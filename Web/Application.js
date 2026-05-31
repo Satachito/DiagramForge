@@ -1,3 +1,6 @@
+export	const
+Report = alert
+
 window.app		= {
 	model	: {
 		nodes	: []	//	[ ID, S, P ]	(S)hape		, (P)aint
