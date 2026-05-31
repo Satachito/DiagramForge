@@ -1,0 +1,26 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Chrome: docroot = Web/ (e.g. /index.html)",
+			"type": "chrome",
+			"request": "launch",
+			"url": "http://localhost:8080/index.html",
+			"webRoot": "${workspaceFolder}/Web"
+		},
+		{
+			"name": "Chrome: docroot = DiagramForge/ (e.g. /Web/index.html)",
+			"type": "chrome",
+			"request": "launch",
+			"url": "http://localhost:8080/Web/index.html",
+			"webRoot": "${workspaceFolder}"
+		},
+		{
+			"name": "Attach to Chrome (port 9222)",
+			"type": "chrome",
+			"request": "attach",
+			"port": 9222,
+			"webRoot": "${workspaceFolder}/Web"
+		}
+	]
+}

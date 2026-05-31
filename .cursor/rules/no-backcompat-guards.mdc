@@ -1,0 +1,10 @@
+---
+description: No backward-compat or defensive error-shrouding while the project is early-stage
+alwaysApply: true
+---
+
+# Early development: avoid compatibility and soft failure
+
+This project is still in active development. Do **not** add backward compatibility layers, legacy field normalization (for example migrating old JSON field names at load time), or extra defensive code whose main purpose is to avoid errors from mismatched or outdated data.
+
+Prefer letting invalid or outdated inputs fail clearly so issues are easy to see and debug. Only add guards when they are part of the real product behavior, not to paper over schema drift during development.

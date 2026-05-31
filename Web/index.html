@@ -1,0 +1,298 @@
+<title>DiagramForge</title>
+<style>
+:root {
+;	color-scheme			: light dark
+;	--color-bg				: light-dark( #ffffff, #000000 )
+;	--color-fg				: light-dark( #000000, #ffffff )
+;	--color-popup-bg		: light-dark( rgba( 245, 245, 245, .95 ), rgba( 32, 32, 32, .95 ) )
+;	--color-popup-border	: light-dark( #999, #666 )
+;	--color-popup-fg		: light-dark( #111, #eee )
+;	--color-popup-hover		: light-dark( #ddd, #444 )
+;	--color-shadow			: light-dark( rgba( 0, 0, 0, .15 ), rgba( 0, 0, 0, .4 ) )
+}
+html {
+;	background				: var( --color-bg )
+;	color					: var( --color-fg )
+;	height					: 100%
+;	font-family				: courier
+}
+body {
+;	margin					: 0
+;	display					: grid
+;	grid-template-rows		: auto 1fr auto
+;	grid-template-columns	: auto 1fr 256px
+;	position				: relative
+;	overflow				: hidden
+}
+main-editor {
+;	overflow				: scroll
+;	position				: relative
+}
+header {
+;	border-bottom			: 1px solid gray
+;	padding					: 8px
+}
+footer {
+;	border-top				: 1px solid gray
+;	padding					: 8px
+;	grid-column				: 1 / 4
+}
+aside {
+;	border-left				: 1px solid gray
+;	overflow				: scroll
+;	padding					: 8px
+}
+aside > button {
+;	display					: block
+;	margin-top				: 4px
+;	width					: 100%
+}
+nav {
+;	border-right			: 1px solid gray
+;	overflow				: scroll
+;	min-height				: 0
+}
+details {
+;	padding-left			: 8px
+}
+summary {
+;	font-size				: 12px
+;	border-bottom			: 1px solid gray
+;	padding-top				: 4px
+;	padding-bottom			: 4px
+}
+[path] {
+;	outline					: 2px solid transparent
+}
+[path]:hover {
+;	outline-color			: var( --color-accent )
+}
+
+#LINK_MENU {
+;	display			: none
+;	position		: fixed
+;	z-index			: 2000
+;	min-width		: 120px
+;	padding			: 4px 0
+;	border			: 1px solid var( --color-popup-border )
+;	border-radius	: 4px
+;	background		: var( --color-popup-bg )
+;	color			: var( --color-popup-fg )
+;	font-size		: 13px
+;	box-shadow		: 0 4px 12px var( --color-shadow )
+}
+#LINK_MENU > button {
+;	display			: block
+;	width			: 100%
+;	text-align		: left
+;	padding			: 6px 14px
+;	border			: none
+;	background		: transparent
+;	color			: inherit
+;	font			: inherit
+;	cursor			: pointer
+}
+#LINK_MENU > button:hover {
+;	background		: var( --color-popup-hover )
+}
+#UNDER_HOVER {
+;	display			: none
+;	position		: fixed
+;	left			: 0
+;	top				: 0
+;	z-index			: 1000
+;	pointer-events	: none
+;	max-width		: 240px
+;	padding			: 4px 8px
+;	border			: 1px solid var( --color-popup-border )
+;	border-radius	: 4px
+;	background		: var( --color-popup-bg )
+;	color			: var( --color-popup-fg )
+;	font-size		: 12px
+;	overflow-wrap	: anywhere
+;	white-space		: pre-wrap
+}
+
+paint-editor	input		{ width	: 128px }
+paint-editor	select		{ width	: 128px }
+link-editor		input		{ width	: 128px }
+link-editor		select		{ width	: 128px }
+shape-editor	input		{ width	: 128px }
+shape-editor	select		{ width	: 128px }
+shape-editor	textarea	{ width	: 100%; height : 6em }
+
+</style>
+
+<header style="font-family: fantasy; margin-right: 16px; font-size: 24px">
+	DiagramForge
+</header>
+<header>
+	<label style="display:inline-flex; align-items:center; gap:4px;font-size:12px">
+		mode
+		<select id=MODE_TOOL style="width:80px;">
+			<option value=select selected>Select</option>
+			<option value=node>Node</option>
+			<option value=link>Link</option>
+		</select>
+	</label>
+</header>
+<header style="font-family: cursive; text-align: right">
+	<div style="font-size: 14px">(C) 2026 SliP.LLC, Tokyo.</div>
+	<div style="font-size: 10px">Wittern by Satoru Ogura, and AIs.</div>
+</header>
+
+<nav>
+	<cloud-icons name=GCP	url=google-cloud-legacy-icons.zip										></cloud-icons>
+	<cloud-icons name=Azure	url=Azure_Public_Service_Icons_V23.zip									></cloud-icons>
+	<cloud-icons name=AWS	url=Asset-Package_07312025.49d3aab7f9e6131e51ade8f7c6c8b961ee7d3bb1.zip	></cloud-icons>
+</nav>
+
+<main-editor id=MAIN_EDITOR></main-editor>
+
+<aside>
+	<div style="display: grid; grid-template-columns: 32px 1fr 32px">
+		<button onclick=UPLOAD.click()>↑<input id=UPLOAD type=file hidden></button>
+		<input id=FILE_NAME style="width: 100%">
+		<button id=DOWNLOAD>↓</button>
+	</div>
+	<button			id=SAMPLE_JSONS		>Sample( JSONs )	</button>
+	<button			id=SAMPLE_AWS		>Sample( AWS )		</button>
+	<button			id=SAMPLE_GCP		>Sample( GCP )		</button>
+	<button			id=SAMPLE_AZURE		>Sample( Azure )	</button>
+	<hr>
+	<paint-editor	id=PAINT_EDITOR		></paint-editor>
+	<hr>
+	<link-editor	id=LINK_EDITOR		></link-editor>
+	<button			id=LINK				>Apply/Create Link	</button>
+	<hr>
+	<shape-editor	id=SHAPE_EDITOR		></shape-editor>
+	<hr>
+	Node ID:
+	<input			id=NODE_ID style="width: 100%">
+	<button			id=NODE				>Apply/Create Node	</button>
+
+	<hr>
+
+	<button			id=DUMP_CDE			>Dump CDE			</button>
+	<button			id=DUMP_JOBS		>Dump Jobs			</button>
+	<button			id=DUMP_CLIPBOARD	>Dump Clipboard		</button>
+	<button			id=FORCE_DRAW		>Force Draw			</button>
+</aside>
+
+<footer>
+	<div			id=UNDER_HOVER		></div>
+	<div			id=LINK_MENU		>
+		<button		id=LINK_MENU_REMOVE	>Remove</button>
+	</div>
+</footer>
+
+<script>
+const Report = alert
+</script>
+
+<script type=module>
+
+import {
+	Node
+,	Link
+,	JSONString
+,	Load
+} from './Application.js'
+
+import	{ DumpJobs } from './Jobs.js'
+import './paint-editor.js'
+import './shape-editor.js'
+import './link-editor.js'
+import './cloud-icons.js'
+import './main-editor.js'
+
+import	{ AE } from './DomUtils.js'
+
+/*
+const
+UpdateApplyNodeLabel = () => NODE.textContent = app.model.nodes.some( _ => _[ 0 ] === NODE_ID.value )
+?	'Update'
+:	app.reforms.length
+	?	'Replace'
+	:	'Create'
+
+window.UpdateApplyNodeLabel = UpdateApplyNodeLabel
+*/
+
+const
+LoadSample = async path => {
+	const
+	res = await fetch( path )
+	if	( ! res.ok )	throw new Error( `${ res.status } ${ path }` )
+	await Load( await res.text() )
+	MAIN_EDITOR.Draw()
+	FILE_NAME.value	= path.replace( /^.*\//, '' )
+}
+
+SAMPLE_JSONS	.onclick = () => LoadSample( 'Samples/JSONs.cde'	).catch( Report )
+SAMPLE_AWS		.onclick = () => LoadSample( 'Samples/AWS.cde'		).catch( Report )
+SAMPLE_GCP		.onclick = () => LoadSample( 'Samples/GCP.cde'		).catch( Report )
+SAMPLE_AZURE	.onclick = () => LoadSample( 'Samples/Azure.cde'	).catch( Report )
+
+DUMP_CDE		.onclick = () => console.log( JSON.stringify( app, null, '\t' ) )
+DUMP_JOBS		.onclick = DumpJobs
+DUMP_CLIPBOARD	.onclick = () => navigator.clipboard.read().then(
+	items => (
+		console.log('Clipboard items:', items.length)
+	,	items.forEach( item => console.log( 'Types:', item.types ) )
+	)
+).catch( er => console.log( 'Clipboard read failed:', er.message ) )
+FORCE_DRAW		.onclick = () => MAIN_EDITOR.Draw()
+
+/*
+SHAPE_EDITOR.addEventListener( 'input', UpdateApplyNodeLabel )
+SHAPE_EDITOR.addEventListener( 'change', UpdateApplyNodeLabel )
+*/
+
+NODE			.onclick = () => Node( [ NODE_ID.value, SHAPE_EDITOR.$, PAINT_EDITOR.$ ] )
+LINK			.onclick = () => Link( [ LINK_EDITOR.$, PAINT_EDITOR.$ ] )
+
+DOWNLOAD		.onclick = () => {
+	const
+	a = AE( document.body, 'a' )
+	a.href = URL.createObjectURL(
+		new Blob( [ JSONString() ], { type: 'application/json' } )
+	)
+	a.download = FILE_NAME.value ?? 'Untitled'
+	a.click()
+	a.remove()
+	URL.revokeObjectURL( a.href )
+}
+
+UPLOAD			.onchange = async ev => {
+	const
+	files = Array.from( ev.target.files )
+	if	( files.length ) {
+		try {
+			await Load(
+				await files.reduce(
+					async ( $, _ ) => $ + await _.text()
+				,	''
+				)
+			)
+			MAIN_EDITOR.Draw()
+			FILE_NAME.value = files.map( _ => _.name ).join( ',' )
+		} catch ( er ) {
+			Report( er )
+		} finally {
+			ev.target.value = ''
+		}
+	}
+}
+
+onload = () => {
+	const
+	_ = localStorage.getItem( 'tokyo.828.diagramforge' )
+	_ && Load( _ )
+
+	MAIN_EDITOR.Draw()
+//	UpdateApplyNodeLabel()
+}
+
+</script>
+

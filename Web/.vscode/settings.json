@@ -1,0 +1,30 @@
+{
+  "eslint.enable": false,
+  "stylelint.enable": false,
+  "html.validate.scripts": false,
+  "html.validate.styles": false,
+  "javascript.validate.enable": false,
+  "typescript.validate.enable": false,
+  "css.validate": false,
+  "json.validate.enable": false,
+  "editor.codeActionsOnSave": {},
+  "editor.quickSuggestions": {
+    "comments": "off",
+    "strings": "off",
+    "other": "off"
+  },
+  "editor.suggestOnTriggerCharacters": false,
+  "editor.wordBasedSuggestions": "off",
+  "editor.parameterHints.enabled": false,
+  "javascript.suggest.enabled": false,
+  "typescript.suggest.enabled": false,
+  "editor.suggest.enabled": false,
+  "editor.inlineSuggest.enabled": false,
+  "editor.acceptSuggestionOnEnter": "off",
+  "editor.acceptSuggestionOnCommitCharacter": false,
+  "cursor.completions.enabled": false,
+  "codeium.enabled": false,
+  "editor.suggest.showSnippets": false,
+  "editor.suggest.showWords": false,
+  "editor.quickSuggestionsDelay": 999999
+}

@@ -1,0 +1,380 @@
+{
+	"nodes": [
+		[
+			"VPN",
+			{
+				"type": "rhombus",
+				"cX": 961,
+				"cY": 559,
+				"rH": 512,
+				"rV": 48,
+				"html": "VPN",
+				"style": ";display     : grid\n;place-items : center\n;font-weight : 700"
+			},
+			{
+				"stroke": "gray",
+				"lineWidth": "2"
+			}
+		],
+		[
+			"VPN Icon",
+			{
+				"type": "SVG",
+				"cX": 876,
+				"cY": 558,
+				"rH": 32,
+				"rV": 32,
+				"SVG": "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNHB4IiBoZWlnaHQ9IjI0cHgiIHZpZXdCb3g9IjAgMCAyNCAyNCI+PGRlZnM+PHN0eWxlPi5jbHMtMXtmaWxsOiM2NjlkZjY7fS5jbHMtMntmaWxsOiM0Mjg1ZjQ7fTwvc3R5bGU+PC9kZWZzPjx0aXRsZT5JY29uXzI0cHhfVlBOLTAxX0NvbG9yPC90aXRsZT48ZyBkYXRhLW5hbWU9IlByb2R1Y3QgSWNvbnMiPjxnID48cmVjdCBjbGFzcz0iY2xzLTEiIHg9IjE0LjczIiB5PSIxMS4yOCIgd2lkdGg9IjQuMTgiIGhlaWdodD0iMS4zOCIvPjxyZWN0IGNsYXNzPSJjbHMtMSIgeD0iMTcuOTUiIHk9IjYuMTIiIHdpZHRoPSIxLjM4IiBoZWlnaHQ9IjExLjcxIi8+PHJlY3QgY2xhc3M9ImNscy0yIiB4PSIxNi4zIiB5PSIxNy4zMiIgd2lkdGg9IjQuNjgiIGhlaWdodD0iNC42OCIgcng9IjAuMjgiLz48cmVjdCBjbGFzcz0iY2xzLTIiIHg9IjE2LjMiIHk9IjIiIHdpZHRoPSI0LjY4IiBoZWlnaHQ9IjQuNjgiIHJ4PSIwLjI4Ii8+PHJlY3QgY2xhc3M9ImNscy0xIiB4PSI2Ljk4IiB5PSIxMS4yOCIgd2lkdGg9IjQuMjgiIGhlaWdodD0iMS4zOCIvPjxyZWN0IGNsYXNzPSJjbHMtMiIgeD0iMy4wMyIgeT0iOS42MyIgd2lkdGg9IjQuNjgiIGhlaWdodD0iNC42OCIgcng9IjAuMjgiLz48cGF0aCBjbGFzcz0iY2xzLTIiIGQ9Ik0xMywxNC4xN2EyLjIsMi4yLDAsMSwxLDIuMi0yLjJBMi4xOSwyLjE5LDAsMCwxLDEzLDE0LjE3Wm0wLTMuNTdBMS4zOCwxLjM4LDAsMSwwLDE0LjMzLDEyLDEuMzcsMS4zNywwLDAsMCwxMywxMC42WiIvPjwvZz48L2c+PC9zdmc+"
+			},
+			{
+				"stroke": "gray",
+				"lineWidth": 2
+			}
+		],
+		[
+			"Cloud",
+			{
+				"type": "rect",
+				"cX": 960,
+				"cY": 336,
+				"rH": 384,
+				"rV": 176,
+				"radii": 18,
+				"html": "Cloud",
+				"style": ";padding     : 8px 12px\n;font-weight : 700"
+			},
+			{
+				"stroke": "gray",
+				"lineWidth": 2
+			}
+		],
+		[
+			"Public Application",
+			{
+				"type": "rect",
+				"cX": 1104,
+				"cY": 384,
+				"rH": 128,
+				"rV": 32,
+				"html": "Public Application\n",
+				"style": ";display     : grid\n;place-items : center"
+			},
+			{
+				"stroke": "gray",
+				"lineWidth": 2
+			}
+		],
+		[
+			"Private Application",
+			{
+				"type": "rect",
+				"cX": 816,
+				"cY": 384,
+				"rH": 128,
+				"rV": 32,
+				"html": "Private Application\n",
+				"style": ";display     : grid\n;place-items : center"
+			},
+			{
+				"stroke": "gray",
+				"lineWidth": 2
+			}
+		],
+		[
+			"Private WAF",
+			{
+				"type": "rect",
+				"cX": 816,
+				"cY": 256,
+				"rH": 128,
+				"rV": 32,
+				"html": "Private WAF\n",
+				"style": ";display     : grid\n;place-items : center"
+			},
+			{
+				"stroke": "gray",
+				"lineWidth": 2
+			}
+		],
+		[
+			"Public WAF",
+			{
+				"type": "rect",
+				"cX": 1104,
+				"cY": 256,
+				"rH": 128,
+				"rV": 32,
+				"html": "Public WAF",
+				"style": ";display     : grid\n;place-items : center"
+			},
+			{
+				"stroke": "gray",
+				"lineWidth": 2
+			}
+		],
+		[
+			"Internet",
+			{
+				"type": "ellipse",
+				"cX": 960,
+				"cY": 112,
+				"rH": 512,
+				"rV": 48,
+				"html": "Internet",
+				"style": ";display     : grid\n;place-items : center\n;font-weight : 700"
+			},
+			{
+				"stroke": "gray",
+				"lineWidth": "2"
+			}
+		],
+		[
+			"Internet Icon",
+			{
+				"type": "SVG",
+				"cX": 873,
+				"cY": 110,
+				"rH": 32,
+				"rV": 32,
+				"SVG": "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNHB4IiBoZWlnaHQ9IjI0cHgiIHZpZXdCb3g9IjAgMCAyNCAyNCI+PGRlZnM+PHN0eWxlPi5jbHMtMXtmaWxsOiM2NjlkZjY7ZmlsbC1ydWxlOmV2ZW5vZGQ7fS5jbHMtMntmaWxsOiM0Mjg1ZjQ7fS5jbHMtM3tmaWxsOiNhZWNiZmE7fTwvc3R5bGU+PC9kZWZzPjx0aXRsZT5JY29uXzI0cHhfTmV0d29ya19Db2xvcjwvdGl0bGU+PGcgZGF0YS1uYW1lPSJQcm9kdWN0IEljb25zIj48ZyA+PHBvbHlnb24gY2xhc3M9ImNscy0xIiBwb2ludHM9IjQuOTQgMTMuNyAxMS41MyAyMC4yMiAxMi42MiAxOS4wNyA2LjMgMTIuOTMgNC45NCAxMy43Ii8+PHBvbHlnb24gY2xhc3M9ImNscy0xIiBwb2ludHM9IjEyLjU3IDQuMDYgMTEuNDggNS4yMiAxNy42OSAxMS40NCAxOS40NyAxMS4wNiAxMi41NyA0LjA2Ii8+PHJlY3QgY2xhc3M9ImNscy0yIiB4PSIxMS4zOCIgeT0iNS4xMyIgd2lkdGg9IjEuMjUiIGhlaWdodD0iNSIvPjxyZWN0IGNsYXNzPSJjbHMtMiIgeD0iMTEuMzgiIHk9IjE0LjUiIHdpZHRoPSIxLjI1IiBoZWlnaHQ9IjUiLz48Y2lyY2xlIGlkPSJPdmFsIiBjbGFzcz0iY2xzLTMiIGN4PSIxMiIgY3k9IjQuNSIgcj0iMS44OCIvPjxjaXJjbGUgY2xhc3M9ImNscy0zIiBjeD0iMTIiIGN5PSIxOS41IiByPSIxLjg4Ii8+PHBvbHlnb24gY2xhc3M9ImNscy0xIiBwb2ludHM9IjIuNjYgMTEuMzggMTcuNzMgMTEuMzggMjEuMzcgMTMuMjUgNi4zIDEzLjI1IDIuNjYgMTEuMzgiLz48Y2lyY2xlIGNsYXNzPSJjbHMtMyIgY3g9IjQuNSIgY3k9IjEyLjMxIiByPSIyLjUiLz48Y2lyY2xlIGNsYXNzPSJjbHMtMyIgY3g9IjE5LjUiIGN5PSIxMi4zMSIgcj0iMi41Ii8+PC9nPjwvZz48L3N2Zz4="
+			},
+			{
+				"stroke": "gray",
+				"lineWidth": 2
+			}
+		],
+		[
+			"Inhouse",
+			{
+				"type": "rect",
+				"cX": 960,
+				"cY": 832,
+				"rH": 464,
+				"rV": 224,
+				"radii": 18,
+				"html": "Inhouse",
+				"style": ";padding     : 8px 12px\n;font-weight : 700"
+			},
+			{
+				"stroke": "gray",
+				"lineWidth": 2
+			}
+		],
+		[
+			"Importer",
+			{
+				"type": "rect",
+				"cX": 960,
+				"cY": 976,
+				"rH": 128,
+				"rV": 32,
+				"html": "Importer\n",
+				"style": ";display     : grid\n;place-items : center"
+			},
+			{
+				"stroke": "gray",
+				"lineWidth": 2
+			}
+		],
+		[
+			"Analysis",
+			{
+				"type": "rect",
+				"cX": 1264,
+				"cY": 976,
+				"rH": 128,
+				"rV": 32,
+				"html": "Analysis\n",
+				"style": ";display     : grid\n;place-items : center"
+			},
+			{
+				"stroke": "gray",
+				"lineWidth": "2"
+			}
+		],
+		[
+			"Writer API",
+			{
+				"type": "rect",
+				"cX": 795,
+				"cY": 706,
+				"rH": 128,
+				"rV": 32,
+				"html": "Writer API",
+				"style": ";display     : grid\n;place-items : center"
+			},
+			{
+				"stroke": "gray",
+				"lineWidth": "2"
+			}
+		],
+		[
+			"Audit Log",
+			{
+				"type": "rect",
+				"cX": 656,
+				"cY": 848,
+				"rH": 128,
+				"rV": 32,
+				"html": "Audit Log",
+				"style": ";display     : grid\n;place-items : center"
+			},
+			{
+				"stroke": "gray",
+				"lineWidth": "2"
+			}
+		],
+		[
+			"Core Data",
+			{
+				"type": "rect",
+				"cX": 960,
+				"cY": 848,
+				"rH": 128,
+				"rV": 32,
+				"radii": 32,
+				"html": "Core Data",
+				"style": ";display     : grid\n;place-items : center"
+			},
+			{
+				"stroke": "gray",
+				"lineWidth": "2"
+			}
+		],
+		[
+			"Sanitized Reader",
+			{
+				"type": "rect",
+				"cX": 1191,
+				"cY": 707,
+				"rH": 128,
+				"rV": 32,
+				"html": "Sanitized Reader\n",
+				"style": ";display     : grid\n;place-items : center"
+			},
+			{
+				"stroke": "gray",
+				"lineWidth": "2"
+			}
+		]
+	],
+	"links": [
+		[
+			["Core Data",
+			{ "headF": false, "headT": true },
+			"Analysis"],
+			{
+				"stroke": "gray",
+				"lineWidth": 2
+			}
+		],
+		[
+			["Internet",
+			{ "headF": true, "headT": true },
+			"Private WAF"],
+			{
+				"stroke": "gray",
+				"lineWidth": 2
+			}
+		],
+		[
+			["Private WAF",
+			{ "headF": true, "headT": true },
+			"Private Application"],
+			{
+				"stroke": "gray",
+				"lineWidth": 2
+			}
+		],
+		[
+			["Internet",
+			{ "headF": true, "headT": true },
+			"Public WAF"],
+			{
+				"stroke": "gray",
+				"lineWidth": 2
+			}
+		],
+		[
+			["Public WAF",
+			{ "headF": true, "headT": true },
+			"Public Application"],
+			{
+				"stroke": "gray",
+				"lineWidth": 2
+			}
+		],
+		[
+			["Importer",
+			{ "headF": false, "headT": true },
+			"Core Data"],
+			{
+				"stroke": "gray",
+				"lineWidth": 2
+			}
+		],
+		[
+			["Private Application",
+			{ "headF": false, "headT": true },
+			"Writer API"],
+			{
+				"stroke": "gray",
+				"lineWidth": "2"
+			}
+		],
+		[
+			["Public Application",
+			{ "headF": false, "headT": true },
+			"Writer API"],
+			{
+				"stroke": "gray",
+				"lineWidth": "2"
+			}
+		],
+		[
+			["Writer API",
+			{ "headF": false, "headT": true },
+			"Core Data"],
+			{
+				"stroke": "gray",
+				"lineWidth": "2"
+			}
+		],
+		[
+			["Writer API",
+			{ "headF": false, "headT": true },
+			"Audit Log"],
+			{
+				"stroke": "gray",
+				"lineWidth": "2"
+			}
+		],
+		[
+			["Sanitized Reader",
+			{ "headF": false, "headT": true },
+			"Private Application"],
+			{
+				"stroke": "gray",
+				"lineWidth": "2"
+			}
+		],
+		[
+			["Sanitized Reader",
+			{ "headF": false, "headT": true },
+			"Public Application"],
+			{
+				"stroke": "gray",
+				"lineWidth": "2"
+			}
+		],
+		[
+			["Core Data",
+			{ "headF": false, "headT": true },
+			"Sanitized Reader"],
+			{
+				"stroke": "gray",
+				"lineWidth": "2"
+			}
+		]
+	]
+}

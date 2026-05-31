@@ -1,0 +1,6 @@
+_*
+*.zip
+macOS
+macOS.xcodeproj
+DebugAssets/
+node_modules/
