@@ -61,3 +61,9 @@ LabeledTextArea	= ( parent, label ) => {
 	return AE( $, 'textarea' )
 }
 
+export const
+EscapeXML		= _ => String( _ )
+.	replace( /&/g, '&amp;' )
+.	replace( /</g, '&lt;' )
+.	replace( />/g, '&gt;' )
+

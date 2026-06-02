@@ -18,6 +18,7 @@ import {
 
 import {
 	AE
+,	EscapeXML
 }	from './DomUtils.js'
 
 const	
@@ -72,8 +73,6 @@ EqualXY			= ( [ X, Y ], [ x, y ] )	=> X === x && Y === y
 const
 DeltaXY			= ( [ X, Y ], [ x, y ] )	=> [ x - X, y - Y ]
 
-const
-ContainsXY		= ( [ T, L, B, R ], [ x, y ] ) => T <= y && y <= B && L <= x && x <= R
 const
 ContainsTLBR	= ( [ T, L, B, R ], [ t, l, b, r ] ) => T <= t && b <= B && L <= l && r <= R
 const
@@ -259,12 +258,6 @@ DrawPath		= ( c2D, path, P ) => {
 }
 
 const
-escapeXml	= _ => String( _ )
-.	replace( /&/g, '&amp;' )
-.	replace( /</g, '&lt;' )
-.	replace( />/g, '&gt;' )
-
-const
 Node_XY		= ( [ x, y ] ) => {
 	const
 	drafts = []
@@ -392,8 +385,8 @@ MainEditor extends HTMLElement {
 					await drawSVG(
 						[	`<svg xmlns="http://www.w3.org/2000/svg" width="${ w }" height="${ h }" viewBox="0 0 ${ w } ${ h }">
 								<foreignObject x="0" y="0" width="100%" height="100%">
-								<div xmlns="http://www.w3.org/1999/xhtml" style="${ escapeXml( style ) }">
-								${ escapeXml( S.html ) }
+								<div xmlns="http://www.w3.org/1999/xhtml" style="${ EscapeXML( style ) }">
+								${ EscapeXML( S.html ) }
 							</div></foreignObject></svg>`
 						]
 					,	S
@@ -763,7 +756,6 @@ MainEditor extends HTMLElement {
 		}
 
 		this.reformer.onmouseup = async ev => {
-console.log( 'onmouseup' )
 			const
 			[ mouseD, mouseU ] = mouse
 			mouse[ 0 ] = mouse[ 1 ] = null
