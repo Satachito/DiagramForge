@@ -27,6 +27,9 @@ jobs:
         run: |
           mkdir -p _site
           cp -rL Web/. _site/
+          # Web/*.zip are gitignored symlinks (absent in CI), so copy the real
+          # icon archives from ICONs/ to the paths the app fetches (bare names).
+          cp ICONs/*.zip _site/
           touch _site/.nojekyll
 
       - uses: actions/upload-pages-artifact@v5
