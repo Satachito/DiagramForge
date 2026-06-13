@@ -1,0 +1,7 @@
+DiagramForge — canvas-based cloud architecture diagram editor.
+Static site: plain ES modules + Web Components, no build. Lint with `npm run lint`.
+Code style: leading-comma/leading-semicolon layout, tabs, `$`/`_` shorthand. Match surrounding code.
+
+Diagrams are plain JSON files (`.cde`). To add/modify/arrange nodes and links, edit the `.cde`
+file directly — there is no in-app AI console. Read SCHEMA.md for the format and the rules for
+safe edits before touching a `.cde`. Sample files are in Samples/.
