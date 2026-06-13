@@ -50,6 +50,17 @@ FindNode		= ID => app.model.nodes.find( _ => _[ 0 ] === ID )
 export	const
 FindReform		= ID => app.reforms.find( _ => _[ 0 ] === ID )
 
+const
+SyncReformsFromModel	= () => {
+	app.reforms = app.reforms.flatMap(
+		( [ ID ] ) => {
+			const
+			node = FindNode( ID )
+			return node ? [ [ ID, structuredClone( node[ 1 ] ), structuredClone( node[ 2 ] ) ] ] : []
+		}
+	)
+}
+
 import Do from './Jobs.js'
 
 const
@@ -62,13 +73,15 @@ DoTypical	= async ( label, redo ) => {
 	await Do(	label
 	,	async () => (
 			await redo()
-		,	MAIN_EDITOR.Draw()
+		,	await MAIN_EDITOR.Draw()
 		,	LINK_EDITOR.Sync()
 		,	Persist()
 		)
 	,	async () => (
 			app = saved
-		,	MAIN_EDITOR.Draw()
+		,	SyncReformsFromModel()
+		,	MAIN_EDITOR.clearInteraction()
+		,	await MAIN_EDITOR.Draw()
 		,	LINK_EDITOR.Sync()
 		,	Persist()
 		)
@@ -76,18 +89,23 @@ DoTypical	= async ( label, redo ) => {
 }
 
 export	const
-Reform		= () => DoTypical(
-	'Reform'
-,	() => {
-		const
-		IDs = app.reforms.map( _ => _[ 0 ] )
+Reform		= () => {
+	const
+	pendingReforms = structuredClone( app.reforms )
+	return	DoTypical(
+		'Reform'
+	,	() => {
+			const
+			IDs = pendingReforms.map( _ => _[ 0 ] )
 
-		app.model.nodes = [
-			...app.model.nodes.filter( _ => !IDs.includes( _[ 0 ] ) )
-		,	...structuredClone( app.reforms )
-		]
-	}
-)
+			app.model.nodes = [
+				...app.model.nodes.filter( _ => !IDs.includes( _[ 0 ] ) )
+			,	...structuredClone( pendingReforms )
+			]
+		,	app.reforms = structuredClone( pendingReforms )
+		}
+	)
+}
 
 const
 GenerateID	= async $ => {

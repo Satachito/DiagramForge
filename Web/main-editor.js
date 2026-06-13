@@ -35,6 +35,7 @@ import {
 }	from './diagram-geometry.js'
 
 import { drawLinkCanvas } from './link-draw.js'
+import { parsePadding, parseLinePx, labelY } from './vector-export-common.js'
 
 const
 mouse			= [ null, null ]
@@ -50,10 +51,10 @@ const
 MinEdge			= ( tlbr, xy ) => Math.min( ...EdgeDist( tlbr, xy ) )
 
 const
-NodeInterior		= ( tlbr, xy ) => MinEdge( tlbr, xy ) > GRAB
+PointContains		= ( tlbr, xy ) => MinEdge( tlbr, xy ) >= 0
 
 const
-NodeGrab		= ( tlbr, xy ) => MinEdge( tlbr, xy ) > -GRAB && !NodeInterior( tlbr, xy )
+NodeInterior		= ( tlbr, xy ) => MinEdge( tlbr, xy ) > GRAB
 
 const
 SelectionGrab		= ( tlbr, xy ) => {
@@ -63,37 +64,14 @@ SelectionGrab		= ( tlbr, xy ) => {
 }
 
 const
-TopNodeWhere		= ( xy, pred ) => {
-	let
-	top = null
-	for ( const node of app.model.nodes ) {
-		pred( node, TLBR( node[ 1 ] ), xy ) && ( top = node )
-	}
-	return	top
-}
-
-const
-SelectedMemberAt	= xy => TopNodeWhere(
-	xy
-,	( node, tlbr, p ) => FindReform( node[ 0 ] ) && MinEdge( tlbr, p ) > -GRAB
-)
-
-const
-UnselectedInteriorAt	= xy => TopNodeWhere(
-	xy
-,	( node, tlbr, p ) => !FindReform( node[ 0 ] ) && NodeInterior( tlbr, p )
-)
-
-const
-UnselectedGrabAt	= xy => {
+ClosestNodeWhere	= ( xy, pred ) => {
 	let
 	top = null
 	,	best = Infinity
 	for ( const node of app.model.nodes ) {
-		if	( FindReform( node[ 0 ] ) ) continue
 		const
 		tlbr = TLBR( node[ 1 ] )
-		if	( !NodeGrab( tlbr, xy ) ) continue
+		if	( !pred( node, tlbr, xy ) ) continue
 		const
 		d = MinEdge( tlbr, xy )
 		if	( d < best ) {
@@ -105,13 +83,24 @@ UnselectedGrabAt	= xy => {
 }
 
 const
+SelectedMemberAt	= xy => ClosestNodeWhere(
+	xy
+,	( node, tlbr, p ) => FindReform( node[ 0 ] ) && PointContains( tlbr, p )
+)
+
+const
+UnselectedAt		= xy => ClosestNodeWhere(
+	xy
+,	( node, tlbr, p ) => !FindReform( node[ 0 ] ) && PointContains( tlbr, p )
+)
+
+const
 SelectionInteriorAt	= xy => {
 	if	( !app.reforms.length ) return false
 	const
 	sel = BBox( app.reforms )
 	return	MinEdge( sel, xy ) > GRAB
-	&&	!UnselectedInteriorAt( xy )
-	&&	!UnselectedGrabAt( xy )
+	&&	!UnselectedAt( xy )
 }
 
 const
@@ -119,8 +108,13 @@ SelectionGrabAt		= xy => app.reforms.length && SelectionGrab( BBox( app.reforms 
 
 const
 HitSelect		= xy => {
-	if	( UnselectedInteriorAt( xy ) )		return 'nodeInside'
-	if	( UnselectedGrabAt( xy ) )		return 'nodeGrab'
+	const
+	unsel = UnselectedAt( xy )
+	if	( unsel ) {
+		const
+		tlbr = TLBR( unsel[ 1 ] )
+		return NodeInterior( tlbr, xy ) ? 'nodeInside' : 'nodeGrab'
+	}
 	if	( SelectedMemberAt( xy ) )			return 'selected'
 	if	( SelectionInteriorAt( xy ) )		return 'selectionInside'
 	if	( SelectionGrabAt( xy ) )			return 'selectionGrab'
@@ -259,7 +253,6 @@ DrawHtmlLabel	= ( c2D, S ) => {
 	,	fontSize = parseFloat( st[ 'font-size' ] ) || 12
 	,	fontWeight = st[ 'font-weight' ] || 'normal'
 	,	fontFamily = st[ 'font-family' ] || 'courier, monospace'
-	,	lineHeight = parseFloat( st[ 'line-height' ] ) || 1.2
 	,	textAlign = ( () => {
 			//	explicit text-align wins; else derive horizontal from the
 			//	flex/grid justify-*; else HTML block default = left.
@@ -269,31 +262,29 @@ DrawHtmlLabel	= ( c2D, S ) => {
 			return /center/.test( j ) ? 'center' : /end/.test( j ) ? 'right' : 'left'
 		} )()
 	,	[ x, y, w, h ] = XYWH( S )
-	,	pad = 4
-	,	innerW = Math.max( 0, w - pad * 2 )
+	,	{ t: padT, r: padR, b: padB, l: padL } = parsePadding( st )
+	,	innerW = Math.max( 0, w - padL - padR )
 	,	color = matchMedia( '(prefers-color-scheme: dark)' ).matches ? '#ffffff' : '#000000'
+	,	middle = st[ 'text-baseline' ] === 'middle'
 
 	c2D.save()
 	c2D.fillStyle = color
 	c2D.font = `${ fontWeight } ${ fontSize }px ${ fontFamily }`
 	c2D.textAlign = textAlign === 'right' ? 'right' : textAlign === 'left' ? 'left' : 'center'
-	c2D.textBaseline = 'alphabetic'
+	c2D.textBaseline = middle ? 'middle' : 'alphabetic'
 
 	const
 	lines = wrapLines( c2D, decodeHtml( S.html ), innerW )
-	,	linePx = fontSize * lineHeight
+	,	linePx = parseLinePx( st, fontSize )
 	,	blockH = lines.length * linePx
 	,	alignItems = st[ 'align-items' ] || st[ 'place-items' ] || 'start'
-	let
-	startY = y + ( h - blockH ) / 2 + fontSize
-	if	( /flex-end|end/.test( alignItems ) )	startY = y + h - pad - blockH + fontSize
-	else if	( /flex-start|start/.test( alignItems ) )	startY = y + pad + fontSize
+	,	startY = labelY( { y, h, blockH, linePx, fontSize, padT, padB, alignItems, middle } )
 
 	const
 	textX = textAlign === 'right'
-	?	x + w - pad
+	?	x + w - padR
 	:	textAlign === 'left'
-	?	x + pad
+	?	x + padL
 	:	x + w / 2
 
 	lines.forEach(
@@ -303,30 +294,10 @@ DrawHtmlLabel	= ( c2D, S ) => {
 }
 
 const
-Node_XY		= ( [ x, y ] ) => {
-	const
-	drafts = []
-	app.model.nodes.forEach(
-		E => {
-			const	[ T, L, B, R ] = TLBR( E[ 1 ] )
-			T < y && y < B && L < x && x < R && drafts.push(
-				[	E
-				,	Math.min( y - T, x - L, B - y, R - x )
-				]
-			)
-		}
-	)
-	switch	( drafts.length ) {
-	case 0:	
-		return null
-	case 1:		//	Do Nothing
-		return drafts[ 0 ][ 0 ]
-	}
-	return drafts.slice( 1 ).reduce(
-		( $, _ ) => $[ 1 ] < _[ 1 ] ? $ : _
-	,	drafts[ 0 ]
-	)[ 0 ]
-}
+Node_XY		= xy => ClosestNodeWhere(
+	xy
+,	( _, tlbr, p ) => PointContains( tlbr, p )
+)
 
 const
 UpdateHoverLabel = ev => {
@@ -349,7 +320,12 @@ MainEditor extends HTMLElement {
 	Draw() {
 		this.ApplyCanvasSize()
 		window.EMPTY_HINT && ( window.EMPTY_HINT.style.display = app.model.nodes.length ? 'none' : '' )
-		Promise.all( [ this.DrawNodes(), this.DrawReforms() ] ).catch( Report )
+		return Promise.all( [ this.DrawNodes(), this.DrawReforms() ] ).catch( Report )
+	}
+
+	clearInteraction() {
+		mouse[ 0 ] = mouse[ 1 ] = null
+		mouseDrag = null
 	}
 
 	ApplyCanvasSize() {
@@ -660,7 +636,7 @@ MainEditor extends HTMLElement {
 
 		const
 		ApplyMultiClick	= async ( tlbr, ev ) => {
-			switch ( ev.detail % 6 ) {
+			switch ( ev.detail % 4 ) {
 			case 1:
 				break
 			case 2:
@@ -671,18 +647,10 @@ MainEditor extends HTMLElement {
 					_ => ContersectsTLBR( tlbr, TLBR( _[ 1 ] ) ) && RegistReform( _ )
 				)
 				break
-			case 4:
+			default:
 				app.model.nodes.forEach(
 					_ => ContainsTLBR( TLBR( _[ 1 ] ), tlbr ) && RegistReform( _ )
 				)
-				break
-			case 5:
-				app.model.nodes.forEach(
-					_ => ContersectsTLBR( TLBR( _[ 1 ] ), tlbr ) && RegistReform( _ )
-				)
-				break
-			default:
-				app.model.nodes.forEach( _ => RegistReform( _ ) )
 				break
 			}
 			await this.DrawReforms()
@@ -748,9 +716,7 @@ MainEditor extends HTMLElement {
 					await this.DrawReforms()
 					return
 				}
-				RegistReform(
-					hit === 'nodeInside' ? UnselectedInteriorAt( xy ) : UnselectedGrabAt( xy )
-				)
+				RegistReform( UnselectedAt( xy ) )
 				await SelectNode( app.reforms[ 0 ] )
 				return
 			case 'selected':
@@ -906,7 +872,6 @@ MainEditor extends HTMLElement {
 					const	[ _F, A, _T ] = LINK_EDITOR.$
 					const	$ = [ [ F[ 0 ], A, T[ 0 ] ], PAINT_EDITOR.$ ]
 					await Link( $ )
-					this.Draw()
 				}
 				return
 			case 'node':
@@ -918,14 +883,12 @@ MainEditor extends HTMLElement {
 					S.rH = r[ 0 ]
 					S.rV = r[ 1 ]
 					await Node( [ NODE_ID.value, S, PAINT_EDITOR.$ ] )
-					this.Draw()
 				}
 				return
 			}
 
 			if	( app.reforms.length ) {
 				await Reform()
-				this.Draw()
 			} else {	//	Make selection or Creation
 				const
 				tlbr = TLBR_XYXY( [ mouseD, mouseU ] )

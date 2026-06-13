@@ -187,6 +187,19 @@ shape-editor > div:has( textarea ) {
 }
 shape-editor textarea	{ width	: 100%; height : 6em; box-sizing: border-box }
 
+aside .node-id-row {
+;	display				: grid
+;	grid-template-columns	: 1fr 120px
+;	align-items			: center
+;	column-gap			: 8px
+;	margin-bottom		: 4px
+}
+aside .node-id-row input {
+;	width				: 100%
+;	box-sizing			: border-box
+;	min-width			: 0
+}
+
 </style>
 
 <header style="font-family: fantasy; margin-right: 16px; font-size: 24px; line-height: 1.15">
@@ -204,7 +217,6 @@ shape-editor textarea	{ width	: 100%; height : 6em; box-sizing: border-box }
 			<option value=link>Link</option>
 		</select>
 	</label>
-	<span style="font-size:10px; opacity:.65; margin-left:8px">⌘-drag = Node · ⌥-drag = Link</span>
 	<label style="display:inline-flex; align-items:center; gap:4px;font-size:12px; margin-left:12px">
 		W
 		<input id=CANVAS_W type=number min=256 step=256 value=4096 style="width:64px">
@@ -214,6 +226,11 @@ shape-editor textarea	{ width	: 100%; height : 6em; box-sizing: border-box }
 		<input id=CANVAS_H type=number min=256 step=256 value=4096 style="width:64px">
 	</label>
 	<button id=CANVAS_APPLY style="margin-left:4px">Apply</button>
+	<div style="font-size:10px; opacity:.65; margin-top:4px; line-height:1.45">
+		⌘-drag = Node · ⌥-drag = Link<br>
+		Select mode — clicks on the current selection:
+		<b>1</b> incl. contained · <b>2</b> first item only · <b>3</b> overlapping · <b>4</b> parents · <b>⌘A</b> all
+	</div>
 </header>
 <header style="font-family: cursive; text-align: right; font-size: 11px">
 	<a href=https://github.com/Satachito/DiagramForge target=_blank rel=noopener>GitHub</a>
@@ -259,8 +276,10 @@ shape-editor textarea	{ width	: 100%; height : 6em; box-sizing: border-box }
 	<hr>
 	<shape-editor	id=SHAPE_EDITOR		></shape-editor>
 	<hr>
-	Node ID:
-	<input			id=NODE_ID style="width: 100%">
+	<div class=node-id-row>
+		<label for=NODE_ID>Node ID:</label>
+		<input id=NODE_ID>
+	</div>
 	<button			id=NODE				>Apply/Create Node	</button>
 
 	<details>

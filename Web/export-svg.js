@@ -92,14 +92,16 @@ drawLabel		= ( parts, X, Y, S ) => {
 	,	startY
 	,	linePx
 	,	color
+	,	textBaseline
 	} = labelLayout( S )
 	const
 	anchor = textAlign === 'right' ? 'end' : textAlign === 'left' ? 'start' : 'middle'
 	const
 	x = X( textX )
 	,	y0 = Y( startY )
+	,	baselineAttr = textBaseline === 'middle' ? ' dominant-baseline="middle"' : ''
 	parts.push(
-		`<text x="${ x }" y="${ y0 }" text-anchor="${ anchor }" font-size="${ fontSize }" font-family="${ EscapeXML( fontFamily ) }" font-weight="${ EscapeXML( fontWeight ) }" fill="${ EscapeXML( color ) }">`
+		`<text x="${ x }" y="${ y0 }" text-anchor="${ anchor }"${ baselineAttr } font-size="${ fontSize }" font-family="${ EscapeXML( fontFamily ) }" font-weight="${ EscapeXML( fontWeight ) }" fill="${ EscapeXML( color ) }">`
 	)
 	lines.forEach(
 		( line, i ) => parts.push(
