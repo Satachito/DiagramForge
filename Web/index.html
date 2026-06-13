@@ -61,6 +61,8 @@ body {
 main-editor {
 ;	overflow				: scroll
 ;	position				: relative
+;	grid-row				: 2
+;	grid-column				: 2
 }
 header {
 ;	border-bottom			: 1px solid gray
@@ -202,6 +204,7 @@ shape-editor textarea	{ width	: 100%; height : 6em; box-sizing: border-box }
 			<option value=link>Link</option>
 		</select>
 	</label>
+	<span style="font-size:10px; opacity:.65; margin-left:8px">⌘-drag = Node · ⌥-drag = Link</span>
 	<label style="display:inline-flex; align-items:center; gap:4px;font-size:12px; margin-left:12px">
 		W
 		<input id=CANVAS_W type=number min=256 step=256 value=4096 style="width:64px">
@@ -226,6 +229,11 @@ shape-editor textarea	{ width	: 100%; height : 6em; box-sizing: border-box }
 </nav>
 
 <main-editor id=MAIN_EDITOR></main-editor>
+<div id=EMPTY_HINT style="grid-row:2; grid-column:2; place-self:center; pointer-events:none; z-index:5; max-width:430px; text-align:center; font-size:13px; opacity:.6; line-height:1.8">
+	Drag on the canvas in <b>Node</b> mode (or hold <b>⌘</b>) to create a shape.<br>
+	Hold <b>⌥</b> and drag from one shape to another to link them.<br>
+	Or load a <b>Sample</b> from the right panel →
+</div>
 
 <aside>
 	<div style="display: grid; grid-template-columns: 32px 1fr 32px">
@@ -331,6 +339,8 @@ CANVAS_APPLY	.onclick = async () => {
 	SetCanvasSize( w, h )
 	MAIN_EDITOR.Draw()
 }
+
+MODE_TOOL		.onchange = () => MAIN_EDITOR.reformer.style.cursor = MODE_TOOL.value === 'select' ? 'default' : 'crosshair'
 
 SAMPLE_JSONS	.onclick = () => LoadSample( 'Samples/JSONs.cde'	).catch( Report )
 SAMPLE_AWS		.onclick = () => LoadSample( 'Samples/AWS.cde'		).catch( Report )

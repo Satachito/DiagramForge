@@ -36,8 +36,12 @@ import {
 
 import { drawLinkCanvas } from './link-draw.js'
 
-const	
+const
 mouse			= [ null, null ]
+
+//	px tolerance for grabbing a selection edge (resize handles) / click-selecting a node
+const
+GRAB			= 8
 
 const
 XYWH_XYXY		= ( [ [ x, y ], [ X, Y ] ] ) => [ x, y, X - x, Y - y ]
@@ -157,7 +161,14 @@ DrawHtmlLabel	= ( c2D, S ) => {
 	,	fontWeight = st[ 'font-weight' ] || 'normal'
 	,	fontFamily = st[ 'font-family' ] || 'courier, monospace'
 	,	lineHeight = parseFloat( st[ 'line-height' ] ) || 1.2
-	,	textAlign = st[ 'text-align' ] || 'center'
+	,	textAlign = ( () => {
+			//	explicit text-align wins; else derive horizontal from the
+			//	flex/grid justify-*; else HTML block default = left.
+			const	t = st[ 'text-align' ]
+			if	( t ) return t
+			const	j = st[ 'justify-items' ] || st[ 'justify-content' ] || st[ 'place-items' ] || ''
+			return /center/.test( j ) ? 'center' : /end/.test( j ) ? 'right' : 'left'
+		} )()
 	,	[ x, y, w, h ] = XYWH( S )
 	,	pad = 4
 	,	innerW = Math.max( 0, w - pad * 2 )
@@ -173,7 +184,7 @@ DrawHtmlLabel	= ( c2D, S ) => {
 	lines = wrapLines( c2D, decodeHtml( S.html ), innerW )
 	,	linePx = fontSize * lineHeight
 	,	blockH = lines.length * linePx
-	,	alignItems = st[ 'align-items' ] || st[ 'place-items' ] || 'center'
+	,	alignItems = st[ 'align-items' ] || st[ 'place-items' ] || 'start'
 	let
 	startY = y + ( h - blockH ) / 2 + fontSize
 	if	( /flex-end|end/.test( alignItems ) )	startY = y + h - pad - blockH + fontSize
@@ -238,6 +249,7 @@ MainEditor extends HTMLElement {
 
 	Draw() {
 		this.ApplyCanvasSize()
+		window.EMPTY_HINT && ( window.EMPTY_HINT.style.display = app.model.nodes.length ? 'none' : '' )
 		Promise.all( [ this.DrawNodes(), this.DrawReforms() ] ).catch( Report )
 	}
 
@@ -254,14 +266,23 @@ MainEditor extends HTMLElement {
 
 		const
 		drawSVG		= async ( svg, S ) => {
+			//	SVG must go through <img>: createImageBitmap() rejects SVG blobs
+			//	in Chrome ("The source image could not be decoded").
 			const
-			blob = new Blob( svg, { type: 'image/svg+xml;charset=utf-8' } )
-			const
-			bitmap = await createImageBitmap( blob )
+			url = URL.createObjectURL( new Blob( svg, { type: 'image/svg+xml;charset=utf-8' } ) )
 			try {
-				c2D.drawImage( bitmap, ...XYWH( S ) )
+				const
+				image = new Image()
+				image.src = url
+				image.decode ? await image.decode() : await new Promise(
+					( Res, Rej ) => (
+						image.onload	= () => Res()
+					,	image.onerror	= () => Rej( new Error( 'SVG: loading failed' ) )
+					)
+				)
+				c2D.drawImage( image, ...XYWH( S ) )
 			} finally {
-				bitmap.close()
+				URL.revokeObjectURL( url )
 			}
 		}
 
@@ -333,7 +354,20 @@ MainEditor extends HTMLElement {
 			for ( const [ , S ] of app.reforms ) c2D.strokeRect( ...XYWH( S ) )
 			c2D.strokeStyle = '#ff0000'
 			c2D.lineWidth = 2
-			c2D.strokeRect( ...XYWH_TLBR( BBox( app.reforms ) ) )
+			const	[ hT, hL, hB, hR ] = BBox( app.reforms )
+			c2D.strokeRect( ...XYWH_TLBR( [ hT, hL, hB, hR ] ) )
+			//	resize handles: 4 corners + 4 edge midpoints
+			const	hMX = ( hL + hR ) / 2, hMY = ( hT + hB ) / 2, HS = 8
+			c2D.fillStyle = '#ffffff'
+			c2D.lineWidth = 1.5
+			for ( const [ hx, hy ] of [
+				[ hL, hT ], [ hMX, hT ], [ hR, hT ]
+			,	[ hL, hMY ],              [ hR, hMY ]
+			,	[ hL, hB ], [ hMX, hB ], [ hR, hB ]
+			] ) {
+				c2D.fillRect( hx - HS / 2, hy - HS / 2, HS, HS )
+				c2D.strokeRect( hx - HS / 2, hy - HS / 2, HS, HS )
+			}
 			c2D.restore()
 		} else {
 			mouse[ 0 ] && mouse[ 1 ] && (
@@ -422,27 +456,32 @@ MainEditor extends HTMLElement {
 		,	Paste( ev.clipboardData )
 		)
 
-		this.reformer.onkeydown = async ev => {
+		//	window-level so shortcuts work without the canvas being focused,
+		//	but never while the user is typing in a form field.
+		addEventListener( 'keydown', async ev => {
+			const	t = ev.target
+			if	( t && ( /^(INPUT|TEXTAREA|SELECT)$/.test( t.tagName ) || t.isContentEditable ) ) return
 			switch ( ev.key ) {
 			case 'z':	case 'Z':
-				if ( ev.metaKey || ev.ctrlKey ) await ( ev.shiftKey ? Redo() : Undo() )
+				if ( ev.metaKey || ev.ctrlKey ) { ev.preventDefault(); await ( ev.shiftKey ? Redo() : Undo() ) }
 				break
 			case 'y':	case 'Y':
-				if ( ev.metaKey || ev.ctrlKey ) await Redo()
+				if ( ev.metaKey || ev.ctrlKey ) { ev.preventDefault(); await Redo() }
 				break
 			case 'Escape':
-				console.log( ev )
-				mouse = [ null, null ]
+				mouse[ 0 ] = mouse[ 1 ] = null
 				this.hideLinkMenu()
 				await this.DrawReforms()
 				break
+			case 'Delete':
 			case 'Backspace':
+				ev.preventDefault()
 				await Delete()
 				break
 			default:
 				break
 			}
-		}
+		} )
 
 		this.reformer.onmouseleave = () => (
 			UNDER_HOVER.style.display = 'none'
@@ -458,6 +497,24 @@ MainEditor extends HTMLElement {
 		}
 
 		const
+		CursorAt = ev => {
+			if	( Mode( ev ) !== 'select' ) return 'crosshair'
+			const	xy = [ ev.offsetX, ev.offsetY ]
+			if	( app.reforms.length ) {
+				const	[ dT, dL, dB, dR ] = EdgeDist( BBox( app.reforms ), xy )
+				if	( Math.min( dT, dL, dB, dR ) > -GRAB ) {
+					const	top = dT <= GRAB, bottom = dB <= GRAB, left = dL <= GRAB, right = dR <= GRAB
+					if	( ( top && left ) || ( bottom && right ) )	return 'nwse-resize'
+					if	( ( top && right ) || ( bottom && left ) )	return 'nesw-resize'
+					if	( top || bottom )	return 'ns-resize'
+					if	( left || right )	return 'ew-resize'
+					return 'move'
+				}
+			}
+			return app.model.nodes.some( _ => Math.min( ...EdgeDist( TLBR( _[ 1 ] ), xy ) ) > -GRAB ) ? 'move' : 'default'
+		}
+
+		const
 		RegistReform	= _ => FindReform( _[ 0 ] ) || app.reforms.push( structuredClone( _ ) )
 
 		this.reformer.onmousedown = async ev => {
@@ -470,7 +527,7 @@ MainEditor extends HTMLElement {
 
 			if	( Mode( ev ) != 'select' ) return
 			
-			if	( app.reforms.length && Math.min( ...EdgeDist( BBox( app.reforms ), xy ) ) > -4 ) {
+			if	( app.reforms.length && Math.min( ...EdgeDist( BBox( app.reforms ), xy ) ) > -GRAB ) {
 //	console.log( 'Selection clicked' )
 				const
 				tlbr = TLBR( app.reforms[ 0 ][ 1 ] )
@@ -525,7 +582,7 @@ MainEditor extends HTMLElement {
 
 			if	( app.model.nodes.length ) {
 				const
-				_ = app.model.nodes.map( _ => [ _, Math.min( ...EdgeDist( TLBR( _[ 1 ] ), xy ) ) ] ).filter( _ => _[ 1 ] > -4 )
+				_ = app.model.nodes.map( _ => [ _, Math.min( ...EdgeDist( TLBR( _[ 1 ] ), xy ) ) ] ).filter( _ => _[ 1 ] > -GRAB )
 				_.length && RegistReform(
 					_.slice( 1 ).reduce(
 						( $, _ ) => $[ 1 ] < _[ 1 ] ? $ : _
@@ -567,7 +624,10 @@ MainEditor extends HTMLElement {
 
 			UpdateHoverLabel( ev )
 
-			if	( mouse[ 0 ] === null ) return
+			if	( mouse[ 0 ] === null ) {
+				this.reformer.style.cursor = CursorAt( ev )
+				return
+			}
 			//	mouseleave may be missed on fast movement — reset if button already released
 			if	( !ev.buttons ) {
 				mouse[ 0 ] = mouse[ 1 ] = null
@@ -615,10 +675,10 @@ MainEditor extends HTMLElement {
 				const	tlbr = BBox( app.reforms.map( _ => FindNode( _[ 0 ] ) ) )
 				const	edgeDist = EdgeDist( tlbr, mouse[ 0 ] )
 				const	[ t, l, b, r ] = tlbr
-				const	T = edgeDist[ 0 ] < 0 ? ( edgeMode = true, mouse[ 1 ][ 1 ] ) : t
-				const	L = edgeDist[ 1 ] < 0 ? ( edgeMode = true, mouse[ 1 ][ 0 ] ) : l
-				const	B = edgeDist[ 2 ] < 0 ? ( edgeMode = true, mouse[ 1 ][ 1 ] ) : b
-				const	R = edgeDist[ 3 ] < 0 ? ( edgeMode = true, mouse[ 1 ][ 0 ] ) : r
+				const	T = edgeDist[ 0 ] <= GRAB ? ( edgeMode = true, mouse[ 1 ][ 1 ] ) : t
+				const	L = edgeDist[ 1 ] <= GRAB ? ( edgeMode = true, mouse[ 1 ][ 0 ] ) : l
+				const	B = edgeDist[ 2 ] <= GRAB ? ( edgeMode = true, mouse[ 1 ][ 1 ] ) : b
+				const	R = edgeDist[ 3 ] <= GRAB ? ( edgeMode = true, mouse[ 1 ][ 0 ] ) : r
 
 				if	( edgeMode ) {
 					const	scaleX	= ( R - L ) / ( r - l || 1 )
