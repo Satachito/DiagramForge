@@ -66,26 +66,28 @@ import Do from './Jobs.js'
 const
 Persist		= () => localStorage.setItem( STORAGE_KEY, JSONString() )
 
+//	Snapshot-based history: capture the state before and after the mutation,
+//	then undo/redo simply restore a *clone* of the relevant snapshot. Restoring a
+//	clone (never the snapshot object itself) keeps both snapshots pristine, so a
+//	later redo can't corrupt the snapshot a subsequent undo relies on.
 const
-DoTypical	= async ( label, redo ) => {
+restoreSnapshot	= snapshot => async () => (
+	app = structuredClone( snapshot )
+,	SyncReformsFromModel()
+,	MAIN_EDITOR.clearInteraction()
+,	await MAIN_EDITOR.Draw()
+,	LINK_EDITOR.Sync()
+,	Persist()
+)
+
+const
+DoTypical	= async ( label, mutate ) => {
 	const
-	saved = structuredClone( app )
-	await Do(	label
-	,	async () => (
-			await redo()
-		,	await MAIN_EDITOR.Draw()
-		,	LINK_EDITOR.Sync()
-		,	Persist()
-		)
-	,	async () => (
-			app = saved
-		,	SyncReformsFromModel()
-		,	MAIN_EDITOR.clearInteraction()
-		,	await MAIN_EDITOR.Draw()
-		,	LINK_EDITOR.Sync()
-		,	Persist()
-		)
-	)
+	before = structuredClone( app )
+	await mutate()
+	const
+	after = structuredClone( app )
+	await Do( label, restoreSnapshot( after ), restoreSnapshot( before ) )
 }
 
 export	const
