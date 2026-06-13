@@ -66,4 +66,5 @@ EscapeXML		= _ => String( _ )
 .	replace( /&/g, '&amp;' )
 .	replace( /</g, '&lt;' )
 .	replace( />/g, '&gt;' )
+.	replace( /"/g, '&quot;' )
 

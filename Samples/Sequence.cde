@@ -1,0 +1,835 @@
+{
+	"nodes": [
+		[
+			"PQXAjm0GiDMQCFoYsRVY-0",
+			{
+				"type": "rect",
+				"cX": 1330.0,
+				"cY": 2400.0,
+				"rH": 10.0,
+				"rV": 80.0
+			},
+			{}
+		],
+		[
+			"JpZr38oFY6MS6JQz7GEj-3",
+			{
+				"type": "rect",
+				"cX": 900.0,
+				"cY": 1340.0,
+				"rH": 860.0,
+				"rV": 1300.0,
+				"html": "ログイン_ID代行登録ユーザー",
+				"style": ";display: grid\n;place-items: center\n;text-align: center"
+			},
+			{}
+		],
+		[
+			"JpZr38oFY6MS6JQz7GEj-4",
+			{
+				"type": "rect",
+				"cX": 840.0,
+				"cY": 130.0,
+				"rH": 160.0,
+				"rV": 40.0,
+				"html": "Auth0",
+				"style": ";display: grid\n;place-items: center\n;text-align: center"
+			},
+			{
+				"stroke": "#000000"
+			}
+		],
+		[
+			"JpZr38oFY6MS6JQz7GEj-5",
+			{
+				"type": "rect",
+				"cX": 160.0,
+				"cY": 140.0,
+				"rH": 40.0,
+				"rV": 20.0,
+				"html": "ユーザー",
+				"style": ";display: grid\n;place-items: center\n;text-align: center"
+			},
+			{
+				"fill": "#fff2cc",
+				"stroke": "#000000"
+			}
+		],
+		[
+			"JpZr38oFY6MS6JQz7GEj-6",
+			{
+				"type": "rect",
+				"cX": 340.0,
+				"cY": 140.0,
+				"rH": 60.0,
+				"rV": 20.0,
+				"html": "本登録サイト/LP",
+				"style": ";display: grid\n;place-items: center\n;text-align: center"
+			},
+			{
+				"fill": "#fff2cc",
+				"stroke": "#000000"
+			}
+		],
+		[
+			"JpZr38oFY6MS6JQz7GEj-7",
+			{
+				"type": "rect",
+				"cX": 750.0,
+				"cY": 140.0,
+				"rH": 50.0,
+				"rV": 20.0,
+				"html": "SSOページ",
+				"style": ";display: grid\n;place-items: center\n;text-align: center"
+			},
+			{
+				"fill": "#fff2cc",
+				"stroke": "#000000"
+			}
+		],
+		[
+			"JpZr38oFY6MS6JQz7GEj-8",
+			{
+				"type": "rect",
+				"cX": 550.0,
+				"cY": 140.0,
+				"rH": 70.0,
+				"rV": 20.0,
+				"html": "IDポータル",
+				"style": ";display: grid\n;place-items: center\n;text-align: center"
+			},
+			{
+				"fill": "#fff2cc",
+				"stroke": "#000000"
+			}
+		],
+		[
+			"JpZr38oFY6MS6JQz7GEj-9",
+			{
+				"type": "rect",
+				"cX": 1330.0,
+				"cY": 140.0,
+				"rH": 70.0,
+				"rV": 20.0,
+				"html": "Carbon",
+				"style": ";display: grid\n;place-items: center\n;text-align: center"
+			},
+			{
+				"fill": "#fff2cc",
+				"stroke": "#000000"
+			}
+		],
+		[
+			"JpZr38oFY6MS6JQz7GEj-10",
+			{
+				"type": "rect",
+				"cX": 1510.0,
+				"cY": 140.0,
+				"rH": 30.0,
+				"rV": 20.0,
+				"html": "Zuora",
+				"style": ";display: grid\n;place-items: center\n;text-align: center"
+			},
+			{
+				"fill": "#fff2cc",
+				"stroke": "#000000"
+			}
+		],
+		[
+			"JpZr38oFY6MS6JQz7GEj-11",
+			{
+				"type": "rect",
+				"cX": 1670.0,
+				"cY": 140.0,
+				"rH": 50.0,
+				"rV": 20.0,
+				"html": "Notification",
+				"style": ";display: grid\n;place-items: center\n;text-align: center"
+			},
+			{
+				"fill": "#fff2cc",
+				"stroke": "#000000"
+			}
+		],
+		[
+			"JpZr38oFY6MS6JQz7GEj-12",
+			{
+				"type": "rect",
+				"cX": 930.0,
+				"cY": 140.0,
+				"rH": 50.0,
+				"rV": 20.0,
+				"html": "バックエンド",
+				"style": ";display: grid\n;place-items: center\n;text-align: center"
+			},
+			{
+				"fill": "#fff2cc",
+				"stroke": "#000000"
+			}
+		],
+		[
+			"JpZr38oFY6MS6JQz7GEj-21",
+			{
+				"type": "rect",
+				"cX": 340.0,
+				"cY": 1520.0,
+				"rH": 10.0,
+				"rV": 1000.0
+			},
+			{}
+		],
+		[
+			"JpZr38oFY6MS6JQz7GEj-38",
+			{
+				"type": "rect",
+				"cX": 160.0,
+				"cY": 1520.0,
+				"rH": 10.0,
+				"rV": 1040.0
+			},
+			{}
+		],
+		[
+			"JpZr38oFY6MS6JQz7GEj-39",
+			{
+				"type": "rect",
+				"cX": 940.0,
+				"cY": 1695.0,
+				"rH": 10.0,
+				"rV": 75.0
+			},
+			{}
+		],
+		[
+			"JpZr38oFY6MS6JQz7GEj-60",
+			{
+				"type": "rect",
+				"cX": 750.0,
+				"cY": 620.0,
+				"rH": 10.0,
+				"rV": 60.0
+			},
+			{}
+		],
+		[
+			"JpZr38oFY6MS6JQz7GEj-126",
+			{
+				"type": "rect",
+				"cX": 840.0,
+				"cY": 1249.5,
+				"rH": 200.0,
+				"rV": 310.5,
+				"html": "post-login-trigger(is_required_password_reset: trueが条件)",
+				"style": ";display: grid\n;place-items: center\n;text-align: center"
+			},
+			{
+				"fill": "#e1d5e7",
+				"stroke": "#9673a6"
+			}
+		],
+		[
+			"93-SrhB8ksXDJkpEScqn-0",
+			{
+				"type": "rect",
+				"cX": 1130.0,
+				"cY": 140.0,
+				"rH": 40.0,
+				"rV": 20.0,
+				"html": "Diaz for ASA",
+				"style": ";display: grid\n;place-items: center\n;text-align: center"
+			},
+			{
+				"fill": "#fff2cc",
+				"stroke": "#000000"
+			}
+		],
+		[
+			"93-SrhB8ksXDJkpEScqn-2",
+			{
+				"type": "rect",
+				"cX": 1130.0,
+				"cY": 360.0,
+				"rH": 10.0,
+				"rV": 140.0
+			},
+			{}
+		],
+		[
+			"93-SrhB8ksXDJkpEScqn-4",
+			{
+				"type": "rect",
+				"cX": 1330.0,
+				"cY": 380.0,
+				"rH": 10.0,
+				"rV": 120.0
+			},
+			{}
+		],
+		[
+			"93-SrhB8ksXDJkpEScqn-6",
+			{
+				"type": "rect",
+				"cX": 940.0,
+				"cY": 350.0,
+				"rH": 10.0,
+				"rV": 50.0
+			},
+			{}
+		],
+		[
+			"93-SrhB8ksXDJkpEScqn-12",
+			{
+				"type": "rect",
+				"cX": 1495.0,
+				"cY": 220.0,
+				"rH": 55.0,
+				"rV": 20.0,
+				"html": "内部会員IDの発番",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;color: #333333"
+			},
+			{
+				"fill": "#f5f5f5",
+				"stroke": "#666666"
+			}
+		],
+		[
+			"zI6s3rlfG0az2R4x79hc-2",
+			{
+				"type": "rect",
+				"cX": 1580.0,
+				"cY": 580.0,
+				"rH": 140.0,
+				"rV": 20.0,
+				"html": "仮登録完了・本登録LPのURL案内メール送付？",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;color: #333333"
+			},
+			{
+				"fill": "#f5f5f5",
+				"stroke": "#666666"
+			}
+		],
+		[
+			"JpZr38oFY6MS6JQz7GEj-25",
+			{
+				"type": "rect",
+				"cX": 940.0,
+				"cY": 800.0,
+				"rH": 10.0,
+				"rV": 120.0
+			},
+			{}
+		],
+		[
+			"-wEKbzOvb-WIdNzF_vqD-0",
+			{
+				"type": "rect",
+				"cX": 840.0,
+				"cY": 830.0,
+				"rH": 200.0,
+				"rV": 50.0,
+				"html": "Databaseにユーザーが存在しないとき-> AutomaticMigration試行",
+				"style": ";display: grid\n;place-items: center\n;text-align: center"
+			},
+			{
+				"fill": "#dae8fc",
+				"stroke": "#6c8ebf"
+			}
+		],
+		[
+			"-wEKbzOvb-WIdNzF_vqD-1",
+			{
+				"type": "rect",
+				"cX": 840.0,
+				"cY": 853.75,
+				"rH": 130.0,
+				"rV": 13.75,
+				"html": "ユーザーが既に存在するためスキップ",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;color: #333333"
+			},
+			{
+				"fill": "#f5f5f5",
+				"stroke": "#666666"
+			}
+		],
+		[
+			"xBQIdkDanIrMP3ShbkRu-0",
+			{
+				"type": "rect",
+				"cX": 940.0,
+				"cY": 1240.0,
+				"rH": 10.0,
+				"rV": 280.0
+			},
+			{}
+		],
+		[
+			"xBQIdkDanIrMP3ShbkRu-1",
+			{
+				"type": "rect",
+				"cX": 1670.0,
+				"cY": 1060.0,
+				"rH": 10.0,
+				"rV": 20.0
+			},
+			{}
+		],
+		[
+			"zud4g7TePETPEnqaV6I9-29",
+			{
+				"type": "rect",
+				"cX": 840.0,
+				"cY": 1694.75,
+				"rH": 200.0,
+				"rV": 95.25,
+				"html": "post-change-password-trigger(パスワード変更成功が条件)",
+				"style": ";display: grid\n;place-items: center\n;text-align: center"
+			},
+			{
+				"fill": "#ffe6cc",
+				"stroke": "#d79b00"
+			}
+		],
+		[
+			"zud4g7TePETPEnqaV6I9-32",
+			{
+				"type": "rect",
+				"cX": 1330.0,
+				"cY": 1720.0,
+				"rH": 10.0,
+				"rV": 20.0
+			},
+			{}
+		],
+		[
+			"oHgBy-9y3wLXpxFrkts3-0",
+			{
+				"type": "rect",
+				"cX": 750.0,
+				"cY": 1200.0,
+				"rH": 10.0,
+				"rV": 200.0
+			},
+			{}
+		],
+		[
+			"oHgBy-9y3wLXpxFrkts3-27",
+			{
+				"type": "rect",
+				"cX": 1355.0,
+				"cY": 1475.0,
+				"rH": 115.0,
+				"rV": 45.0,
+				"html": "パスワード変更はユーザー情報更新APIを使用する。実行時にフラグ削除も可能だが、post-login-triggerが絡まないパスワード変更フローを考慮すると後段のpost-change-password-triggerで扱うのが適切",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;color: #333333"
+			},
+			{
+				"fill": "#f5f5f5",
+				"stroke": "#666666"
+			}
+		],
+		[
+			"zud4g7TePETPEnqaV6I9-49",
+			{
+				"type": "rect",
+				"cX": 1510.0,
+				"cY": 2400.0,
+				"rH": 10.0,
+				"rV": 60.0
+			},
+			{}
+		],
+		[
+			"rwXz3VaJhVdocWj0BRKf-1",
+			{
+				"type": "rect",
+				"cX": 940.0,
+				"cY": 2405.0,
+				"rH": 10.0,
+				"rV": 35.0
+			},
+			{}
+		],
+		[
+			"rwXz3VaJhVdocWj0BRKf-9",
+			{
+				"type": "rect",
+				"cX": 1670.0,
+				"cY": 2425.0,
+				"rH": 10.0,
+				"rV": 15.0
+			},
+			{}
+		],
+		[
+			"Mtq5oI-nNst-9AOJkv33-0",
+			{
+				"type": "rect",
+				"cX": 720.0,
+				"cY": 455.0,
+				"rH": 180.0,
+				"rV": 15.0,
+				"html": "別のIDでのSSOを防止するため強制再認証フラグを付与する",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;color: #333333"
+			},
+			{
+				"fill": "#f5f5f5",
+				"stroke": "#666666"
+			}
+		],
+		[
+			"93-SrhB8ksXDJkpEScqn-14",
+			{
+				"type": "rect",
+				"cX": 720.0,
+				"cY": 305.0,
+				"rH": 180.0,
+				"rV": 125.0,
+				"html": "ユーザー情報{ \"email\": <ログインID>, \"email_verified\": false, \"blocked\": false, \"name\": <ログインID>, \"nickname\": \"unregistered\", \"connection\": \"Username-Password-Authentication\", \"password: <電話番号>, \"verify_email\": false, \"app_metadata\": { \"is_required_password_reset\": true, \"crd_data\": { \"apf_uid\": <内部会員ID> } }}",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;color: #333333"
+			},
+			{
+				"fill": "#f5f5f5",
+				"stroke": "#666666"
+			}
+		],
+		[
+			"rwXz3VaJhVdocWj0BRKf-20",
+			{
+				"type": "rect",
+				"cX": 1510.0,
+				"cY": 380.0,
+				"rH": 10.0,
+				"rV": 80.0
+			},
+			{}
+		],
+		[
+			"rwXz3VaJhVdocWj0BRKf-33",
+			{
+				"type": "rect",
+				"cX": 1680.0,
+				"cY": 460.0,
+				"rH": 10.0,
+				"rV": 20.0
+			},
+			{}
+		],
+		[
+			"PQXAjm0GiDMQCFoYsRVY-4",
+			{
+				"type": "rect",
+				"cX": 1125.0,
+				"cY": 2380.0,
+				"rH": 95.0,
+				"rV": 30.0,
+				"html": "・本登録可能ロールはく奪・ID化可能ロールのはく奪・IDロールの付与・app_metadata.is_asahiid: true付与",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;color: #333333"
+			},
+			{
+				"fill": "#f5f5f5",
+				"stroke": "#666666"
+			}
+		],
+		[
+			"6n3_O64gcKj_jMowBMWT-0",
+			{
+				"type": "rect",
+				"cX": 690.0,
+				"cY": 350.0,
+				"rH": 100.0,
+				"rV": 10.0
+			},
+			{
+				"fill": "#f8cecc",
+				"stroke": "#b85450"
+			}
+		],
+		[
+			"6n3_O64gcKj_jMowBMWT-1",
+			{
+				"type": "rect",
+				"cX": 370.0,
+				"cY": 345.0,
+				"rH": 110.0,
+				"rV": 30.0,
+				"html": "初期パスワードが窃取されても、OTPを経たパスワード再設定が必要となりセキュリティ懸念にはなり得ないと考える",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;color: #333333"
+			},
+			{
+				"fill": "#f5f5f5",
+				"stroke": "#666666"
+			}
+		],
+		[
+			"jag1lU4S8cjX6rYJqPQe-2",
+			{
+				"type": "rect",
+				"cX": 1475.0,
+				"cY": 1620.0,
+				"rH": 115.0,
+				"rV": 60.0,
+				"html": "Auth0ユーザー, Carbon顧客アカウントはいずれもemail_verified: falseとして登録されている。下記条件に合致する場合はフラグをtrueに更新する ・user.email_verified: false・user.email: {メールアドレス}※このときuser.usernameは必ずブランク%3CmxGraphModel%3E%3Croot%3E%3CmxCell%20id%3D%220%22%2F%3E%3CmxCell%20id%3D%221%22%20parent%3D%220%22%2F%3E%3CmxCell%20id%3D%222%22%20style%3D%22rounded%3D0%3BorthogonalLoop%3D1%3BjettySize%3Dauto%3Bhtml%3D1%3BendArrow%3Dnone%3BstartFill%3D0%3BexitX%3D0%3BexitY%3D0.5%3BexitDx%3D0%3BexitDy%3D0%3B%22%20edge%3D%221%22%20source%3D%223%22%20parent%3D%221%22%3E%3CmxGeometry%20relative%3D%221%22%20as%3D%22geometry%22%3E%3CmxPoint%20x%3D%221160%22%20y%3D%221620%22%20as%3D%22targetPoint%22%2F%3E%3CmxPoint%20x%3D%221390%22%20y%3D%221592.027027027027%22%20as%3D%22sourcePoint%22%2F%3E%3C%2FmxGeometry%3E%3C%2FmxCell%3E%3CmxCell%20id%3D%223%22%20value%3D%22%26lt%3Bdiv%26gt%3B%26lt%3Bspan%20style%3D%26quot%3Bbackground-color%3A%20transparent%3B%20color%3A%20light-dark(rgb(51%2C%2051%2C%2051)%2C%20rgb(193%2C%20193%2C%20193))%3B%26quot%3B%26gt%3B%E3%83%BBuser.email_verified%3A%20false%26lt%3B%2Fspan%26gt%3B%26lt%3B%2Fdiv%26gt%3B%26lt%3Bdiv%26gt%3B%E3%83%BBuser.email%3A%20%7B%E3%83%A1%E3%83%BC%E3%83%AB%E3%82%A2%E3%83%89%E3%83%AC%E3%82%B9%7D%26lt%3B%2Fdiv%26gt%3B%26lt%3Bdiv%26gt%3B%E2%80%BB%E3%81%93%E3%81%AE%E3%81%A8%E3%81%8Duser.username%E3%81%AF%E5%BF%85%E3%81%9A%E3%83%96%E3%83%A9%E3%83%B3%E3%82%AF%26lt%3B%2Fdiv%26gt%3B%26lt%3Bdiv%26gt%3B%26lt%3Bbr%26gt%3B%26lt%3B%2Fdiv%26gt%3B%26lt%3Bdiv%26gt%3B%E3%81%A7%E3%81%82%E3%82%8C%E3%81%B0%26lt%3Bspan%20style%3D%26quot%3Bbackground-color%3A%20transparent%3B%20color%3A%20light-dark(rgb(51%2C%2051%2C%2051)%2C%20rgb(193%2C%20193%2C%20193))%3B%26quot%3B%26gt%3B%E3%83%95%E3%83%A9%E3%82%B0%E3%82%92true%E3%81%AB%E6%9B%B4%E6%96%B0%E3%81%99%E3%82%8B%26lt%3B%2Fspan%26gt%3B%26lt%3B%2Fdiv%26gt%3B%22%20style%3D%22whiteSpace%3Dwrap%3Bhtml%3D1%3BfillColor%3D%23f5f5f5%3BstrokeColor%3D%23666666%3BfontColor%3D%23333333%3Balign%3Dleft%3B%22%20vertex%3D%221%22%20parent%3D%221%22%3E%3CmxGeometry%20x%3D%221400%22%20y%3D%221440%22%20width%3D%22230%22%20height%3D%2280%22%20as%3D%22geometry%22%2F%3E%3C%2FmxCell%3E%3C%2Froot%3E%3C%2FmxGraphModel%3Eあああ",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;color: #333333"
+			},
+			{
+				"fill": "#f5f5f5",
+				"stroke": "#666666"
+			}
+		],
+		[
+			"Ivx1arlxckFQ-sZWu2sd-6",
+			{
+				"type": "rect",
+				"cX": 370.0,
+				"cY": 235.0,
+				"rH": 110.0,
+				"rV": 45.0,
+				"html": "設計初期は<電話番号下4桁>であったが、パスワードポリシーはAsIs踏襲で「8文字以上」である必要があった。これはManagementAPIによるユーザー作成でも共通しており、<電話番号>と改めることとなった",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;color: #333333"
+			},
+			{
+				"fill": "#f5f5f5",
+				"stroke": "#666666"
+			}
+		],
+		[
+			"Ivx1arlxckFQ-sZWu2sd-8",
+			{
+				"type": "rect",
+				"cX": 635.0,
+				"cY": 305.0,
+				"rH": 75.0,
+				"rV": 10.0
+			},
+			{
+				"fill": "#f8cecc",
+				"stroke": "#b85450"
+			}
+		],
+		[
+			"Ivx1arlxckFQ-sZWu2sd-12",
+			{
+				"type": "rect",
+				"cX": 1670.0,
+				"cY": 1790.0,
+				"rH": 10.0,
+				"rV": 20.0
+			},
+			{}
+		],
+		[
+			"F3fQVFSbxUx5emQj9mO7-1",
+			{
+				"type": "rect",
+				"cX": 934.8789376203586,
+				"cY": 1975.0,
+				"rH": 295.0,
+				"rV": 145.0,
+				"html": "post-login-trigger(共通処理)",
+				"style": ";display: grid\n;place-items: center\n;text-align: center"
+			},
+			{
+				"fill": "#e1d5e7",
+				"stroke": "#9673a6"
+			}
+		],
+		[
+			"F3fQVFSbxUx5emQj9mO7-3",
+			{
+				"type": "rect",
+				"cX": 939.8789376203586,
+				"cY": 1900.0,
+				"rH": 10.0,
+				"rV": 50.0
+			},
+			{}
+		],
+		[
+			"F3fQVFSbxUx5emQj9mO7-6",
+			{
+				"type": "rect",
+				"cX": 939.8789376203586,
+				"cY": 2040.0,
+				"rH": 10.0,
+				"rV": 50.0
+			},
+			{}
+		]
+	],
+	"links": [
+		[
+			[
+				"93-SrhB8ksXDJkpEScqn-6",
+				{
+					"headF": false,
+					"headT": false
+				},
+				"JpZr38oFY6MS6JQz7GEj-12"
+			],
+			{
+				"stroke": "#111827",
+				"lineWidth": 1.5,
+				"lineDash": [
+					6,
+					4
+				]
+			}
+		],
+		[
+			[
+				"93-SrhB8ksXDJkpEScqn-4",
+				{
+					"headF": false,
+					"headT": false
+				},
+				"JpZr38oFY6MS6JQz7GEj-9"
+			],
+			{
+				"stroke": "#111827",
+				"lineWidth": 1.5,
+				"lineDash": [
+					6,
+					4
+				]
+			}
+		],
+		[
+			[
+				"JpZr38oFY6MS6JQz7GEj-39",
+				{
+					"headF": false,
+					"headT": true
+				},
+				"F3fQVFSbxUx5emQj9mO7-3"
+			],
+			{
+				"stroke": "#111827",
+				"lineWidth": 1.5
+			}
+		],
+		[
+			[
+				"93-SrhB8ksXDJkpEScqn-2",
+				{
+					"headF": false,
+					"headT": false
+				},
+				"93-SrhB8ksXDJkpEScqn-0"
+			],
+			{
+				"stroke": "#111827",
+				"lineWidth": 1.5,
+				"lineDash": [
+					6,
+					4
+				]
+			}
+		],
+		[
+			[
+				"zud4g7TePETPEnqaV6I9-32",
+				{
+					"headF": false,
+					"headT": false
+				},
+				"93-SrhB8ksXDJkpEScqn-4"
+			],
+			{
+				"stroke": "#111827",
+				"lineWidth": 1.5,
+				"lineDash": [
+					6,
+					4
+				]
+			}
+		],
+		[
+			[
+				"93-SrhB8ksXDJkpEScqn-14",
+				{
+					"headF": false,
+					"headT": false
+				},
+				"93-SrhB8ksXDJkpEScqn-6"
+			],
+			{
+				"stroke": "#111827",
+				"lineWidth": 1.5
+			}
+		],
+		[
+			[
+				"xBQIdkDanIrMP3ShbkRu-0",
+				{
+					"headF": false,
+					"headT": true
+				},
+				"JpZr38oFY6MS6JQz7GEj-39"
+			],
+			{
+				"stroke": "#111827",
+				"lineWidth": 1.5
+			}
+		],
+		[
+			[
+				"JpZr38oFY6MS6JQz7GEj-60",
+				{
+					"headF": false,
+					"headT": false
+				},
+				"JpZr38oFY6MS6JQz7GEj-7"
+			],
+			{
+				"stroke": "#111827",
+				"lineWidth": 1.5,
+				"lineDash": [
+					6,
+					4
+				]
+			}
+		],
+		[
+			[
+				"6n3_O64gcKj_jMowBMWT-1",
+				{
+					"headF": false,
+					"headT": false
+				},
+				"6n3_O64gcKj_jMowBMWT-0"
+			],
+			{
+				"stroke": "#111827",
+				"lineWidth": 1.5
+			}
+		],
+		[
+			[
+				"Ivx1arlxckFQ-sZWu2sd-6",
+				{
+					"headF": false,
+					"headT": false
+				},
+				"Ivx1arlxckFQ-sZWu2sd-8"
+			],
+			{
+				"stroke": "#111827",
+				"lineWidth": 1.5
+			}
+		],
+		[
+			[
+				"F3fQVFSbxUx5emQj9mO7-3",
+				{
+					"headF": false,
+					"headT": true
+				},
+				"F3fQVFSbxUx5emQj9mO7-6"
+			],
+			{
+				"stroke": "#111827",
+				"lineWidth": 1.5
+			}
+		]
+	]
+}

@@ -17,6 +17,12 @@ FindReform		= ID => app.reforms.find( _ => _[ 0 ] === ID )
 
 import Do from './Jobs.js'
 
+export	const
+STORAGE_KEY	= 'tokyo.828.diagramforge'
+
+const
+Persist		= () => localStorage.setItem( STORAGE_KEY, JSONString() )
+
 const
 DoTypical	= async ( label, redo ) => {
 	const
@@ -26,11 +32,13 @@ DoTypical	= async ( label, redo ) => {
 			await redo()
 		,	MAIN_EDITOR.Draw()
 		,	LINK_EDITOR.Sync()
+		,	Persist()
 		)
 	,	async () => (
 			app = saved
 		,	MAIN_EDITOR.Draw()
 		,	LINK_EDITOR.Sync()
+		,	Persist()
 		)
 	)
 }

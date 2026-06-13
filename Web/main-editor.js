@@ -607,7 +607,7 @@ MainEditor extends HTMLElement {
 				( [ [ F, A, T ], P ] ) => {
 					const
 					[ nF, nT ]	= [ FindNode( F ), FindNode( T ) ]
-					this.reformer.getContext( '2d' ).isPointInPath( LinkPath2D( nF[ 1 ], A, nT[ 1 ] ), ...xy ) && (
+					nF && nT && this.reformer.getContext( '2d' ).isPointInPath( LinkPath2D( nF[ 1 ], A, nT[ 1 ] ), ...xy ) && (
 						RegistReform( nF )
 					,	RegistReform( nT )
 					,	LINK_EDITOR.$ = [ F, A, T ]

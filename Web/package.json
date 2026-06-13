@@ -1,13 +1,21 @@
 {
-  "name": "web",
+  "name": "diagramforge",
   "version": "1.0.0",
-  "description": "",
+  "description": "Canvas-based cloud architecture diagram editor (AWS / Azure / GCP icons).",
   "main": "Application.js",
   "scripts": {
     "lint": "eslint *.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "diagram",
+    "canvas",
+    "cloud",
+    "architecture",
+    "aws",
+    "azure",
+    "gcp"
+  ],
+  "author": "Satoru Ogura",
   "license": "ISC",
   "type": "module",
   "devDependencies": {

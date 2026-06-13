@@ -1,3 +1,7 @@
+<!DOCTYPE html>
+<html lang=en>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width, initial-scale=1">
 <title>DiagramForge</title>
 <style>
 :root {
@@ -18,6 +22,7 @@ html {
 }
 body {
 ;	margin					: 0
+;	height					: 100vh
 ;	display					: grid
 ;	grid-template-rows		: auto 1fr auto
 ;	grid-template-columns	: auto 1fr 256px
@@ -137,8 +142,7 @@ shape-editor	textarea	{ width	: 100%; height : 6em }
 	</label>
 </header>
 <header style="font-family: cursive; text-align: right">
-	<div style="font-size: 14px">(C) 2026 SliP.LLC, Tokyo.</div>
-	<div style="font-size: 10px">Wittern by Satoru Ogura, and AIs.</div>
+	<div style="font-size: 10px">Written by Satoru Ogura, and AIs.</div>
 </header>
 
 <nav>
@@ -159,6 +163,8 @@ shape-editor	textarea	{ width	: 100%; height : 6em }
 	<button			id=SAMPLE_AWS		>Sample( AWS )		</button>
 	<button			id=SAMPLE_GCP		>Sample( GCP )		</button>
 	<button			id=SAMPLE_AZURE		>Sample( Azure )	</button>
+	<button			id=SAMPLE_MINDMAP	>Sample( MindMap )	</button>
+	<button			id=SAMPLE_SEQUENCE	>Sample( Sequence )	</button>
 	<hr>
 	<paint-editor	id=PAINT_EDITOR		></paint-editor>
 	<hr>
@@ -194,6 +200,7 @@ import {
 ,	Link
 ,	JSONString
 ,	Load
+,	STORAGE_KEY
 } from './Application.js'
 
 import	{ DumpJobs } from './Jobs.js'
@@ -230,6 +237,8 @@ SAMPLE_JSONS	.onclick = () => LoadSample( 'Samples/JSONs.cde'	).catch( Report )
 SAMPLE_AWS		.onclick = () => LoadSample( 'Samples/AWS.cde'		).catch( Report )
 SAMPLE_GCP		.onclick = () => LoadSample( 'Samples/GCP.cde'		).catch( Report )
 SAMPLE_AZURE	.onclick = () => LoadSample( 'Samples/Azure.cde'	).catch( Report )
+SAMPLE_MINDMAP	.onclick = () => LoadSample( 'Samples/MindMap.cde'	).catch( Report )
+SAMPLE_SEQUENCE	.onclick = () => LoadSample( 'Samples/Sequence.cde'	).catch( Report )
 
 DUMP_CDE		.onclick = () => console.log( JSON.stringify( app, null, '\t' ) )
 DUMP_JOBS		.onclick = DumpJobs
@@ -282,12 +291,11 @@ UPLOAD			.onchange = async ev => {
 	}
 }
 
-onload = () => {
+onload = async () => {
 	const
-	_ = localStorage.getItem( 'tokyo.828.diagramforge' )
-	_ && Load( _ )
-
-	MAIN_EDITOR.Draw()
+	_ = localStorage.getItem( STORAGE_KEY )
+	_	? await Load( _ ).catch( Report )	//	Load() draws on success
+		: MAIN_EDITOR.Draw()
 //	UpdateApplyNodeLabel()
 }
 

@@ -5,6 +5,11 @@ dones	= []
 export	const
 todos	= []
 
+//	Cap the undo history: each entry holds a full structuredClone of app
+//	(embedded base64 SVG/PNG included), so an uncapped stack grows without bound.
+const
+LIMIT	= 100
+
 export	const
 DumpJobs	= () => {
 	console.log( '---- todos', todos.length )
@@ -40,5 +45,6 @@ async ( label, redo, undo ) => {
 		,	undo
 		}
 	)
+	while	( dones.length > LIMIT ) dones.shift()
 	todos.length = 0
 }
