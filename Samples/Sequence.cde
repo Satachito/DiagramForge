@@ -1,53 +1,44 @@
 {
 	"nodes": [
 		[
-			"PQXAjm0GiDMQCFoYsRVY-0",
+			"cust",
 			{
 				"type": "rect",
-				"cX": 1330.0,
-				"cY": 2400.0,
-				"rH": 10.0,
-				"rV": 80.0
-			},
-			{}
-		],
-		[
-			"JpZr38oFY6MS6JQz7GEj-3",
-			{
-				"type": "rect",
-				"cX": 900.0,
-				"cY": 1340.0,
-				"rH": 860.0,
-				"rV": 1300.0,
-				"html": "ログイン_ID代行登録ユーザー",
-				"style": ";display: grid\n;place-items: center\n;text-align: center"
-			},
-			{}
-		],
-		[
-			"JpZr38oFY6MS6JQz7GEj-4",
-			{
-				"type": "rect",
-				"cX": 840.0,
-				"cY": 130.0,
-				"rH": 160.0,
-				"rV": 40.0,
-				"html": "Auth0",
+				"cX": 180,
+				"cY": 140,
+				"rH": 35.0,
+				"rV": 20,
+				"html": "Customer",
 				"style": ";display: grid\n;place-items: center\n;text-align: center"
 			},
 			{
+				"fill": "#fff2cc",
 				"stroke": "#000000"
 			}
 		],
 		[
-			"JpZr38oFY6MS6JQz7GEj-5",
+			"life-cust",
 			{
 				"type": "rect",
-				"cX": 160.0,
-				"cY": 140.0,
+				"cX": 180,
+				"cY": 1345.0,
+				"rH": 5,
+				"rV": 1135.0
+			},
+			{
+				"stroke": "#bbbbbb",
+				"lineWidth": 1
+			}
+		],
+		[
+			"web",
+			{
+				"type": "rect",
+				"cX": 420,
+				"cY": 140,
 				"rH": 40.0,
-				"rV": 20.0,
-				"html": "ユーザー",
+				"rV": 20,
+				"html": "Web App",
 				"style": ";display: grid\n;place-items: center\n;text-align: center"
 			},
 			{
@@ -56,14 +47,28 @@
 			}
 		],
 		[
-			"JpZr38oFY6MS6JQz7GEj-6",
+			"life-web",
 			{
 				"type": "rect",
-				"cX": 340.0,
-				"cY": 140.0,
-				"rH": 60.0,
-				"rV": 20.0,
-				"html": "本登録サイト/LP",
+				"cX": 420,
+				"cY": 1345.0,
+				"rH": 5,
+				"rV": 1135.0
+			},
+			{
+				"stroke": "#bbbbbb",
+				"lineWidth": 1
+			}
+		],
+		[
+			"gw",
+			{
+				"type": "rect",
+				"cX": 660,
+				"cY": 140,
+				"rH": 45.0,
+				"rV": 20,
+				"html": "API Gateway",
 				"style": ";display: grid\n;place-items: center\n;text-align: center"
 			},
 			{
@@ -72,14 +77,28 @@
 			}
 		],
 		[
-			"JpZr38oFY6MS6JQz7GEj-7",
+			"life-gw",
 			{
 				"type": "rect",
-				"cX": 750.0,
-				"cY": 140.0,
-				"rH": 50.0,
-				"rV": 20.0,
-				"html": "SSOページ",
+				"cX": 660,
+				"cY": 1345.0,
+				"rH": 5,
+				"rV": 1135.0
+			},
+			{
+				"stroke": "#bbbbbb",
+				"lineWidth": 1
+			}
+		],
+		[
+			"order",
+			{
+				"type": "rect",
+				"cX": 900,
+				"cY": 140,
+				"rH": 47.5,
+				"rV": 20,
+				"html": "Order Service",
 				"style": ";display: grid\n;place-items: center\n;text-align: center"
 			},
 			{
@@ -88,14 +107,28 @@
 			}
 		],
 		[
-			"JpZr38oFY6MS6JQz7GEj-8",
+			"life-order",
 			{
 				"type": "rect",
-				"cX": 550.0,
-				"cY": 140.0,
-				"rH": 70.0,
-				"rV": 20.0,
-				"html": "IDポータル",
+				"cX": 900,
+				"cY": 1345.0,
+				"rH": 5,
+				"rV": 1135.0
+			},
+			{
+				"stroke": "#bbbbbb",
+				"lineWidth": 1
+			}
+		],
+		[
+			"pay",
+			{
+				"type": "rect",
+				"cX": 1140,
+				"cY": 140,
+				"rH": 40.0,
+				"rV": 20,
+				"html": "Payment",
 				"style": ";display: grid\n;place-items: center\n;text-align: center"
 			},
 			{
@@ -104,14 +137,28 @@
 			}
 		],
 		[
-			"JpZr38oFY6MS6JQz7GEj-9",
+			"life-pay",
 			{
 				"type": "rect",
-				"cX": 1330.0,
-				"cY": 140.0,
-				"rH": 70.0,
-				"rV": 20.0,
-				"html": "Carbon",
+				"cX": 1140,
+				"cY": 1345.0,
+				"rH": 5,
+				"rV": 1135.0
+			},
+			{
+				"stroke": "#bbbbbb",
+				"lineWidth": 1
+			}
+		],
+		[
+			"inv",
+			{
+				"type": "rect",
+				"cX": 1380,
+				"cY": 140,
+				"rH": 40.0,
+				"rV": 20,
+				"html": "Inventory",
 				"style": ";display: grid\n;place-items: center\n;text-align: center"
 			},
 			{
@@ -120,29 +167,27 @@
 			}
 		],
 		[
-			"JpZr38oFY6MS6JQz7GEj-10",
+			"life-inv",
 			{
 				"type": "rect",
-				"cX": 1510.0,
-				"cY": 140.0,
-				"rH": 30.0,
-				"rV": 20.0,
-				"html": "Zuora",
-				"style": ";display: grid\n;place-items: center\n;text-align: center"
+				"cX": 1380,
+				"cY": 1345.0,
+				"rH": 5,
+				"rV": 1135.0
 			},
 			{
-				"fill": "#fff2cc",
-				"stroke": "#000000"
+				"stroke": "#bbbbbb",
+				"lineWidth": 1
 			}
 		],
 		[
-			"JpZr38oFY6MS6JQz7GEj-11",
+			"notify",
 			{
 				"type": "rect",
-				"cX": 1670.0,
-				"cY": 140.0,
-				"rH": 50.0,
-				"rV": 20.0,
+				"cX": 1620,
+				"cY": 140,
+				"rH": 47.5,
+				"rV": 20,
 				"html": "Notification",
 				"style": ";display: grid\n;place-items: center\n;text-align: center"
 			},
@@ -152,506 +197,995 @@
 			}
 		],
 		[
-			"JpZr38oFY6MS6JQz7GEj-12",
+			"life-notify",
 			{
 				"type": "rect",
-				"cX": 930.0,
-				"cY": 140.0,
-				"rH": 50.0,
-				"rV": 20.0,
-				"html": "バックエンド",
-				"style": ";display: grid\n;place-items: center\n;text-align: center"
+				"cX": 1620,
+				"cY": 1345.0,
+				"rH": 5,
+				"rV": 1135.0
 			},
 			{
-				"fill": "#fff2cc",
-				"stroke": "#000000"
+				"stroke": "#bbbbbb",
+				"lineWidth": 1
 			}
 		],
 		[
-			"JpZr38oFY6MS6JQz7GEj-21",
+			"title",
 			{
 				"type": "rect",
-				"cX": 340.0,
-				"cY": 1520.0,
-				"rH": 10.0,
-				"rV": 1000.0
-			},
-			{}
-		],
-		[
-			"JpZr38oFY6MS6JQz7GEj-38",
-			{
-				"type": "rect",
-				"cX": 160.0,
-				"cY": 1520.0,
-				"rH": 10.0,
-				"rV": 1040.0
-			},
-			{}
-		],
-		[
-			"JpZr38oFY6MS6JQz7GEj-39",
-			{
-				"type": "rect",
-				"cX": 940.0,
-				"cY": 1695.0,
-				"rH": 10.0,
-				"rV": 75.0
-			},
-			{}
-		],
-		[
-			"JpZr38oFY6MS6JQz7GEj-60",
-			{
-				"type": "rect",
-				"cX": 750.0,
-				"cY": 620.0,
-				"rH": 10.0,
-				"rV": 60.0
-			},
-			{}
-		],
-		[
-			"JpZr38oFY6MS6JQz7GEj-126",
-			{
-				"type": "rect",
-				"cX": 840.0,
-				"cY": 1249.5,
-				"rH": 200.0,
-				"rV": 310.5,
-				"html": "post-login-trigger(is_required_password_reset: trueが条件)",
-				"style": ";display: grid\n;place-items: center\n;text-align: center"
+				"cX": 900,
+				"cY": 60,
+				"rH": 750.0,
+				"rV": 35.0,
+				"html": "Sequence: E-Commerce Checkout (cart → payment → fulfillment)",
+				"style": ";display: grid\n;place-items: start\n;padding: 8px\n;text-align: left"
 			},
 			{
-				"fill": "#e1d5e7",
-				"stroke": "#9673a6"
+				"fill": "#ecfdf5",
+				"stroke": "#059669",
+				"lineWidth": 1.5
 			}
 		],
 		[
-			"93-SrhB8ksXDJkpEScqn-0",
+			"cust-1",
 			{
 				"type": "rect",
-				"cX": 1130.0,
-				"cY": 140.0,
-				"rH": 40.0,
-				"rV": 20.0,
-				"html": "Diaz for ASA",
-				"style": ";display: grid\n;place-items: center\n;text-align: center"
+				"cX": 180,
+				"cY": 320,
+				"rH": 5,
+				"rV": 25.0
 			},
 			{
-				"fill": "#fff2cc",
-				"stroke": "#000000"
+				"fill": "#ffffff",
+				"stroke": "#111827",
+				"lineWidth": 1
 			}
 		],
 		[
-			"93-SrhB8ksXDJkpEScqn-2",
+			"web-2",
 			{
 				"type": "rect",
-				"cX": 1130.0,
-				"cY": 360.0,
-				"rH": 10.0,
-				"rV": 140.0
-			},
-			{}
-		],
-		[
-			"93-SrhB8ksXDJkpEScqn-4",
-			{
-				"type": "rect",
-				"cX": 1330.0,
-				"cY": 380.0,
-				"rH": 10.0,
-				"rV": 120.0
-			},
-			{}
-		],
-		[
-			"93-SrhB8ksXDJkpEScqn-6",
-			{
-				"type": "rect",
-				"cX": 940.0,
-				"cY": 350.0,
-				"rH": 10.0,
-				"rV": 50.0
-			},
-			{}
-		],
-		[
-			"93-SrhB8ksXDJkpEScqn-12",
-			{
-				"type": "rect",
-				"cX": 1495.0,
-				"cY": 220.0,
-				"rH": 55.0,
-				"rV": 20.0,
-				"html": "内部会員IDの発番",
-				"style": ";display: grid\n;place-items: center\n;text-align: center\n;color: #333333"
+				"cX": 420,
+				"cY": 320,
+				"rH": 5,
+				"rV": 25.0
 			},
 			{
-				"fill": "#f5f5f5",
-				"stroke": "#666666"
+				"fill": "#ffffff",
+				"stroke": "#111827",
+				"lineWidth": 1
 			}
 		],
 		[
-			"zI6s3rlfG0az2R4x79hc-2",
+			"lbl-3",
 			{
 				"type": "rect",
-				"cX": 1580.0,
-				"cY": 580.0,
-				"rH": 140.0,
-				"rV": 20.0,
-				"html": "仮登録完了・本登録LPのURL案内メール送付？",
-				"style": ";display: grid\n;place-items: center\n;text-align: center\n;color: #333333"
-			},
-			{
-				"fill": "#f5f5f5",
-				"stroke": "#666666"
-			}
-		],
-		[
-			"JpZr38oFY6MS6JQz7GEj-25",
-			{
-				"type": "rect",
-				"cX": 940.0,
-				"cY": 800.0,
-				"rH": 10.0,
-				"rV": 120.0
-			},
-			{}
-		],
-		[
-			"-wEKbzOvb-WIdNzF_vqD-0",
-			{
-				"type": "rect",
-				"cX": 840.0,
-				"cY": 830.0,
-				"rH": 200.0,
-				"rV": 50.0,
-				"html": "Databaseにユーザーが存在しないとき-> AutomaticMigration試行",
-				"style": ";display: grid\n;place-items: center\n;text-align: center"
-			},
-			{
-				"fill": "#dae8fc",
-				"stroke": "#6c8ebf"
-			}
-		],
-		[
-			"-wEKbzOvb-WIdNzF_vqD-1",
-			{
-				"type": "rect",
-				"cX": 840.0,
-				"cY": 853.75,
-				"rH": 130.0,
-				"rV": 13.75,
-				"html": "ユーザーが既に存在するためスキップ",
-				"style": ";display: grid\n;place-items: center\n;text-align: center\n;color: #333333"
-			},
-			{
-				"fill": "#f5f5f5",
-				"stroke": "#666666"
-			}
-		],
-		[
-			"xBQIdkDanIrMP3ShbkRu-0",
-			{
-				"type": "rect",
-				"cX": 940.0,
-				"cY": 1240.0,
-				"rH": 10.0,
-				"rV": 280.0
-			},
-			{}
-		],
-		[
-			"xBQIdkDanIrMP3ShbkRu-1",
-			{
-				"type": "rect",
-				"cX": 1670.0,
-				"cY": 1060.0,
-				"rH": 10.0,
-				"rV": 20.0
-			},
-			{}
-		],
-		[
-			"zud4g7TePETPEnqaV6I9-29",
-			{
-				"type": "rect",
-				"cX": 840.0,
-				"cY": 1694.75,
-				"rH": 200.0,
-				"rV": 95.25,
-				"html": "post-change-password-trigger(パスワード変更成功が条件)",
-				"style": ";display: grid\n;place-items: center\n;text-align: center"
-			},
-			{
-				"fill": "#ffe6cc",
-				"stroke": "#d79b00"
-			}
-		],
-		[
-			"zud4g7TePETPEnqaV6I9-32",
-			{
-				"type": "rect",
-				"cX": 1330.0,
-				"cY": 1720.0,
-				"rH": 10.0,
-				"rV": 20.0
-			},
-			{}
-		],
-		[
-			"oHgBy-9y3wLXpxFrkts3-0",
-			{
-				"type": "rect",
-				"cX": 750.0,
-				"cY": 1200.0,
-				"rH": 10.0,
-				"rV": 200.0
-			},
-			{}
-		],
-		[
-			"oHgBy-9y3wLXpxFrkts3-27",
-			{
-				"type": "rect",
-				"cX": 1355.0,
-				"cY": 1475.0,
-				"rH": 115.0,
-				"rV": 45.0,
-				"html": "パスワード変更はユーザー情報更新APIを使用する。実行時にフラグ削除も可能だが、post-login-triggerが絡まないパスワード変更フローを考慮すると後段のpost-change-password-triggerで扱うのが適切",
-				"style": ";display: grid\n;place-items: center\n;text-align: center\n;color: #333333"
-			},
-			{
-				"fill": "#f5f5f5",
-				"stroke": "#666666"
-			}
-		],
-		[
-			"zud4g7TePETPEnqaV6I9-49",
-			{
-				"type": "rect",
-				"cX": 1510.0,
-				"cY": 2400.0,
-				"rH": 10.0,
-				"rV": 60.0
-			},
-			{}
-		],
-		[
-			"rwXz3VaJhVdocWj0BRKf-1",
-			{
-				"type": "rect",
-				"cX": 940.0,
-				"cY": 2405.0,
-				"rH": 10.0,
-				"rV": 35.0
-			},
-			{}
-		],
-		[
-			"rwXz3VaJhVdocWj0BRKf-9",
-			{
-				"type": "rect",
-				"cX": 1670.0,
-				"cY": 2425.0,
-				"rH": 10.0,
-				"rV": 15.0
-			},
-			{}
-		],
-		[
-			"Mtq5oI-nNst-9AOJkv33-0",
-			{
-				"type": "rect",
-				"cX": 720.0,
-				"cY": 455.0,
-				"rH": 180.0,
-				"rV": 15.0,
-				"html": "別のIDでのSSOを防止するため強制再認証フラグを付与する",
-				"style": ";display: grid\n;place-items: center\n;text-align: center\n;color: #333333"
-			},
-			{
-				"fill": "#f5f5f5",
-				"stroke": "#666666"
-			}
-		],
-		[
-			"93-SrhB8ksXDJkpEScqn-14",
-			{
-				"type": "rect",
-				"cX": 720.0,
-				"cY": 305.0,
-				"rH": 180.0,
-				"rV": 125.0,
-				"html": "ユーザー情報{ \"email\": <ログインID>, \"email_verified\": false, \"blocked\": false, \"name\": <ログインID>, \"nickname\": \"unregistered\", \"connection\": \"Username-Password-Authentication\", \"password: <電話番号>, \"verify_email\": false, \"app_metadata\": { \"is_required_password_reset\": true, \"crd_data\": { \"apf_uid\": <内部会員ID> } }}",
-				"style": ";display: grid\n;place-items: center\n;text-align: center\n;color: #333333"
-			},
-			{
-				"fill": "#f5f5f5",
-				"stroke": "#666666"
-			}
-		],
-		[
-			"rwXz3VaJhVdocWj0BRKf-20",
-			{
-				"type": "rect",
-				"cX": 1510.0,
-				"cY": 380.0,
-				"rH": 10.0,
-				"rV": 80.0
-			},
-			{}
-		],
-		[
-			"rwXz3VaJhVdocWj0BRKf-33",
-			{
-				"type": "rect",
-				"cX": 1680.0,
-				"cY": 460.0,
-				"rH": 10.0,
-				"rV": 20.0
-			},
-			{}
-		],
-		[
-			"PQXAjm0GiDMQCFoYsRVY-4",
-			{
-				"type": "rect",
-				"cX": 1125.0,
-				"cY": 2380.0,
-				"rH": 95.0,
-				"rV": 30.0,
-				"html": "・本登録可能ロールはく奪・ID化可能ロールのはく奪・IDロールの付与・app_metadata.is_asahiid: true付与",
-				"style": ";display: grid\n;place-items: center\n;text-align: center\n;color: #333333"
-			},
-			{
-				"fill": "#f5f5f5",
-				"stroke": "#666666"
-			}
-		],
-		[
-			"6n3_O64gcKj_jMowBMWT-0",
-			{
-				"type": "rect",
-				"cX": 690.0,
-				"cY": 350.0,
+				"cX": 300.0,
+				"cY": 292,
 				"rH": 100.0,
-				"rV": 10.0
+				"rV": 14,
+				"html": "1. addItem(sku, qty)",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px"
+			},
+			{}
+		],
+		[
+			"web-4",
+			{
+				"type": "rect",
+				"cX": 420,
+				"cY": 420,
+				"rH": 5,
+				"rV": 25.0
 			},
 			{
-				"fill": "#f8cecc",
-				"stroke": "#b85450"
+				"fill": "#ffffff",
+				"stroke": "#111827",
+				"lineWidth": 1
 			}
 		],
 		[
-			"6n3_O64gcKj_jMowBMWT-1",
+			"gw-5",
 			{
 				"type": "rect",
-				"cX": 370.0,
-				"cY": 345.0,
-				"rH": 110.0,
-				"rV": 30.0,
-				"html": "初期パスワードが窃取されても、OTPを経たパスワード再設定が必要となりセキュリティ懸念にはなり得ないと考える",
-				"style": ";display: grid\n;place-items: center\n;text-align: center\n;color: #333333"
+				"cX": 660,
+				"cY": 420,
+				"rH": 5,
+				"rV": 25.0
 			},
 			{
-				"fill": "#f5f5f5",
-				"stroke": "#666666"
+				"fill": "#ffffff",
+				"stroke": "#111827",
+				"lineWidth": 1
 			}
 		],
 		[
-			"jag1lU4S8cjX6rYJqPQe-2",
+			"lbl-6",
 			{
 				"type": "rect",
-				"cX": 1475.0,
-				"cY": 1620.0,
-				"rH": 115.0,
-				"rV": 60.0,
-				"html": "Auth0ユーザー, Carbon顧客アカウントはいずれもemail_verified: falseとして登録されている。下記条件に合致する場合はフラグをtrueに更新する ・user.email_verified: false・user.email: {メールアドレス}※このときuser.usernameは必ずブランク%3CmxGraphModel%3E%3Croot%3E%3CmxCell%20id%3D%220%22%2F%3E%3CmxCell%20id%3D%221%22%20parent%3D%220%22%2F%3E%3CmxCell%20id%3D%222%22%20style%3D%22rounded%3D0%3BorthogonalLoop%3D1%3BjettySize%3Dauto%3Bhtml%3D1%3BendArrow%3Dnone%3BstartFill%3D0%3BexitX%3D0%3BexitY%3D0.5%3BexitDx%3D0%3BexitDy%3D0%3B%22%20edge%3D%221%22%20source%3D%223%22%20parent%3D%221%22%3E%3CmxGeometry%20relative%3D%221%22%20as%3D%22geometry%22%3E%3CmxPoint%20x%3D%221160%22%20y%3D%221620%22%20as%3D%22targetPoint%22%2F%3E%3CmxPoint%20x%3D%221390%22%20y%3D%221592.027027027027%22%20as%3D%22sourcePoint%22%2F%3E%3C%2FmxGeometry%3E%3C%2FmxCell%3E%3CmxCell%20id%3D%223%22%20value%3D%22%26lt%3Bdiv%26gt%3B%26lt%3Bspan%20style%3D%26quot%3Bbackground-color%3A%20transparent%3B%20color%3A%20light-dark(rgb(51%2C%2051%2C%2051)%2C%20rgb(193%2C%20193%2C%20193))%3B%26quot%3B%26gt%3B%E3%83%BBuser.email_verified%3A%20false%26lt%3B%2Fspan%26gt%3B%26lt%3B%2Fdiv%26gt%3B%26lt%3Bdiv%26gt%3B%E3%83%BBuser.email%3A%20%7B%E3%83%A1%E3%83%BC%E3%83%AB%E3%82%A2%E3%83%89%E3%83%AC%E3%82%B9%7D%26lt%3B%2Fdiv%26gt%3B%26lt%3Bdiv%26gt%3B%E2%80%BB%E3%81%93%E3%81%AE%E3%81%A8%E3%81%8Duser.username%E3%81%AF%E5%BF%85%E3%81%9A%E3%83%96%E3%83%A9%E3%83%B3%E3%82%AF%26lt%3B%2Fdiv%26gt%3B%26lt%3Bdiv%26gt%3B%26lt%3Bbr%26gt%3B%26lt%3B%2Fdiv%26gt%3B%26lt%3Bdiv%26gt%3B%E3%81%A7%E3%81%82%E3%82%8C%E3%81%B0%26lt%3Bspan%20style%3D%26quot%3Bbackground-color%3A%20transparent%3B%20color%3A%20light-dark(rgb(51%2C%2051%2C%2051)%2C%20rgb(193%2C%20193%2C%20193))%3B%26quot%3B%26gt%3B%E3%83%95%E3%83%A9%E3%82%B0%E3%82%92true%E3%81%AB%E6%9B%B4%E6%96%B0%E3%81%99%E3%82%8B%26lt%3B%2Fspan%26gt%3B%26lt%3B%2Fdiv%26gt%3B%22%20style%3D%22whiteSpace%3Dwrap%3Bhtml%3D1%3BfillColor%3D%23f5f5f5%3BstrokeColor%3D%23666666%3BfontColor%3D%23333333%3Balign%3Dleft%3B%22%20vertex%3D%221%22%20parent%3D%221%22%3E%3CmxGeometry%20x%3D%221400%22%20y%3D%221440%22%20width%3D%22230%22%20height%3D%2280%22%20as%3D%22geometry%22%2F%3E%3C%2FmxCell%3E%3C%2Froot%3E%3C%2FmxGraphModel%3Eあああ",
-				"style": ";display: grid\n;place-items: center\n;text-align: center\n;color: #333333"
+				"cX": 540.0,
+				"cY": 392,
+				"rH": 100.0,
+				"rV": 14,
+				"html": "2. POST /cart/items",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px"
+			},
+			{}
+		],
+		[
+			"gw-7",
+			{
+				"type": "rect",
+				"cX": 660,
+				"cY": 520,
+				"rH": 5,
+				"rV": 25.0
 			},
 			{
-				"fill": "#f5f5f5",
-				"stroke": "#666666"
+				"fill": "#ffffff",
+				"stroke": "#111827",
+				"lineWidth": 1
 			}
 		],
 		[
-			"Ivx1arlxckFQ-sZWu2sd-6",
+			"order-8",
 			{
 				"type": "rect",
-				"cX": 370.0,
-				"cY": 235.0,
-				"rH": 110.0,
-				"rV": 45.0,
-				"html": "設計初期は<電話番号下4桁>であったが、パスワードポリシーはAsIs踏襲で「8文字以上」である必要があった。これはManagementAPIによるユーザー作成でも共通しており、<電話番号>と改めることとなった",
-				"style": ";display: grid\n;place-items: center\n;text-align: center\n;color: #333333"
+				"cX": 900,
+				"cY": 520,
+				"rH": 5,
+				"rV": 25.0
 			},
 			{
-				"fill": "#f5f5f5",
-				"stroke": "#666666"
+				"fill": "#ffffff",
+				"stroke": "#111827",
+				"lineWidth": 1
 			}
 		],
 		[
-			"Ivx1arlxckFQ-sZWu2sd-8",
+			"lbl-9",
 			{
 				"type": "rect",
-				"cX": 635.0,
-				"cY": 305.0,
-				"rH": 75.0,
-				"rV": 10.0
+				"cX": 780.0,
+				"cY": 492,
+				"rH": 100.0,
+				"rV": 14,
+				"html": "3. addItem(cartId, sku, qty)",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px"
+			},
+			{}
+		],
+		[
+			"order-10",
+			{
+				"type": "rect",
+				"cX": 900,
+				"cY": 620,
+				"rH": 5,
+				"rV": 25.0
 			},
 			{
-				"fill": "#f8cecc",
-				"stroke": "#b85450"
+				"fill": "#ffffff",
+				"stroke": "#111827",
+				"lineWidth": 1
 			}
 		],
 		[
-			"Ivx1arlxckFQ-sZWu2sd-12",
+			"inv-11",
 			{
 				"type": "rect",
-				"cX": 1670.0,
-				"cY": 1790.0,
-				"rH": 10.0,
+				"cX": 1380,
+				"cY": 620,
+				"rH": 5,
+				"rV": 25.0
+			},
+			{
+				"fill": "#ffffff",
+				"stroke": "#111827",
+				"lineWidth": 1
+			}
+		],
+		[
+			"lbl-12",
+			{
+				"type": "rect",
+				"cX": 1140.0,
+				"cY": 592,
+				"rH": 220.0,
+				"rV": 14,
+				"html": "4. reserveStock(sku, qty)",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px"
+			},
+			{}
+		],
+		[
+			"inv-13",
+			{
+				"type": "rect",
+				"cX": 1380,
+				"cY": 720,
+				"rH": 5,
+				"rV": 25.0
+			},
+			{
+				"fill": "#ffffff",
+				"stroke": "#111827",
+				"lineWidth": 1
+			}
+		],
+		[
+			"order-14",
+			{
+				"type": "rect",
+				"cX": 900,
+				"cY": 720,
+				"rH": 5,
+				"rV": 25.0
+			},
+			{
+				"fill": "#ffffff",
+				"stroke": "#111827",
+				"lineWidth": 1
+			}
+		],
+		[
+			"lbl-15",
+			{
+				"type": "rect",
+				"cX": 1140.0,
+				"cY": 692,
+				"rH": 220.0,
+				"rV": 14,
+				"html": "5. reservationId",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px"
+			},
+			{}
+		],
+		[
+			"order-16",
+			{
+				"type": "rect",
+				"cX": 900,
+				"cY": 820,
+				"rH": 5,
+				"rV": 25.0
+			},
+			{
+				"fill": "#ffffff",
+				"stroke": "#111827",
+				"lineWidth": 1
+			}
+		],
+		[
+			"gw-17",
+			{
+				"type": "rect",
+				"cX": 660,
+				"cY": 820,
+				"rH": 5,
+				"rV": 25.0
+			},
+			{
+				"fill": "#ffffff",
+				"stroke": "#111827",
+				"lineWidth": 1
+			}
+		],
+		[
+			"lbl-18",
+			{
+				"type": "rect",
+				"cX": 780.0,
+				"cY": 792,
+				"rH": 100.0,
+				"rV": 14,
+				"html": "6. 201 Created + cart snapshot",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px"
+			},
+			{}
+		],
+		[
+			"gw-19",
+			{
+				"type": "rect",
+				"cX": 660,
+				"cY": 920,
+				"rH": 5,
+				"rV": 25.0
+			},
+			{
+				"fill": "#ffffff",
+				"stroke": "#111827",
+				"lineWidth": 1
+			}
+		],
+		[
+			"web-20",
+			{
+				"type": "rect",
+				"cX": 420,
+				"cY": 920,
+				"rH": 5,
+				"rV": 25.0
+			},
+			{
+				"fill": "#ffffff",
+				"stroke": "#111827",
+				"lineWidth": 1
+			}
+		],
+		[
+			"lbl-21",
+			{
+				"type": "rect",
+				"cX": 540.0,
+				"cY": 892,
+				"rH": 100.0,
+				"rV": 14,
+				"html": "7. cart updated",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px"
+			},
+			{}
+		],
+		[
+			"cust-22",
+			{
+				"type": "rect",
+				"cX": 180,
+				"cY": 1040,
+				"rH": 5,
+				"rV": 25.0
+			},
+			{
+				"fill": "#ffffff",
+				"stroke": "#111827",
+				"lineWidth": 1
+			}
+		],
+		[
+			"web-23",
+			{
+				"type": "rect",
+				"cX": 420,
+				"cY": 1040,
+				"rH": 5,
+				"rV": 25.0
+			},
+			{
+				"fill": "#ffffff",
+				"stroke": "#111827",
+				"lineWidth": 1
+			}
+		],
+		[
+			"lbl-24",
+			{
+				"type": "rect",
+				"cX": 300.0,
+				"cY": 1012,
+				"rH": 100.0,
+				"rV": 14,
+				"html": "8. checkout()",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px"
+			},
+			{}
+		],
+		[
+			"web-25",
+			{
+				"type": "rect",
+				"cX": 420,
+				"cY": 1140,
+				"rH": 5,
+				"rV": 25.0
+			},
+			{
+				"fill": "#ffffff",
+				"stroke": "#111827",
+				"lineWidth": 1
+			}
+		],
+		[
+			"gw-26",
+			{
+				"type": "rect",
+				"cX": 660,
+				"cY": 1140,
+				"rH": 5,
+				"rV": 25.0
+			},
+			{
+				"fill": "#ffffff",
+				"stroke": "#111827",
+				"lineWidth": 1
+			}
+		],
+		[
+			"lbl-27",
+			{
+				"type": "rect",
+				"cX": 540.0,
+				"cY": 1112,
+				"rH": 100.0,
+				"rV": 14,
+				"html": "9. POST /checkout",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px"
+			},
+			{}
+		],
+		[
+			"gw-28",
+			{
+				"type": "rect",
+				"cX": 660,
+				"cY": 1240,
+				"rH": 5,
+				"rV": 25.0
+			},
+			{
+				"fill": "#ffffff",
+				"stroke": "#111827",
+				"lineWidth": 1
+			}
+		],
+		[
+			"order-29",
+			{
+				"type": "rect",
+				"cX": 900,
+				"cY": 1240,
+				"rH": 5,
+				"rV": 25.0
+			},
+			{
+				"fill": "#ffffff",
+				"stroke": "#111827",
+				"lineWidth": 1
+			}
+		],
+		[
+			"lbl-30",
+			{
+				"type": "rect",
+				"cX": 780.0,
+				"cY": 1212,
+				"rH": 100.0,
+				"rV": 14,
+				"html": "10. createOrder(cartId, address)",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px"
+			},
+			{}
+		],
+		[
+			"par-frame",
+			{
+				"type": "rect",
+				"cX": 900,
+				"cY": 1260,
+				"rH": 780.0,
+				"rV": 55.0,
+				"html": "[par] createOrder() also triggers fraud screening asynchronously",
+				"style": ";display: grid\n;place-items: start\n;padding: 8px\n;text-align: left"
+			},
+			{
+				"fill": "#eff6ff",
+				"stroke": "#2563eb",
+				"lineWidth": 1.5
+			}
+		],
+		[
+			"note-async",
+			{
+				"type": "rect",
+				"cX": 1760,
+				"cY": 1280,
+				"rH": 180.0,
+				"rV": 40.0,
+				"html": "Fraud service runs in parallel; checkout waits only for payment authorization.",
+				"style": ";display: grid\n;place-items: start\n;padding: 8px\n;text-align: left\n;font-size: 12px"
+			},
+			{
+				"fill": "#fef9c3",
+				"stroke": "#ca8a04",
+				"lineWidth": 1.5
+			}
+		],
+		[
+			"opt-frame",
+			{
+				"type": "rect",
+				"cX": 900,
+				"cY": 1380,
+				"rH": 260.0,
+				"rV": 35.0,
+				"html": "[opt] coupon applied",
+				"style": ";display: grid\n;place-items: start\n;padding: 8px\n;text-align: left"
+			},
+			{
+				"fill": "#faf5ff",
+				"stroke": "#7c3aed",
+				"lineWidth": 1.5
+			}
+		],
+		[
+			"order-31",
+			{
+				"type": "rect",
+				"cX": 900,
+				"cY": 1340,
+				"rH": 5,
+				"rV": 25.0
+			},
+			{
+				"fill": "#ffffff",
+				"stroke": "#111827",
+				"lineWidth": 1
+			}
+		],
+		[
+			"order-32",
+			{
+				"type": "rect",
+				"cX": 945,
+				"cY": 1410,
+				"rH": 5,
+				"rV": 25.0
+			},
+			{
+				"fill": "#ffffff",
+				"stroke": "#111827",
+				"lineWidth": 1
+			}
+		],
+		[
+			"lbl-33",
+			{
+				"type": "rect",
+				"cX": 962.5,
+				"cY": 1337,
+				"rH": 60.0,
+				"rV": 14,
+				"html": "11. validatePromoCode()",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px"
+			},
+			{}
+		],
+		[
+			"order-34",
+			{
+				"type": "rect",
+				"cX": 900,
+				"cY": 1480,
+				"rH": 5,
+				"rV": 25.0
+			},
+			{
+				"fill": "#ffffff",
+				"stroke": "#111827",
+				"lineWidth": 1
+			}
+		],
+		[
+			"pay-35",
+			{
+				"type": "rect",
+				"cX": 1140,
+				"cY": 1480,
+				"rH": 5,
+				"rV": 25.0
+			},
+			{
+				"fill": "#ffffff",
+				"stroke": "#111827",
+				"lineWidth": 1
+			}
+		],
+		[
+			"lbl-36",
+			{
+				"type": "rect",
+				"cX": 1020.0,
+				"cY": 1452,
+				"rH": 100.0,
+				"rV": 14,
+				"html": "12. authorize(orderId, amount)",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px"
+			},
+			{}
+		],
+		[
+			"pay-37",
+			{
+				"type": "rect",
+				"cX": 1140,
+				"cY": 1580,
+				"rH": 5,
+				"rV": 25.0
+			},
+			{
+				"fill": "#ffffff",
+				"stroke": "#111827",
+				"lineWidth": 1
+			}
+		],
+		[
+			"gw-38",
+			{
+				"type": "rect",
+				"cX": 660,
+				"cY": 1580,
+				"rH": 5,
+				"rV": 25.0
+			},
+			{
+				"fill": "#ffffff",
+				"stroke": "#111827",
+				"lineWidth": 1
+			}
+		],
+		[
+			"lbl-39",
+			{
+				"type": "rect",
+				"cX": 900.0,
+				"cY": 1552,
+				"rH": 220.0,
+				"rV": 14,
+				"html": "13. authToken + captureId",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px"
+			},
+			{}
+		],
+		[
+			"alt-frame",
+			{
+				"type": "rect",
+				"cX": 900,
+				"cY": 1720,
+				"rH": 780.0,
+				"rV": 130.0,
+				"html": "[alt] payment declined",
+				"style": ";display: grid\n;place-items: start\n;padding: 8px\n;text-align: left"
+			},
+			{
+				"fill": "#fff1f2",
+				"stroke": "#e11d48",
+				"lineWidth": 1.5
+			}
+		],
+		[
+			"else-label",
+			{
+				"type": "rect",
+				"cX": 250,
+				"cY": 1720,
+				"rH": 90.0,
+				"rV": 20.0,
+				"html": "[else] success",
+				"style": ";display: grid\n;place-items: start\n;padding: 8px\n;text-align: left"
+			},
+			{
+				"fill": "#ecfdf5",
+				"stroke": "#059669",
+				"lineWidth": 1.5
+			}
+		],
+		[
+			"gw-40",
+			{
+				"type": "rect",
+				"cX": 660,
+				"cY": 1660,
+				"rH": 5,
 				"rV": 20.0
 			},
-			{}
-		],
-		[
-			"F3fQVFSbxUx5emQj9mO7-1",
 			{
-				"type": "rect",
-				"cX": 934.8789376203586,
-				"cY": 1975.0,
-				"rH": 295.0,
-				"rV": 145.0,
-				"html": "post-login-trigger(共通処理)",
-				"style": ";display: grid\n;place-items: center\n;text-align: center"
-			},
-			{
-				"fill": "#e1d5e7",
-				"stroke": "#9673a6"
+				"fill": "#ffffff",
+				"stroke": "#111827",
+				"lineWidth": 1
 			}
 		],
 		[
-			"F3fQVFSbxUx5emQj9mO7-3",
+			"pay-41",
 			{
 				"type": "rect",
-				"cX": 939.8789376203586,
-				"cY": 1900.0,
-				"rH": 10.0,
-				"rV": 50.0
+				"cX": 1140,
+				"cY": 1660,
+				"rH": 5,
+				"rV": 20.0
+			},
+			{
+				"fill": "#ffffff",
+				"stroke": "#111827",
+				"lineWidth": 1
+			}
+		],
+		[
+			"lbl-42",
+			{
+				"type": "rect",
+				"cX": 900.0,
+				"cY": 1632,
+				"rH": 220.0,
+				"rV": 14,
+				"html": "14a. capture(authToken)",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px"
 			},
 			{}
 		],
 		[
-			"F3fQVFSbxUx5emQj9mO7-6",
+			"pay-43",
 			{
 				"type": "rect",
-				"cX": 939.8789376203586,
-				"cY": 2040.0,
-				"rH": 10.0,
-				"rV": 50.0
+				"cX": 1140,
+				"cY": 1740,
+				"rH": 5,
+				"rV": 20.0
+			},
+			{
+				"fill": "#ffffff",
+				"stroke": "#111827",
+				"lineWidth": 1
+			}
+		],
+		[
+			"gw-44",
+			{
+				"type": "rect",
+				"cX": 660,
+				"cY": 1740,
+				"rH": 5,
+				"rV": 20.0
+			},
+			{
+				"fill": "#ffffff",
+				"stroke": "#111827",
+				"lineWidth": 1
+			}
+		],
+		[
+			"lbl-45",
+			{
+				"type": "rect",
+				"cX": 900.0,
+				"cY": 1712,
+				"rH": 220.0,
+				"rV": 14,
+				"html": "14b. 402 Payment Required",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px"
+			},
+			{}
+		],
+		[
+			"alt-note",
+			{
+				"type": "rect",
+				"cX": 1240,
+				"cY": 1820,
+				"rH": 210.0,
+				"rV": 45.0,
+				"html": "Gateway rolls back the pending order and releases inventory reservation.",
+				"style": ";display: grid\n;place-items: start\n;padding: 8px\n;text-align: left\n;font-size: 12px"
+			},
+			{
+				"fill": "#fef9c3",
+				"stroke": "#ca8a04",
+				"lineWidth": 1.5
+			}
+		],
+		[
+			"gw-46",
+			{
+				"type": "rect",
+				"cX": 660,
+				"cY": 1960,
+				"rH": 5,
+				"rV": 25.0
+			},
+			{
+				"fill": "#ffffff",
+				"stroke": "#111827",
+				"lineWidth": 1
+			}
+		],
+		[
+			"order-47",
+			{
+				"type": "rect",
+				"cX": 900,
+				"cY": 1960,
+				"rH": 5,
+				"rV": 25.0
+			},
+			{
+				"fill": "#ffffff",
+				"stroke": "#111827",
+				"lineWidth": 1
+			}
+		],
+		[
+			"lbl-48",
+			{
+				"type": "rect",
+				"cX": 780.0,
+				"cY": 1932,
+				"rH": 100.0,
+				"rV": 14,
+				"html": "15. markPaid(orderId, captureId)",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px"
+			},
+			{}
+		],
+		[
+			"order-49",
+			{
+				"type": "rect",
+				"cX": 900,
+				"cY": 2060,
+				"rH": 5,
+				"rV": 25.0
+			},
+			{
+				"fill": "#ffffff",
+				"stroke": "#111827",
+				"lineWidth": 1
+			}
+		],
+		[
+			"inv-50",
+			{
+				"type": "rect",
+				"cX": 1380,
+				"cY": 2060,
+				"rH": 5,
+				"rV": 25.0
+			},
+			{
+				"fill": "#ffffff",
+				"stroke": "#111827",
+				"lineWidth": 1
+			}
+		],
+		[
+			"lbl-51",
+			{
+				"type": "rect",
+				"cX": 1140.0,
+				"cY": 2032,
+				"rH": 220.0,
+				"rV": 14,
+				"html": "16. commitReservation()",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px"
+			},
+			{}
+		],
+		[
+			"inv-52",
+			{
+				"type": "rect",
+				"cX": 1380,
+				"cY": 2160,
+				"rH": 5,
+				"rV": 25.0
+			},
+			{
+				"fill": "#ffffff",
+				"stroke": "#111827",
+				"lineWidth": 1
+			}
+		],
+		[
+			"order-53",
+			{
+				"type": "rect",
+				"cX": 900,
+				"cY": 2160,
+				"rH": 5,
+				"rV": 25.0
+			},
+			{
+				"fill": "#ffffff",
+				"stroke": "#111827",
+				"lineWidth": 1
+			}
+		],
+		[
+			"lbl-54",
+			{
+				"type": "rect",
+				"cX": 1140.0,
+				"cY": 2132,
+				"rH": 220.0,
+				"rV": 14,
+				"html": "17. stockCommitted",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px"
+			},
+			{}
+		],
+		[
+			"order-55",
+			{
+				"type": "rect",
+				"cX": 900,
+				"cY": 2260,
+				"rH": 5,
+				"rV": 25.0
+			},
+			{
+				"fill": "#ffffff",
+				"stroke": "#111827",
+				"lineWidth": 1
+			}
+		],
+		[
+			"notify-56",
+			{
+				"type": "rect",
+				"cX": 1620,
+				"cY": 2260,
+				"rH": 5,
+				"rV": 25.0
+			},
+			{
+				"fill": "#ffffff",
+				"stroke": "#111827",
+				"lineWidth": 1
+			}
+		],
+		[
+			"lbl-57",
+			{
+				"type": "rect",
+				"cX": 1260.0,
+				"cY": 2232,
+				"rH": 340.0,
+				"rV": 14,
+				"html": "18. enqueueReceipt(orderId)",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px"
+			},
+			{}
+		],
+		[
+			"notify-58",
+			{
+				"type": "rect",
+				"cX": 1620,
+				"cY": 2360,
+				"rH": 5,
+				"rV": 25.0
+			},
+			{
+				"fill": "#ffffff",
+				"stroke": "#111827",
+				"lineWidth": 1
+			}
+		],
+		[
+			"cust-59",
+			{
+				"type": "rect",
+				"cX": 180,
+				"cY": 2360,
+				"rH": 5,
+				"rV": 25.0
+			},
+			{
+				"fill": "#ffffff",
+				"stroke": "#111827",
+				"lineWidth": 1
+			}
+		],
+		[
+			"lbl-60",
+			{
+				"type": "rect",
+				"cX": 900.0,
+				"cY": 2332,
+				"rH": 700.0,
+				"rV": 14,
+				"html": "19. emailReceipt(orderId)",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px"
 			},
 			{}
 		]
@@ -659,48 +1193,12 @@
 	"links": [
 		[
 			[
-				"93-SrhB8ksXDJkpEScqn-6",
-				{
-					"headF": false,
-					"headT": false
-				},
-				"JpZr38oFY6MS6JQz7GEj-12"
-			],
-			{
-				"stroke": "#111827",
-				"lineWidth": 1.5,
-				"lineDash": [
-					6,
-					4
-				]
-			}
-		],
-		[
-			[
-				"93-SrhB8ksXDJkpEScqn-4",
-				{
-					"headF": false,
-					"headT": false
-				},
-				"JpZr38oFY6MS6JQz7GEj-9"
-			],
-			{
-				"stroke": "#111827",
-				"lineWidth": 1.5,
-				"lineDash": [
-					6,
-					4
-				]
-			}
-		],
-		[
-			[
-				"JpZr38oFY6MS6JQz7GEj-39",
+				"cust-1",
 				{
 					"headF": false,
 					"headT": true
 				},
-				"F3fQVFSbxUx5emQj9mO7-3"
+				"web-2"
 			],
 			{
 				"stroke": "#111827",
@@ -709,62 +1207,12 @@
 		],
 		[
 			[
-				"93-SrhB8ksXDJkpEScqn-2",
-				{
-					"headF": false,
-					"headT": false
-				},
-				"93-SrhB8ksXDJkpEScqn-0"
-			],
-			{
-				"stroke": "#111827",
-				"lineWidth": 1.5,
-				"lineDash": [
-					6,
-					4
-				]
-			}
-		],
-		[
-			[
-				"zud4g7TePETPEnqaV6I9-32",
-				{
-					"headF": false,
-					"headT": false
-				},
-				"93-SrhB8ksXDJkpEScqn-4"
-			],
-			{
-				"stroke": "#111827",
-				"lineWidth": 1.5,
-				"lineDash": [
-					6,
-					4
-				]
-			}
-		],
-		[
-			[
-				"93-SrhB8ksXDJkpEScqn-14",
-				{
-					"headF": false,
-					"headT": false
-				},
-				"93-SrhB8ksXDJkpEScqn-6"
-			],
-			{
-				"stroke": "#111827",
-				"lineWidth": 1.5
-			}
-		],
-		[
-			[
-				"xBQIdkDanIrMP3ShbkRu-0",
+				"web-4",
 				{
 					"headF": false,
 					"headT": true
 				},
-				"JpZr38oFY6MS6JQz7GEj-39"
+				"gw-5"
 			],
 			{
 				"stroke": "#111827",
@@ -773,12 +1221,40 @@
 		],
 		[
 			[
-				"JpZr38oFY6MS6JQz7GEj-60",
+				"gw-7",
+				{
+					"headF": false,
+					"headT": true
+				},
+				"order-8"
+			],
+			{
+				"stroke": "#111827",
+				"lineWidth": 1.5
+			}
+		],
+		[
+			[
+				"order-10",
+				{
+					"headF": false,
+					"headT": true
+				},
+				"inv-11"
+			],
+			{
+				"stroke": "#111827",
+				"lineWidth": 1.5
+			}
+		],
+		[
+			[
+				"inv-13",
 				{
 					"headF": false,
 					"headT": false
 				},
-				"JpZr38oFY6MS6JQz7GEj-7"
+				"order-14"
 			],
 			{
 				"stroke": "#111827",
@@ -791,40 +1267,228 @@
 		],
 		[
 			[
-				"6n3_O64gcKj_jMowBMWT-1",
+				"order-16",
 				{
 					"headF": false,
 					"headT": false
 				},
-				"6n3_O64gcKj_jMowBMWT-0"
+				"gw-17"
 			],
 			{
 				"stroke": "#111827",
-				"lineWidth": 1.5
+				"lineWidth": 1.5,
+				"lineDash": [
+					6,
+					4
+				]
 			}
 		],
 		[
 			[
-				"Ivx1arlxckFQ-sZWu2sd-6",
+				"gw-19",
 				{
 					"headF": false,
 					"headT": false
 				},
-				"Ivx1arlxckFQ-sZWu2sd-8"
+				"web-20"
 			],
 			{
 				"stroke": "#111827",
-				"lineWidth": 1.5
+				"lineWidth": 1.5,
+				"lineDash": [
+					6,
+					4
+				]
 			}
 		],
 		[
 			[
-				"F3fQVFSbxUx5emQj9mO7-3",
+				"cust-22",
 				{
 					"headF": false,
 					"headT": true
 				},
-				"F3fQVFSbxUx5emQj9mO7-6"
+				"web-23"
+			],
+			{
+				"stroke": "#111827",
+				"lineWidth": 1.5
+			}
+		],
+		[
+			[
+				"web-25",
+				{
+					"headF": false,
+					"headT": true
+				},
+				"gw-26"
+			],
+			{
+				"stroke": "#111827",
+				"lineWidth": 1.5
+			}
+		],
+		[
+			[
+				"gw-28",
+				{
+					"headF": false,
+					"headT": true
+				},
+				"order-29"
+			],
+			{
+				"stroke": "#111827",
+				"lineWidth": 1.5
+			}
+		],
+		[
+			[
+				"order-31",
+				{
+					"headF": false,
+					"headT": true
+				},
+				"order-32"
+			],
+			{
+				"stroke": "#111827",
+				"lineWidth": 1.5
+			}
+		],
+		[
+			[
+				"order-34",
+				{
+					"headF": false,
+					"headT": true
+				},
+				"pay-35"
+			],
+			{
+				"stroke": "#111827",
+				"lineWidth": 1.5
+			}
+		],
+		[
+			[
+				"pay-37",
+				{
+					"headF": false,
+					"headT": false
+				},
+				"gw-38"
+			],
+			{
+				"stroke": "#111827",
+				"lineWidth": 1.5,
+				"lineDash": [
+					6,
+					4
+				]
+			}
+		],
+		[
+			[
+				"gw-40",
+				{
+					"headF": false,
+					"headT": true
+				},
+				"pay-41"
+			],
+			{
+				"stroke": "#111827",
+				"lineWidth": 1.5
+			}
+		],
+		[
+			[
+				"pay-43",
+				{
+					"headF": false,
+					"headT": false
+				},
+				"gw-44"
+			],
+			{
+				"stroke": "#111827",
+				"lineWidth": 1.5,
+				"lineDash": [
+					6,
+					4
+				]
+			}
+		],
+		[
+			[
+				"gw-46",
+				{
+					"headF": false,
+					"headT": true
+				},
+				"order-47"
+			],
+			{
+				"stroke": "#111827",
+				"lineWidth": 1.5
+			}
+		],
+		[
+			[
+				"order-49",
+				{
+					"headF": false,
+					"headT": true
+				},
+				"inv-50"
+			],
+			{
+				"stroke": "#111827",
+				"lineWidth": 1.5
+			}
+		],
+		[
+			[
+				"inv-52",
+				{
+					"headF": false,
+					"headT": false
+				},
+				"order-53"
+			],
+			{
+				"stroke": "#111827",
+				"lineWidth": 1.5,
+				"lineDash": [
+					6,
+					4
+				]
+			}
+		],
+		[
+			[
+				"order-55",
+				{
+					"headF": false,
+					"headT": true
+				},
+				"notify-56"
+			],
+			{
+				"stroke": "#111827",
+				"lineWidth": 1.5
+			}
+		],
+		[
+			[
+				"notify-58",
+				{
+					"headF": false,
+					"headT": true
+				},
+				"cust-59"
 			],
 			{
 				"stroke": "#111827",

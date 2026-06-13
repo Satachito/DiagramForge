@@ -1,7 +1,6 @@
 _*
 *.zip
 !ICONs/*.zip
-!docs/*.zip
 macOS
 macOS.xcodeproj
 DebugAssets/

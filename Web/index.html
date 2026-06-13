@@ -154,8 +154,7 @@ shape-editor	textarea	{ width	: 100%; height : 6em }
 <main-editor id=MAIN_EDITOR></main-editor>
 
 <aside>
-	<div style="display: grid; grid-template-columns: 32px 1fr 32px">
-		<button onclick=UPLOAD.click()>↑<input id=UPLOAD type=file hidden></button>
+	<div style="display: grid; grid-template-columns: 1fr 32px">
 		<input id=FILE_NAME style="width: 100%">
 		<button id=DOWNLOAD>↓</button>
 	</div>
@@ -164,7 +163,6 @@ shape-editor	textarea	{ width	: 100%; height : 6em }
 	<button			id=SAMPLE_GCP		>Sample( GCP )		</button>
 	<button			id=SAMPLE_AZURE		>Sample( Azure )	</button>
 	<button			id=SAMPLE_MINDMAP	>Sample( MindMap )	</button>
-	<button			id=SAMPLE_SEQUENCE	>Sample( Sequence )	</button>
 	<hr>
 	<paint-editor	id=PAINT_EDITOR		></paint-editor>
 	<hr>
@@ -238,7 +236,6 @@ SAMPLE_AWS		.onclick = () => LoadSample( 'Samples/AWS.cde'		).catch( Report )
 SAMPLE_GCP		.onclick = () => LoadSample( 'Samples/GCP.cde'		).catch( Report )
 SAMPLE_AZURE	.onclick = () => LoadSample( 'Samples/Azure.cde'	).catch( Report )
 SAMPLE_MINDMAP	.onclick = () => LoadSample( 'Samples/MindMap.cde'	).catch( Report )
-SAMPLE_SEQUENCE	.onclick = () => LoadSample( 'Samples/Sequence.cde'	).catch( Report )
 
 DUMP_CDE		.onclick = () => console.log( JSON.stringify( app, null, '\t' ) )
 DUMP_JOBS		.onclick = DumpJobs
@@ -268,27 +265,6 @@ DOWNLOAD		.onclick = () => {
 	a.click()
 	a.remove()
 	URL.revokeObjectURL( a.href )
-}
-
-UPLOAD			.onchange = async ev => {
-	const
-	files = Array.from( ev.target.files )
-	if	( files.length ) {
-		try {
-			await Load(
-				await files.reduce(
-					async ( $, _ ) => $ + await _.text()
-				,	''
-				)
-			)
-			MAIN_EDITOR.Draw()
-			FILE_NAME.value = files.map( _ => _.name ).join( ',' )
-		} catch ( er ) {
-			Report( er )
-		} finally {
-			ev.target.value = ''
-		}
-	}
 }
 
 onload = async () => {
