@@ -39,9 +39,108 @@ import { drawLinkCanvas } from './link-draw.js'
 const
 mouse			= [ null, null ]
 
+let
+mouseDrag		= null	//	'move' | 'resize'
+
 //	px tolerance for grabbing a selection edge (resize handles) / click-selecting a node
 const
 GRAB			= 8
+
+const
+MinEdge			= ( tlbr, xy ) => Math.min( ...EdgeDist( tlbr, xy ) )
+
+const
+NodeInterior		= ( tlbr, xy ) => MinEdge( tlbr, xy ) > GRAB
+
+const
+NodeGrab		= ( tlbr, xy ) => MinEdge( tlbr, xy ) > -GRAB && !NodeInterior( tlbr, xy )
+
+const
+SelectionGrab		= ( tlbr, xy ) => {
+	const
+	m = MinEdge( tlbr, xy )
+	return	m > -GRAB && m <= GRAB
+}
+
+const
+TopNodeWhere		= ( xy, pred ) => {
+	let
+	top = null
+	for ( const node of app.model.nodes ) {
+		pred( node, TLBR( node[ 1 ] ), xy ) && ( top = node )
+	}
+	return	top
+}
+
+const
+SelectedMemberAt	= xy => TopNodeWhere(
+	xy
+,	( node, tlbr, p ) => FindReform( node[ 0 ] ) && MinEdge( tlbr, p ) > -GRAB
+)
+
+const
+UnselectedInteriorAt	= xy => TopNodeWhere(
+	xy
+,	( node, tlbr, p ) => !FindReform( node[ 0 ] ) && NodeInterior( tlbr, p )
+)
+
+const
+UnselectedGrabAt	= xy => {
+	let
+	top = null
+	,	best = Infinity
+	for ( const node of app.model.nodes ) {
+		if	( FindReform( node[ 0 ] ) ) continue
+		const
+		tlbr = TLBR( node[ 1 ] )
+		if	( !NodeGrab( tlbr, xy ) ) continue
+		const
+		d = MinEdge( tlbr, xy )
+		if	( d < best ) {
+			best = d
+			top = node
+		}
+	}
+	return	top
+}
+
+const
+SelectionInteriorAt	= xy => {
+	if	( !app.reforms.length ) return false
+	const
+	sel = BBox( app.reforms )
+	return	MinEdge( sel, xy ) > GRAB
+	&&	!UnselectedInteriorAt( xy )
+	&&	!UnselectedGrabAt( xy )
+}
+
+const
+SelectionGrabAt		= xy => app.reforms.length && SelectionGrab( BBox( app.reforms ), xy )
+
+const
+HitSelect		= xy => {
+	if	( UnselectedInteriorAt( xy ) )		return 'nodeInside'
+	if	( UnselectedGrabAt( xy ) )		return 'nodeGrab'
+	if	( SelectedMemberAt( xy ) )			return 'selected'
+	if	( SelectionInteriorAt( xy ) )		return 'selectionInside'
+	if	( SelectionGrabAt( xy ) )			return 'selectionGrab'
+	return	'none'
+}
+
+const
+SelectionGrabCursor	= ( sel, xy ) => {
+	const
+	[ dT, dL, dB, dR ] = EdgeDist( sel, xy )
+	,	top = dT <= GRAB
+	,	bottom = dB <= GRAB
+	,	left = dL <= GRAB
+	,	right = dR <= GRAB
+	if	( ( top && left ) || ( bottom && right ) )	return 'nwse-resize'
+	if	( ( top && right ) || ( bottom && left ) )	return 'nesw-resize'
+	if	( top || bottom )	return 'ns-resize'
+	if	( left || right )	return 'ew-resize'
+	return	'move'
+}
 
 const
 XYWH_XYXY		= ( [ [ x, y ], [ X, Y ] ] ) => [ x, y, X - x, Y - y ]
@@ -458,7 +557,36 @@ MainEditor extends HTMLElement {
 
 		//	window-level so shortcuts work without the canvas being focused,
 		//	but never while the user is typing in a form field.
+		let
+		modeBeforeModifier = null
+
+		const
+		UpdateModeCursor = () => {
+			this.reformer.style.cursor = MODE_TOOL.value === 'select' ? 'default' : 'crosshair'
+		}
+
+		const
+		SyncModeSelector = ev => {
+			const	t = ev.target
+			if	( t && ( /^(INPUT|TEXTAREA|SELECT)$/.test( t.tagName ) || t.isContentEditable ) ) return
+
+			if	( ev.metaKey || ev.altKey ) {
+				const
+				next = ev.metaKey ? 'node' : 'link'
+				modeBeforeModifier === null && ( modeBeforeModifier = MODE_TOOL.value )
+				if	( MODE_TOOL.value !== next ) {
+					MODE_TOOL.value = next
+					UpdateModeCursor()
+				}
+			} else if	( modeBeforeModifier !== null ) {
+				MODE_TOOL.value = modeBeforeModifier
+				modeBeforeModifier = null
+				UpdateModeCursor()
+			}
+		}
+
 		addEventListener( 'keydown', async ev => {
+			SyncModeSelector( ev )
 			const	t = ev.target
 			if	( t && ( /^(INPUT|TEXTAREA|SELECT)$/.test( t.tagName ) || t.isContentEditable ) ) return
 			switch ( ev.key ) {
@@ -468,8 +596,12 @@ MainEditor extends HTMLElement {
 			case 'y':	case 'Y':
 				if ( ev.metaKey || ev.ctrlKey ) { ev.preventDefault(); await Redo() }
 				break
+			case 'a':	case 'A':
+				if ( ev.metaKey || ev.ctrlKey ) { ev.preventDefault(); await SelectAll() }
+				break
 			case 'Escape':
 				mouse[ 0 ] = mouse[ 1 ] = null
+				mouseDrag = null
 				this.hideLinkMenu()
 				await this.DrawReforms()
 				break
@@ -481,6 +613,15 @@ MainEditor extends HTMLElement {
 			default:
 				break
 			}
+		} )
+
+		addEventListener( 'keyup', ev => SyncModeSelector( ev ) )
+
+		addEventListener( 'blur', () => {
+			if	( modeBeforeModifier === null ) return
+			MODE_TOOL.value = modeBeforeModifier
+			modeBeforeModifier = null
+			UpdateModeCursor()
 		} )
 
 		this.reformer.onmouseleave = () => (
@@ -499,23 +640,79 @@ MainEditor extends HTMLElement {
 		const
 		CursorAt = ev => {
 			if	( Mode( ev ) !== 'select' ) return 'crosshair'
-			const	xy = [ ev.offsetX, ev.offsetY ]
-			if	( app.reforms.length ) {
-				const	[ dT, dL, dB, dR ] = EdgeDist( BBox( app.reforms ), xy )
-				if	( Math.min( dT, dL, dB, dR ) > -GRAB ) {
-					const	top = dT <= GRAB, bottom = dB <= GRAB, left = dL <= GRAB, right = dR <= GRAB
-					if	( ( top && left ) || ( bottom && right ) )	return 'nwse-resize'
-					if	( ( top && right ) || ( bottom && left ) )	return 'nesw-resize'
-					if	( top || bottom )	return 'ns-resize'
-					if	( left || right )	return 'ew-resize'
-					return 'move'
-				}
+			const
+			xy = XY_EV( ev )
+			switch ( HitSelect( xy ) ) {
+			case 'selected':
+			case 'selectionInside':
+			case 'nodeInside':
+			case 'nodeGrab':
+				return 'move'
+			case 'selectionGrab':
+				return SelectionGrabCursor( BBox( app.reforms ), xy )
+			default:
+				return 'default'
 			}
-			return app.model.nodes.some( _ => Math.min( ...EdgeDist( TLBR( _[ 1 ] ), xy ) ) > -GRAB ) ? 'move' : 'default'
 		}
 
 		const
 		RegistReform	= _ => FindReform( _[ 0 ] ) || app.reforms.push( structuredClone( _ ) )
+
+		const
+		ApplyMultiClick	= async ( tlbr, ev ) => {
+			switch ( ev.detail % 6 ) {
+			case 1:
+				break
+			case 2:
+				app.reforms.splice( 1 )
+				break
+			case 3:
+				app.model.nodes.forEach(
+					_ => ContersectsTLBR( tlbr, TLBR( _[ 1 ] ) ) && RegistReform( _ )
+				)
+				break
+			case 4:
+				app.model.nodes.forEach(
+					_ => ContainsTLBR( TLBR( _[ 1 ] ), tlbr ) && RegistReform( _ )
+				)
+				break
+			case 5:
+				app.model.nodes.forEach(
+					_ => ContersectsTLBR( TLBR( _[ 1 ] ), tlbr ) && RegistReform( _ )
+				)
+				break
+			default:
+				app.model.nodes.forEach( _ => RegistReform( _ ) )
+				break
+			}
+			await this.DrawReforms()
+		}
+
+		const
+		SelectAll	= async () => {
+			app.reforms = app.model.nodes.map( _ => structuredClone( _ ) )
+			await this.DrawReforms()
+		}
+
+		const
+		SelectNode	= async node => {
+			const
+			$ = node
+			SHAPE_EDITOR.$ = $[ 1 ]
+			PAINT_EDITOR.$ = $[ 2 ]
+			const
+			tlbr = TLBR( $[ 1 ] )
+			app.model.nodes.forEach(
+				_ => ContainsTLBR( tlbr, TLBR( _[ 1 ] ) ) && RegistReform( _ )
+			)
+			app.model.nodes.forEach(
+				$ => app.reforms.find( _ => _[ 0 ] === $[ 0 ] ) && (
+					app.model.nodes = app.model.nodes.filter( _ => _ !== $ )
+				,	app.model.nodes.push( $ )
+				)
+			)
+			await this.DrawReforms()
+		}
 
 		this.reformer.onmousedown = async ev => {
 			this.reformer.tabIndex = 0
@@ -523,44 +720,50 @@ MainEditor extends HTMLElement {
 			if	( ev.button ) return
 
 			const
-			xy	= mouse[ 0 ] = [ ev.offsetX, ev.offsetY ]
+			xy	= mouse[ 0 ] = XY_EV( ev )
 
 			if	( Mode( ev ) != 'select' ) return
-			
-			if	( app.reforms.length && Math.min( ...EdgeDist( BBox( app.reforms ), xy ) ) > -GRAB ) {
-//	console.log( 'Selection clicked' )
-				const
-				tlbr = TLBR( app.reforms[ 0 ][ 1 ] )
 
-				switch ( ev.detail % 6 ) {
-				case 1:
-					break
-				case 2:
-					app.reforms.splice( 1 )
-					break
-				case 3:
-					app.model.nodes.forEach(
-						_ => ContersectsTLBR( tlbr, TLBR( _[ 1 ] ) ) && RegistReform( _ )
-					)
-					break
-				case 4:
-					app.model.nodes.forEach(
-						_ => ContainsTLBR( TLBR( _[ 1 ] ), tlbr ) && RegistReform( _ )
-					)
-					break
-				case 5:
-					app.model.nodes.forEach(
-						_ => ContersectsTLBR( TLBR( _[ 1 ] ), tlbr ) && RegistReform( _ )
-					)
-					break
-				default:
-					app.model.nodes.forEach( _ => RegistReform( _ ) )
-					break
+			const
+			hit = HitSelect( xy )
+			,	selTLBR = app.reforms.length ? TLBR( app.reforms[ 0 ][ 1 ] ) : null
+
+			switch ( hit ) {
+			case 'nodeInside':
+			case 'nodeGrab':
+				mouseDrag = 'move'
+				app.reforms = []
+				app.model.links.forEach(
+					( [ [ F, A, T ], P ] ) => {
+						const
+						[ nF, nT ]	= [ FindNode( F ), FindNode( T ) ]
+						nF && nT && this.reformer.getContext( '2d' ).isPointInPath( LinkPath2D( nF[ 1 ], A, nT[ 1 ] ), ...xy ) && (
+							RegistReform( nF )
+						,	RegistReform( nT )
+						,	LINK_EDITOR.$ = [ F, A, T ]
+						)
+					}
+				)
+				if	( app.reforms.length ) {
+					await this.DrawReforms()
+					return
 				}
-				await this.DrawReforms()
+				RegistReform(
+					hit === 'nodeInside' ? UnselectedInteriorAt( xy ) : UnselectedGrabAt( xy )
+				)
+				await SelectNode( app.reforms[ 0 ] )
+				return
+			case 'selected':
+			case 'selectionInside':
+				mouseDrag = 'move'
+				await ApplyMultiClick( selTLBR, ev )
+				return
+			case 'selectionGrab':
+				mouseDrag = 'resize'
 				return
 			}
 
+			mouseDrag = null
 			app.reforms = []
 
 			app.model.links.forEach(
@@ -575,47 +778,10 @@ MainEditor extends HTMLElement {
 				}
 			)
 			if	( app.reforms.length ) {
-//	console.log( 'Link clicked' )
+				mouseDrag = 'move'
 				await this.DrawReforms()
 				return
 			}
-
-			if	( app.model.nodes.length ) {
-				const
-				_ = app.model.nodes.map( _ => [ _, Math.min( ...EdgeDist( TLBR( _[ 1 ] ), xy ) ) ] ).filter( _ => _[ 1 ] > -GRAB )
-				_.length && RegistReform(
-					_.slice( 1 ).reduce(
-						( $, _ ) => $[ 1 ] < _[ 1 ] ? $ : _
-					,	_[ 0 ]
-					)[ 0 ]
-				)
-			}
-			if	( !app.reforms.length ) {
-//console.log( 'No target' )
-				await this.DrawReforms()
-				return
-			}
-
-//console.log( 'Node clicked' )
-			const
-			$ = app.reforms[ 0 ]
-			SHAPE_EDITOR.$ = $[ 1 ]
-			PAINT_EDITOR.$ = $[ 2 ]
-
-			const
-			tlbr = TLBR( $[ 1 ] )
-
-			app.model.nodes.forEach(
-				_ => ContainsTLBR( tlbr, TLBR( _[ 1 ] ) ) && RegistReform( _ )
-			)
-
-//	ROLL UP
-			app.model.nodes.forEach(
-				$ => app.reforms.find( _ => _[ 0 ] === $[ 0 ] ) && (
-					app.model.nodes = app.model.nodes.filter( _ => _ !== $ )
-				,	app.model.nodes.push( $ )
-				)
-			)
 
 			await this.DrawReforms()
 		}
@@ -631,6 +797,7 @@ MainEditor extends HTMLElement {
 			//	mouseleave may be missed on fast movement — reset if button already released
 			if	( !ev.buttons ) {
 				mouse[ 0 ] = mouse[ 1 ] = null
+				mouseDrag = null
 				return
 			}
 
@@ -670,35 +837,37 @@ MainEditor extends HTMLElement {
 			}
 
 			if	( app.reforms.length ) {
-				let		edgeMode = false
+				if	( mouseDrag === 'resize' ) {
+					let		edgeMode = false
 
-				const	tlbr = BBox( app.reforms.map( _ => FindNode( _[ 0 ] ) ) )
-				const	edgeDist = EdgeDist( tlbr, mouse[ 0 ] )
-				const	[ t, l, b, r ] = tlbr
-				const	T = edgeDist[ 0 ] <= GRAB ? ( edgeMode = true, mouse[ 1 ][ 1 ] ) : t
-				const	L = edgeDist[ 1 ] <= GRAB ? ( edgeMode = true, mouse[ 1 ][ 0 ] ) : l
-				const	B = edgeDist[ 2 ] <= GRAB ? ( edgeMode = true, mouse[ 1 ][ 1 ] ) : b
-				const	R = edgeDist[ 3 ] <= GRAB ? ( edgeMode = true, mouse[ 1 ][ 0 ] ) : r
+					const	tlbr = BBox( app.reforms.map( _ => FindNode( _[ 0 ] ) ) )
+					const	edgeDist = EdgeDist( tlbr, mouse[ 0 ] )
+					const	[ t, l, b, r ] = tlbr
+					const	T = edgeDist[ 0 ] <= GRAB ? ( edgeMode = true, mouse[ 1 ][ 1 ] ) : t
+					const	L = edgeDist[ 1 ] <= GRAB ? ( edgeMode = true, mouse[ 1 ][ 0 ] ) : l
+					const	B = edgeDist[ 2 ] <= GRAB ? ( edgeMode = true, mouse[ 1 ][ 1 ] ) : b
+					const	R = edgeDist[ 3 ] <= GRAB ? ( edgeMode = true, mouse[ 1 ][ 0 ] ) : r
 
-				if	( edgeMode ) {
-					const	scaleX	= ( R - L ) / ( r - l || 1 )
-					const	scaleY	= ( B - T ) / ( b - t || 1 )
-					const	tX = L - l * scaleX
-					const	tY = T - t * scaleY
+					if	( edgeMode ) {
+						const	scaleX	= ( R - L ) / ( r - l || 1 )
+						const	scaleY	= ( B - T ) / ( b - t || 1 )
+						const	tX = L - l * scaleX
+						const	tY = T - t * scaleY
 
-					app.reforms.forEach(
-						( [ ID, S ] ) => {
-							const	[ t, l, b, r ] = TLBR( FindNode( ID )[ 1 ] )
-							const	T = t * scaleY + tY
-							const	L = l * scaleX + tX
-							const	B = b * scaleY + tY
-							const	R = r * scaleX + tX
-							S.cX = ( L + R ) / 2
-							S.cY = ( T + B ) / 2
-							S.rH = ( R - L ) / 2
-							S.rV = ( B - T ) / 2
-						}
-					)
+						app.reforms.forEach(
+							( [ ID, S ] ) => {
+								const	[ t, l, b, r ] = TLBR( FindNode( ID )[ 1 ] )
+								const	T = t * scaleY + tY
+								const	L = l * scaleX + tX
+								const	B = b * scaleY + tY
+								const	R = r * scaleX + tX
+								S.cX = ( L + R ) / 2
+								S.cY = ( T + B ) / 2
+								S.rH = ( R - L ) / 2
+								S.rV = ( B - T ) / 2
+							}
+						)
+					}
 				} else {
 					const	[ dX, dY ] = DeltaXY( ...mouse )
 					app.reforms.forEach(
@@ -722,6 +891,7 @@ MainEditor extends HTMLElement {
 			const
 			[ mouseD, mouseU ] = mouse
 			mouse[ 0 ] = mouse[ 1 ] = null
+			mouseDrag = null
 			if	( mouseD === null || mouseU === null ) return
 			if	( EqualXY( mouseD, mouseU ) ) return
 
