@@ -90,7 +90,6 @@ CloudIcons extends HTMLElement {
 
 	connectedCallback() {
 		this.querySelector( 'fetch-progression' ).value = this.getAttribute( 'url' ) ?? ''
-		this.querySelector( ':scope > details' ).open = true
 	}
 
 	async	fetchZip() {

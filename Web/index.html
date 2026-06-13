@@ -327,7 +327,6 @@ LoadSample = async path => {
 	res = await fetch( new URL( path, import.meta.url ), { cache: 'no-store' } )
 	if	( ! res.ok )	throw new Error( `${ res.status } ${ path }` )
 	await Load( await res.text() )
-	MAIN_EDITOR.Draw()
 	FILE_NAME.value	= path.replace( /^.*\//, '' )
 }
 
@@ -396,7 +395,6 @@ UPLOAD			.onchange = async ev => {
 				,	''
 				)
 			)
-			MAIN_EDITOR.Draw()
 			FILE_NAME.value = files.map( _ => _.name ).join( ',' )
 		} catch ( er ) {
 			Report( er )
