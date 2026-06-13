@@ -6,14 +6,15 @@
 				"type": "rect",
 				"cX": 180,
 				"cY": 140,
-				"rH": 35.0,
-				"rV": 20,
+				"rH": 40,
+				"rV": 28,
 				"html": "Customer",
 				"style": ";display: grid\n;place-items: center\n;text-align: center"
 			},
 			{
-				"fill": "#fff2cc",
-				"stroke": "#000000"
+				"fill": "rgba(30, 64, 175, 0.5)",
+				"stroke": "#93c5fd",
+				"lineWidth": 2
 			}
 		],
 		[
@@ -26,7 +27,7 @@
 				"rV": 1135.0
 			},
 			{
-				"stroke": "#bbbbbb",
+				"stroke": "#64748b",
 				"lineWidth": 1
 			}
 		],
@@ -36,14 +37,15 @@
 				"type": "rect",
 				"cX": 420,
 				"cY": 140,
-				"rH": 40.0,
-				"rV": 20,
+				"rH": 48,
+				"rV": 28,
 				"html": "Web App",
 				"style": ";display: grid\n;place-items: center\n;text-align: center"
 			},
 			{
-				"fill": "#fff2cc",
-				"stroke": "#000000"
+				"fill": "rgba(30, 64, 175, 0.5)",
+				"stroke": "#93c5fd",
+				"lineWidth": 2
 			}
 		],
 		[
@@ -56,7 +58,7 @@
 				"rV": 1135.0
 			},
 			{
-				"stroke": "#bbbbbb",
+				"stroke": "#64748b",
 				"lineWidth": 1
 			}
 		],
@@ -66,14 +68,15 @@
 				"type": "rect",
 				"cX": 660,
 				"cY": 140,
-				"rH": 45.0,
-				"rV": 20,
+				"rH": 58,
+				"rV": 28,
 				"html": "API Gateway",
 				"style": ";display: grid\n;place-items: center\n;text-align: center"
 			},
 			{
-				"fill": "#fff2cc",
-				"stroke": "#000000"
+				"fill": "rgba(30, 64, 175, 0.5)",
+				"stroke": "#93c5fd",
+				"lineWidth": 2
 			}
 		],
 		[
@@ -86,7 +89,7 @@
 				"rV": 1135.0
 			},
 			{
-				"stroke": "#bbbbbb",
+				"stroke": "#64748b",
 				"lineWidth": 1
 			}
 		],
@@ -96,14 +99,15 @@
 				"type": "rect",
 				"cX": 900,
 				"cY": 140,
-				"rH": 47.5,
-				"rV": 20,
+				"rH": 62,
+				"rV": 28,
 				"html": "Order Service",
 				"style": ";display: grid\n;place-items: center\n;text-align: center"
 			},
 			{
-				"fill": "#fff2cc",
-				"stroke": "#000000"
+				"fill": "rgba(30, 64, 175, 0.5)",
+				"stroke": "#93c5fd",
+				"lineWidth": 2
 			}
 		],
 		[
@@ -116,7 +120,7 @@
 				"rV": 1135.0
 			},
 			{
-				"stroke": "#bbbbbb",
+				"stroke": "#64748b",
 				"lineWidth": 1
 			}
 		],
@@ -126,14 +130,15 @@
 				"type": "rect",
 				"cX": 1140,
 				"cY": 140,
-				"rH": 40.0,
-				"rV": 20,
+				"rH": 48,
+				"rV": 28,
 				"html": "Payment",
 				"style": ";display: grid\n;place-items: center\n;text-align: center"
 			},
 			{
-				"fill": "#fff2cc",
-				"stroke": "#000000"
+				"fill": "rgba(30, 64, 175, 0.5)",
+				"stroke": "#93c5fd",
+				"lineWidth": 2
 			}
 		],
 		[
@@ -146,7 +151,7 @@
 				"rV": 1135.0
 			},
 			{
-				"stroke": "#bbbbbb",
+				"stroke": "#64748b",
 				"lineWidth": 1
 			}
 		],
@@ -156,14 +161,15 @@
 				"type": "rect",
 				"cX": 1380,
 				"cY": 140,
-				"rH": 40.0,
-				"rV": 20,
+				"rH": 48,
+				"rV": 28,
 				"html": "Inventory",
 				"style": ";display: grid\n;place-items: center\n;text-align: center"
 			},
 			{
-				"fill": "#fff2cc",
-				"stroke": "#000000"
+				"fill": "rgba(30, 64, 175, 0.5)",
+				"stroke": "#93c5fd",
+				"lineWidth": 2
 			}
 		],
 		[
@@ -176,7 +182,7 @@
 				"rV": 1135.0
 			},
 			{
-				"stroke": "#bbbbbb",
+				"stroke": "#64748b",
 				"lineWidth": 1
 			}
 		],
@@ -186,14 +192,15 @@
 				"type": "rect",
 				"cX": 1620,
 				"cY": 140,
-				"rH": 47.5,
-				"rV": 20,
+				"rH": 62,
+				"rV": 28,
 				"html": "Notification",
 				"style": ";display: grid\n;place-items: center\n;text-align: center"
 			},
 			{
-				"fill": "#fff2cc",
-				"stroke": "#000000"
+				"fill": "rgba(30, 64, 175, 0.5)",
+				"stroke": "#93c5fd",
+				"lineWidth": 2
 			}
 		],
 		[
@@ -206,7 +213,7 @@
 				"rV": 1135.0
 			},
 			{
-				"stroke": "#bbbbbb",
+				"stroke": "#64748b",
 				"lineWidth": 1
 			}
 		],
@@ -222,8 +229,8 @@
 				"style": ";display: grid\n;place-items: start\n;padding: 8px\n;text-align: left"
 			},
 			{
-				"fill": "#ecfdf5",
-				"stroke": "#059669",
+				"fill": "rgba(6, 95, 70, 0.28)",
+				"stroke": "#34d399",
 				"lineWidth": 1.5
 			}
 		],
@@ -237,8 +244,8 @@
 				"rV": 25.0
 			},
 			{
-				"fill": "#ffffff",
-				"stroke": "#111827",
+				"fill": "rgba(203, 213, 225, 0.4)",
+				"stroke": "#475569",
 				"lineWidth": 1
 			}
 		],
@@ -252,23 +259,10 @@
 				"rV": 25.0
 			},
 			{
-				"fill": "#ffffff",
-				"stroke": "#111827",
+				"fill": "rgba(203, 213, 225, 0.4)",
+				"stroke": "#475569",
 				"lineWidth": 1
 			}
-		],
-		[
-			"lbl-3",
-			{
-				"type": "rect",
-				"cX": 300.0,
-				"cY": 292,
-				"rH": 100.0,
-				"rV": 14,
-				"html": "1. addItem(sku, qty)",
-				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px"
-			},
-			{}
 		],
 		[
 			"web-4",
@@ -280,8 +274,8 @@
 				"rV": 25.0
 			},
 			{
-				"fill": "#ffffff",
-				"stroke": "#111827",
+				"fill": "rgba(203, 213, 225, 0.4)",
+				"stroke": "#475569",
 				"lineWidth": 1
 			}
 		],
@@ -295,23 +289,10 @@
 				"rV": 25.0
 			},
 			{
-				"fill": "#ffffff",
-				"stroke": "#111827",
+				"fill": "rgba(203, 213, 225, 0.4)",
+				"stroke": "#475569",
 				"lineWidth": 1
 			}
-		],
-		[
-			"lbl-6",
-			{
-				"type": "rect",
-				"cX": 540.0,
-				"cY": 392,
-				"rH": 100.0,
-				"rV": 14,
-				"html": "2. POST /cart/items",
-				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px"
-			},
-			{}
 		],
 		[
 			"gw-7",
@@ -323,8 +304,8 @@
 				"rV": 25.0
 			},
 			{
-				"fill": "#ffffff",
-				"stroke": "#111827",
+				"fill": "rgba(203, 213, 225, 0.4)",
+				"stroke": "#475569",
 				"lineWidth": 1
 			}
 		],
@@ -338,23 +319,10 @@
 				"rV": 25.0
 			},
 			{
-				"fill": "#ffffff",
-				"stroke": "#111827",
+				"fill": "rgba(203, 213, 225, 0.4)",
+				"stroke": "#475569",
 				"lineWidth": 1
 			}
-		],
-		[
-			"lbl-9",
-			{
-				"type": "rect",
-				"cX": 780.0,
-				"cY": 492,
-				"rH": 100.0,
-				"rV": 14,
-				"html": "3. addItem(cartId, sku, qty)",
-				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px"
-			},
-			{}
 		],
 		[
 			"order-10",
@@ -366,8 +334,8 @@
 				"rV": 25.0
 			},
 			{
-				"fill": "#ffffff",
-				"stroke": "#111827",
+				"fill": "rgba(203, 213, 225, 0.4)",
+				"stroke": "#475569",
 				"lineWidth": 1
 			}
 		],
@@ -381,23 +349,10 @@
 				"rV": 25.0
 			},
 			{
-				"fill": "#ffffff",
-				"stroke": "#111827",
+				"fill": "rgba(203, 213, 225, 0.4)",
+				"stroke": "#475569",
 				"lineWidth": 1
 			}
-		],
-		[
-			"lbl-12",
-			{
-				"type": "rect",
-				"cX": 1140.0,
-				"cY": 592,
-				"rH": 220.0,
-				"rV": 14,
-				"html": "4. reserveStock(sku, qty)",
-				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px"
-			},
-			{}
 		],
 		[
 			"inv-13",
@@ -409,8 +364,8 @@
 				"rV": 25.0
 			},
 			{
-				"fill": "#ffffff",
-				"stroke": "#111827",
+				"fill": "rgba(203, 213, 225, 0.4)",
+				"stroke": "#475569",
 				"lineWidth": 1
 			}
 		],
@@ -424,23 +379,10 @@
 				"rV": 25.0
 			},
 			{
-				"fill": "#ffffff",
-				"stroke": "#111827",
+				"fill": "rgba(203, 213, 225, 0.4)",
+				"stroke": "#475569",
 				"lineWidth": 1
 			}
-		],
-		[
-			"lbl-15",
-			{
-				"type": "rect",
-				"cX": 1140.0,
-				"cY": 692,
-				"rH": 220.0,
-				"rV": 14,
-				"html": "5. reservationId",
-				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px"
-			},
-			{}
 		],
 		[
 			"order-16",
@@ -452,8 +394,8 @@
 				"rV": 25.0
 			},
 			{
-				"fill": "#ffffff",
-				"stroke": "#111827",
+				"fill": "rgba(203, 213, 225, 0.4)",
+				"stroke": "#475569",
 				"lineWidth": 1
 			}
 		],
@@ -467,23 +409,10 @@
 				"rV": 25.0
 			},
 			{
-				"fill": "#ffffff",
-				"stroke": "#111827",
+				"fill": "rgba(203, 213, 225, 0.4)",
+				"stroke": "#475569",
 				"lineWidth": 1
 			}
-		],
-		[
-			"lbl-18",
-			{
-				"type": "rect",
-				"cX": 780.0,
-				"cY": 792,
-				"rH": 100.0,
-				"rV": 14,
-				"html": "6. 201 Created + cart snapshot",
-				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px"
-			},
-			{}
 		],
 		[
 			"gw-19",
@@ -495,8 +424,8 @@
 				"rV": 25.0
 			},
 			{
-				"fill": "#ffffff",
-				"stroke": "#111827",
+				"fill": "rgba(203, 213, 225, 0.4)",
+				"stroke": "#475569",
 				"lineWidth": 1
 			}
 		],
@@ -510,23 +439,10 @@
 				"rV": 25.0
 			},
 			{
-				"fill": "#ffffff",
-				"stroke": "#111827",
+				"fill": "rgba(203, 213, 225, 0.4)",
+				"stroke": "#475569",
 				"lineWidth": 1
 			}
-		],
-		[
-			"lbl-21",
-			{
-				"type": "rect",
-				"cX": 540.0,
-				"cY": 892,
-				"rH": 100.0,
-				"rV": 14,
-				"html": "7. cart updated",
-				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px"
-			},
-			{}
 		],
 		[
 			"cust-22",
@@ -538,8 +454,8 @@
 				"rV": 25.0
 			},
 			{
-				"fill": "#ffffff",
-				"stroke": "#111827",
+				"fill": "rgba(203, 213, 225, 0.4)",
+				"stroke": "#475569",
 				"lineWidth": 1
 			}
 		],
@@ -553,23 +469,10 @@
 				"rV": 25.0
 			},
 			{
-				"fill": "#ffffff",
-				"stroke": "#111827",
+				"fill": "rgba(203, 213, 225, 0.4)",
+				"stroke": "#475569",
 				"lineWidth": 1
 			}
-		],
-		[
-			"lbl-24",
-			{
-				"type": "rect",
-				"cX": 300.0,
-				"cY": 1012,
-				"rH": 100.0,
-				"rV": 14,
-				"html": "8. checkout()",
-				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px"
-			},
-			{}
 		],
 		[
 			"web-25",
@@ -581,8 +484,8 @@
 				"rV": 25.0
 			},
 			{
-				"fill": "#ffffff",
-				"stroke": "#111827",
+				"fill": "rgba(203, 213, 225, 0.4)",
+				"stroke": "#475569",
 				"lineWidth": 1
 			}
 		],
@@ -596,23 +499,10 @@
 				"rV": 25.0
 			},
 			{
-				"fill": "#ffffff",
-				"stroke": "#111827",
+				"fill": "rgba(203, 213, 225, 0.4)",
+				"stroke": "#475569",
 				"lineWidth": 1
 			}
-		],
-		[
-			"lbl-27",
-			{
-				"type": "rect",
-				"cX": 540.0,
-				"cY": 1112,
-				"rH": 100.0,
-				"rV": 14,
-				"html": "9. POST /checkout",
-				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px"
-			},
-			{}
 		],
 		[
 			"gw-28",
@@ -624,8 +514,8 @@
 				"rV": 25.0
 			},
 			{
-				"fill": "#ffffff",
-				"stroke": "#111827",
+				"fill": "rgba(203, 213, 225, 0.4)",
+				"stroke": "#475569",
 				"lineWidth": 1
 			}
 		],
@@ -639,38 +529,25 @@
 				"rV": 25.0
 			},
 			{
-				"fill": "#ffffff",
-				"stroke": "#111827",
+				"fill": "rgba(203, 213, 225, 0.4)",
+				"stroke": "#475569",
 				"lineWidth": 1
 			}
-		],
-		[
-			"lbl-30",
-			{
-				"type": "rect",
-				"cX": 780.0,
-				"cY": 1212,
-				"rH": 100.0,
-				"rV": 14,
-				"html": "10. createOrder(cartId, address)",
-				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px"
-			},
-			{}
 		],
 		[
 			"par-frame",
 			{
 				"type": "rect",
 				"cX": 900,
-				"cY": 1260,
+				"cY": 1340,
 				"rH": 780.0,
-				"rV": 55.0,
+				"rV": 65,
 				"html": "[par] createOrder() also triggers fraud screening asynchronously",
 				"style": ";display: grid\n;place-items: start\n;padding: 8px\n;text-align: left"
 			},
 			{
-				"fill": "#eff6ff",
-				"stroke": "#2563eb",
+				"fill": "rgba(30, 58, 138, 0.28)",
+				"stroke": "#60a5fa",
 				"lineWidth": 1.5
 			}
 		],
@@ -680,14 +557,14 @@
 				"type": "rect",
 				"cX": 1760,
 				"cY": 1280,
-				"rH": 180.0,
-				"rV": 40.0,
+				"rH": 200,
+				"rV": 52,
 				"html": "Fraud service runs in parallel; checkout waits only for payment authorization.",
 				"style": ";display: grid\n;place-items: start\n;padding: 8px\n;text-align: left\n;font-size: 12px"
 			},
 			{
-				"fill": "#fef9c3",
-				"stroke": "#ca8a04",
+				"fill": "rgba(146, 64, 14, 0.35)",
+				"stroke": "#fcd34d",
 				"lineWidth": 1.5
 			}
 		],
@@ -696,15 +573,15 @@
 			{
 				"type": "rect",
 				"cX": 900,
-				"cY": 1380,
-				"rH": 260.0,
-				"rV": 35.0,
+				"cY": 1375,
+				"rH": 220,
+				"rV": 42,
 				"html": "[opt] coupon applied",
 				"style": ";display: grid\n;place-items: start\n;padding: 8px\n;text-align: left"
 			},
 			{
-				"fill": "#faf5ff",
-				"stroke": "#7c3aed",
+				"fill": "rgba(91, 33, 182, 0.28)",
+				"stroke": "#c4b5fd",
 				"lineWidth": 1.5
 			}
 		],
@@ -718,8 +595,8 @@
 				"rV": 25.0
 			},
 			{
-				"fill": "#ffffff",
-				"stroke": "#111827",
+				"fill": "rgba(203, 213, 225, 0.4)",
+				"stroke": "#475569",
 				"lineWidth": 1
 			}
 		],
@@ -733,36 +610,23 @@
 				"rV": 25.0
 			},
 			{
-				"fill": "#ffffff",
-				"stroke": "#111827",
+				"fill": "rgba(203, 213, 225, 0.4)",
+				"stroke": "#475569",
 				"lineWidth": 1
 			}
-		],
-		[
-			"lbl-33",
-			{
-				"type": "rect",
-				"cX": 962.5,
-				"cY": 1337,
-				"rH": 60.0,
-				"rV": 14,
-				"html": "11. validatePromoCode()",
-				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px"
-			},
-			{}
 		],
 		[
 			"order-34",
 			{
 				"type": "rect",
 				"cX": 900,
-				"cY": 1480,
+				"cY": 1530,
 				"rH": 5,
 				"rV": 25.0
 			},
 			{
-				"fill": "#ffffff",
-				"stroke": "#111827",
+				"fill": "rgba(203, 213, 225, 0.4)",
+				"stroke": "#475569",
 				"lineWidth": 1
 			}
 		],
@@ -771,41 +635,28 @@
 			{
 				"type": "rect",
 				"cX": 1140,
-				"cY": 1480,
+				"cY": 1530,
 				"rH": 5,
 				"rV": 25.0
 			},
 			{
-				"fill": "#ffffff",
-				"stroke": "#111827",
+				"fill": "rgba(203, 213, 225, 0.4)",
+				"stroke": "#475569",
 				"lineWidth": 1
 			}
-		],
-		[
-			"lbl-36",
-			{
-				"type": "rect",
-				"cX": 1020.0,
-				"cY": 1452,
-				"rH": 100.0,
-				"rV": 14,
-				"html": "12. authorize(orderId, amount)",
-				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px"
-			},
-			{}
 		],
 		[
 			"pay-37",
 			{
 				"type": "rect",
 				"cX": 1140,
-				"cY": 1580,
+				"cY": 1630,
 				"rH": 5,
 				"rV": 25.0
 			},
 			{
-				"fill": "#ffffff",
-				"stroke": "#111827",
+				"fill": "rgba(203, 213, 225, 0.4)",
+				"stroke": "#475569",
 				"lineWidth": 1
 			}
 		],
@@ -814,43 +665,30 @@
 			{
 				"type": "rect",
 				"cX": 660,
-				"cY": 1580,
+				"cY": 1630,
 				"rH": 5,
 				"rV": 25.0
 			},
 			{
-				"fill": "#ffffff",
-				"stroke": "#111827",
+				"fill": "rgba(203, 213, 225, 0.4)",
+				"stroke": "#475569",
 				"lineWidth": 1
 			}
-		],
-		[
-			"lbl-39",
-			{
-				"type": "rect",
-				"cX": 900.0,
-				"cY": 1552,
-				"rH": 220.0,
-				"rV": 14,
-				"html": "13. authToken + captureId",
-				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px"
-			},
-			{}
 		],
 		[
 			"alt-frame",
 			{
 				"type": "rect",
 				"cX": 900,
-				"cY": 1720,
+				"cY": 1770,
 				"rH": 780.0,
 				"rV": 130.0,
 				"html": "[alt] payment declined",
 				"style": ";display: grid\n;place-items: start\n;padding: 8px\n;text-align: left"
 			},
 			{
-				"fill": "#fff1f2",
-				"stroke": "#e11d48",
+				"fill": "rgba(153, 27, 27, 0.28)",
+				"stroke": "#fca5a5",
 				"lineWidth": 1.5
 			}
 		],
@@ -859,15 +697,15 @@
 			{
 				"type": "rect",
 				"cX": 250,
-				"cY": 1720,
+				"cY": 1770,
 				"rH": 90.0,
 				"rV": 20.0,
 				"html": "[else] success",
 				"style": ";display: grid\n;place-items: start\n;padding: 8px\n;text-align: left"
 			},
 			{
-				"fill": "#ecfdf5",
-				"stroke": "#059669",
+				"fill": "rgba(22, 101, 52, 0.28)",
+				"stroke": "#86efac",
 				"lineWidth": 1.5
 			}
 		],
@@ -876,13 +714,13 @@
 			{
 				"type": "rect",
 				"cX": 660,
-				"cY": 1660,
+				"cY": 1710,
 				"rH": 5,
 				"rV": 20.0
 			},
 			{
-				"fill": "#ffffff",
-				"stroke": "#111827",
+				"fill": "rgba(203, 213, 225, 0.4)",
+				"stroke": "#475569",
 				"lineWidth": 1
 			}
 		],
@@ -891,41 +729,28 @@
 			{
 				"type": "rect",
 				"cX": 1140,
-				"cY": 1660,
+				"cY": 1710,
 				"rH": 5,
 				"rV": 20.0
 			},
 			{
-				"fill": "#ffffff",
-				"stroke": "#111827",
+				"fill": "rgba(203, 213, 225, 0.4)",
+				"stroke": "#475569",
 				"lineWidth": 1
 			}
-		],
-		[
-			"lbl-42",
-			{
-				"type": "rect",
-				"cX": 900.0,
-				"cY": 1632,
-				"rH": 220.0,
-				"rV": 14,
-				"html": "14a. capture(authToken)",
-				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px"
-			},
-			{}
 		],
 		[
 			"pay-43",
 			{
 				"type": "rect",
 				"cX": 1140,
-				"cY": 1740,
+				"cY": 1790,
 				"rH": 5,
 				"rV": 20.0
 			},
 			{
-				"fill": "#ffffff",
-				"stroke": "#111827",
+				"fill": "rgba(203, 213, 225, 0.4)",
+				"stroke": "#475569",
 				"lineWidth": 1
 			}
 		],
@@ -934,43 +759,30 @@
 			{
 				"type": "rect",
 				"cX": 660,
-				"cY": 1740,
+				"cY": 1790,
 				"rH": 5,
 				"rV": 20.0
 			},
 			{
-				"fill": "#ffffff",
-				"stroke": "#111827",
+				"fill": "rgba(203, 213, 225, 0.4)",
+				"stroke": "#475569",
 				"lineWidth": 1
 			}
-		],
-		[
-			"lbl-45",
-			{
-				"type": "rect",
-				"cX": 900.0,
-				"cY": 1712,
-				"rH": 220.0,
-				"rV": 14,
-				"html": "14b. 402 Payment Required",
-				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px"
-			},
-			{}
 		],
 		[
 			"alt-note",
 			{
 				"type": "rect",
 				"cX": 1240,
-				"cY": 1820,
+				"cY": 1870,
 				"rH": 210.0,
 				"rV": 45.0,
 				"html": "Gateway rolls back the pending order and releases inventory reservation.",
 				"style": ";display: grid\n;place-items: start\n;padding: 8px\n;text-align: left\n;font-size: 12px"
 			},
 			{
-				"fill": "#fef9c3",
-				"stroke": "#ca8a04",
+				"fill": "rgba(146, 64, 14, 0.35)",
+				"stroke": "#fcd34d",
 				"lineWidth": 1.5
 			}
 		],
@@ -979,13 +791,13 @@
 			{
 				"type": "rect",
 				"cX": 660,
-				"cY": 1960,
+				"cY": 2010,
 				"rH": 5,
 				"rV": 25.0
 			},
 			{
-				"fill": "#ffffff",
-				"stroke": "#111827",
+				"fill": "rgba(203, 213, 225, 0.4)",
+				"stroke": "#475569",
 				"lineWidth": 1
 			}
 		],
@@ -994,41 +806,28 @@
 			{
 				"type": "rect",
 				"cX": 900,
-				"cY": 1960,
+				"cY": 2010,
 				"rH": 5,
 				"rV": 25.0
 			},
 			{
-				"fill": "#ffffff",
-				"stroke": "#111827",
+				"fill": "rgba(203, 213, 225, 0.4)",
+				"stroke": "#475569",
 				"lineWidth": 1
 			}
-		],
-		[
-			"lbl-48",
-			{
-				"type": "rect",
-				"cX": 780.0,
-				"cY": 1932,
-				"rH": 100.0,
-				"rV": 14,
-				"html": "15. markPaid(orderId, captureId)",
-				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px"
-			},
-			{}
 		],
 		[
 			"order-49",
 			{
 				"type": "rect",
 				"cX": 900,
-				"cY": 2060,
+				"cY": 2110,
 				"rH": 5,
 				"rV": 25.0
 			},
 			{
-				"fill": "#ffffff",
-				"stroke": "#111827",
+				"fill": "rgba(203, 213, 225, 0.4)",
+				"stroke": "#475569",
 				"lineWidth": 1
 			}
 		],
@@ -1037,41 +836,28 @@
 			{
 				"type": "rect",
 				"cX": 1380,
-				"cY": 2060,
+				"cY": 2110,
 				"rH": 5,
 				"rV": 25.0
 			},
 			{
-				"fill": "#ffffff",
-				"stroke": "#111827",
+				"fill": "rgba(203, 213, 225, 0.4)",
+				"stroke": "#475569",
 				"lineWidth": 1
 			}
-		],
-		[
-			"lbl-51",
-			{
-				"type": "rect",
-				"cX": 1140.0,
-				"cY": 2032,
-				"rH": 220.0,
-				"rV": 14,
-				"html": "16. commitReservation()",
-				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px"
-			},
-			{}
 		],
 		[
 			"inv-52",
 			{
 				"type": "rect",
 				"cX": 1380,
-				"cY": 2160,
+				"cY": 2210,
 				"rH": 5,
 				"rV": 25.0
 			},
 			{
-				"fill": "#ffffff",
-				"stroke": "#111827",
+				"fill": "rgba(203, 213, 225, 0.4)",
+				"stroke": "#475569",
 				"lineWidth": 1
 			}
 		],
@@ -1080,41 +866,28 @@
 			{
 				"type": "rect",
 				"cX": 900,
-				"cY": 2160,
+				"cY": 2210,
 				"rH": 5,
 				"rV": 25.0
 			},
 			{
-				"fill": "#ffffff",
-				"stroke": "#111827",
+				"fill": "rgba(203, 213, 225, 0.4)",
+				"stroke": "#475569",
 				"lineWidth": 1
 			}
-		],
-		[
-			"lbl-54",
-			{
-				"type": "rect",
-				"cX": 1140.0,
-				"cY": 2132,
-				"rH": 220.0,
-				"rV": 14,
-				"html": "17. stockCommitted",
-				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px"
-			},
-			{}
 		],
 		[
 			"order-55",
 			{
 				"type": "rect",
 				"cX": 900,
-				"cY": 2260,
+				"cY": 2310,
 				"rH": 5,
 				"rV": 25.0
 			},
 			{
-				"fill": "#ffffff",
-				"stroke": "#111827",
+				"fill": "rgba(203, 213, 225, 0.4)",
+				"stroke": "#475569",
 				"lineWidth": 1
 			}
 		],
@@ -1123,41 +896,28 @@
 			{
 				"type": "rect",
 				"cX": 1620,
-				"cY": 2260,
+				"cY": 2310,
 				"rH": 5,
 				"rV": 25.0
 			},
 			{
-				"fill": "#ffffff",
-				"stroke": "#111827",
+				"fill": "rgba(203, 213, 225, 0.4)",
+				"stroke": "#475569",
 				"lineWidth": 1
 			}
-		],
-		[
-			"lbl-57",
-			{
-				"type": "rect",
-				"cX": 1260.0,
-				"cY": 2232,
-				"rH": 340.0,
-				"rV": 14,
-				"html": "18. enqueueReceipt(orderId)",
-				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px"
-			},
-			{}
 		],
 		[
 			"notify-58",
 			{
 				"type": "rect",
 				"cX": 1620,
-				"cY": 2360,
+				"cY": 2410,
 				"rH": 5,
 				"rV": 25.0
 			},
 			{
-				"fill": "#ffffff",
-				"stroke": "#111827",
+				"fill": "rgba(203, 213, 225, 0.4)",
+				"stroke": "#475569",
 				"lineWidth": 1
 			}
 		],
@@ -1166,26 +926,273 @@
 			{
 				"type": "rect",
 				"cX": 180,
-				"cY": 2360,
+				"cY": 2410,
 				"rH": 5,
 				"rV": 25.0
 			},
 			{
-				"fill": "#ffffff",
-				"stroke": "#111827",
+				"fill": "rgba(203, 213, 225, 0.4)",
+				"stroke": "#475569",
 				"lineWidth": 1
 			}
+		],
+		[
+			"lbl-3",
+			{
+				"type": "rect",
+				"cX": 300.0,
+				"cY": 292,
+				"rH": 100.0,
+				"rV": 20,
+				"html": "1. addItem(sku, qty)",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px\n;background: rgba(51, 65, 85, .72)\n;color: #f8fafc\n;padding: 2px 6px\n;border-radius: 4px"
+			},
+			{}
+		],
+		[
+			"lbl-6",
+			{
+				"type": "rect",
+				"cX": 540.0,
+				"cY": 392,
+				"rH": 100.0,
+				"rV": 20,
+				"html": "2. POST /cart/items",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px\n;background: rgba(51, 65, 85, .72)\n;color: #f8fafc\n;padding: 2px 6px\n;border-radius: 4px"
+			},
+			{}
+		],
+		[
+			"lbl-9",
+			{
+				"type": "rect",
+				"cX": 780.0,
+				"cY": 492,
+				"rH": 100.0,
+				"rV": 20,
+				"html": "3. addItem(cartId, sku, qty)",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px\n;background: rgba(51, 65, 85, .72)\n;color: #f8fafc\n;padding: 2px 6px\n;border-radius: 4px"
+			},
+			{}
+		],
+		[
+			"lbl-12",
+			{
+				"type": "rect",
+				"cX": 1140.0,
+				"cY": 592,
+				"rH": 220.0,
+				"rV": 20,
+				"html": "4. reserveStock(sku, qty)",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px\n;background: rgba(51, 65, 85, .72)\n;color: #f8fafc\n;padding: 2px 6px\n;border-radius: 4px"
+			},
+			{}
+		],
+		[
+			"lbl-15",
+			{
+				"type": "rect",
+				"cX": 1140.0,
+				"cY": 692,
+				"rH": 220.0,
+				"rV": 20,
+				"html": "5. reservationId",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px\n;background: rgba(51, 65, 85, .72)\n;color: #f8fafc\n;padding: 2px 6px\n;border-radius: 4px"
+			},
+			{}
+		],
+		[
+			"lbl-18",
+			{
+				"type": "rect",
+				"cX": 780.0,
+				"cY": 792,
+				"rH": 100.0,
+				"rV": 20,
+				"html": "6. 201 Created + cart snapshot",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px\n;background: rgba(51, 65, 85, .72)\n;color: #f8fafc\n;padding: 2px 6px\n;border-radius: 4px"
+			},
+			{}
+		],
+		[
+			"lbl-21",
+			{
+				"type": "rect",
+				"cX": 540.0,
+				"cY": 892,
+				"rH": 100.0,
+				"rV": 20,
+				"html": "7. cart updated",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px\n;background: rgba(51, 65, 85, .72)\n;color: #f8fafc\n;padding: 2px 6px\n;border-radius: 4px"
+			},
+			{}
+		],
+		[
+			"lbl-24",
+			{
+				"type": "rect",
+				"cX": 300.0,
+				"cY": 1012,
+				"rH": 100.0,
+				"rV": 20,
+				"html": "8. checkout()",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px\n;background: rgba(51, 65, 85, .72)\n;color: #f8fafc\n;padding: 2px 6px\n;border-radius: 4px"
+			},
+			{}
+		],
+		[
+			"lbl-27",
+			{
+				"type": "rect",
+				"cX": 540.0,
+				"cY": 1112,
+				"rH": 100.0,
+				"rV": 20,
+				"html": "9. POST /checkout",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px\n;background: rgba(51, 65, 85, .72)\n;color: #f8fafc\n;padding: 2px 6px\n;border-radius: 4px"
+			},
+			{}
+		],
+		[
+			"lbl-30",
+			{
+				"type": "rect",
+				"cX": 780,
+				"cY": 1212,
+				"rH": 130,
+				"rV": 20,
+				"html": "10. createOrder(cartId, address)",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px\n;background: rgba(51, 65, 85, .72)\n;color: #f8fafc\n;padding: 2px 6px\n;border-radius: 4px"
+			},
+			{}
+		],
+		[
+			"lbl-33",
+			{
+				"type": "rect",
+				"cX": 970,
+				"cY": 1337,
+				"rH": 105,
+				"rV": 20,
+				"html": "11. validatePromoCode()",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px\n;background: rgba(51, 65, 85, .72)\n;color: #f8fafc\n;padding: 2px 6px\n;border-radius: 4px"
+			},
+			{}
+		],
+		[
+			"lbl-36",
+			{
+				"type": "rect",
+				"cX": 1020,
+				"cY": 1502,
+				"rH": 115,
+				"rV": 20,
+				"html": "12. authorize(orderId, amount)",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px\n;background: rgba(51, 65, 85, .72)\n;color: #f8fafc\n;padding: 2px 6px\n;border-radius: 4px"
+			},
+			{}
+		],
+		[
+			"lbl-39",
+			{
+				"type": "rect",
+				"cX": 900.0,
+				"cY": 1602,
+				"rH": 220.0,
+				"rV": 20,
+				"html": "13. authToken + captureId",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px\n;background: rgba(51, 65, 85, .72)\n;color: #f8fafc\n;padding: 2px 6px\n;border-radius: 4px"
+			},
+			{}
+		],
+		[
+			"lbl-42",
+			{
+				"type": "rect",
+				"cX": 900.0,
+				"cY": 1682,
+				"rH": 220.0,
+				"rV": 20,
+				"html": "14a. capture(authToken)",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px\n;background: rgba(51, 65, 85, .72)\n;color: #f8fafc\n;padding: 2px 6px\n;border-radius: 4px"
+			},
+			{}
+		],
+		[
+			"lbl-45",
+			{
+				"type": "rect",
+				"cX": 900.0,
+				"cY": 1762,
+				"rH": 220.0,
+				"rV": 20,
+				"html": "14b. 402 Payment Required",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px\n;background: rgba(51, 65, 85, .72)\n;color: #f8fafc\n;padding: 2px 6px\n;border-radius: 4px"
+			},
+			{}
+		],
+		[
+			"lbl-48",
+			{
+				"type": "rect",
+				"cX": 780.0,
+				"cY": 1982,
+				"rH": 100.0,
+				"rV": 20,
+				"html": "15. markPaid(orderId, captureId)",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px\n;background: rgba(51, 65, 85, .72)\n;color: #f8fafc\n;padding: 2px 6px\n;border-radius: 4px"
+			},
+			{}
+		],
+		[
+			"lbl-51",
+			{
+				"type": "rect",
+				"cX": 1140.0,
+				"cY": 2082,
+				"rH": 220.0,
+				"rV": 20,
+				"html": "16. commitReservation()",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px\n;background: rgba(51, 65, 85, .72)\n;color: #f8fafc\n;padding: 2px 6px\n;border-radius: 4px"
+			},
+			{}
+		],
+		[
+			"lbl-54",
+			{
+				"type": "rect",
+				"cX": 1140.0,
+				"cY": 2182,
+				"rH": 220.0,
+				"rV": 20,
+				"html": "17. stockCommitted",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px\n;background: rgba(51, 65, 85, .72)\n;color: #f8fafc\n;padding: 2px 6px\n;border-radius: 4px"
+			},
+			{}
+		],
+		[
+			"lbl-57",
+			{
+				"type": "rect",
+				"cX": 1260.0,
+				"cY": 2282,
+				"rH": 340.0,
+				"rV": 20,
+				"html": "18. enqueueReceipt(orderId)",
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px\n;background: rgba(51, 65, 85, .72)\n;color: #f8fafc\n;padding: 2px 6px\n;border-radius: 4px"
+			},
+			{}
 		],
 		[
 			"lbl-60",
 			{
 				"type": "rect",
 				"cX": 900.0,
-				"cY": 2332,
+				"cY": 2382,
 				"rH": 700.0,
-				"rV": 14,
+				"rV": 20,
 				"html": "19. emailReceipt(orderId)",
-				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px"
+				"style": ";display: grid\n;place-items: center\n;text-align: center\n;font-size: 12px\n;background: rgba(51, 65, 85, .72)\n;color: #f8fafc\n;padding: 2px 6px\n;border-radius: 4px"
 			},
 			{}
 		]
@@ -1201,7 +1208,7 @@
 				"web-2"
 			],
 			{
-				"stroke": "#111827",
+				"stroke": "#2563eb",
 				"lineWidth": 1.5
 			}
 		],
@@ -1215,7 +1222,7 @@
 				"gw-5"
 			],
 			{
-				"stroke": "#111827",
+				"stroke": "#2563eb",
 				"lineWidth": 1.5
 			}
 		],
@@ -1229,7 +1236,7 @@
 				"order-8"
 			],
 			{
-				"stroke": "#111827",
+				"stroke": "#2563eb",
 				"lineWidth": 1.5
 			}
 		],
@@ -1243,7 +1250,7 @@
 				"inv-11"
 			],
 			{
-				"stroke": "#111827",
+				"stroke": "#2563eb",
 				"lineWidth": 1.5
 			}
 		],
@@ -1257,7 +1264,7 @@
 				"order-14"
 			],
 			{
-				"stroke": "#111827",
+				"stroke": "#94a3b8",
 				"lineWidth": 1.5,
 				"lineDash": [
 					6,
@@ -1275,7 +1282,7 @@
 				"gw-17"
 			],
 			{
-				"stroke": "#111827",
+				"stroke": "#94a3b8",
 				"lineWidth": 1.5,
 				"lineDash": [
 					6,
@@ -1293,7 +1300,7 @@
 				"web-20"
 			],
 			{
-				"stroke": "#111827",
+				"stroke": "#94a3b8",
 				"lineWidth": 1.5,
 				"lineDash": [
 					6,
@@ -1311,7 +1318,7 @@
 				"web-23"
 			],
 			{
-				"stroke": "#111827",
+				"stroke": "#2563eb",
 				"lineWidth": 1.5
 			}
 		],
@@ -1325,7 +1332,7 @@
 				"gw-26"
 			],
 			{
-				"stroke": "#111827",
+				"stroke": "#2563eb",
 				"lineWidth": 1.5
 			}
 		],
@@ -1339,7 +1346,7 @@
 				"order-29"
 			],
 			{
-				"stroke": "#111827",
+				"stroke": "#2563eb",
 				"lineWidth": 1.5
 			}
 		],
@@ -1353,7 +1360,7 @@
 				"order-32"
 			],
 			{
-				"stroke": "#111827",
+				"stroke": "#2563eb",
 				"lineWidth": 1.5
 			}
 		],
@@ -1367,7 +1374,7 @@
 				"pay-35"
 			],
 			{
-				"stroke": "#111827",
+				"stroke": "#2563eb",
 				"lineWidth": 1.5
 			}
 		],
@@ -1381,7 +1388,7 @@
 				"gw-38"
 			],
 			{
-				"stroke": "#111827",
+				"stroke": "#94a3b8",
 				"lineWidth": 1.5,
 				"lineDash": [
 					6,
@@ -1399,7 +1406,7 @@
 				"pay-41"
 			],
 			{
-				"stroke": "#111827",
+				"stroke": "#2563eb",
 				"lineWidth": 1.5
 			}
 		],
@@ -1413,7 +1420,7 @@
 				"gw-44"
 			],
 			{
-				"stroke": "#111827",
+				"stroke": "#94a3b8",
 				"lineWidth": 1.5,
 				"lineDash": [
 					6,
@@ -1431,7 +1438,7 @@
 				"order-47"
 			],
 			{
-				"stroke": "#111827",
+				"stroke": "#2563eb",
 				"lineWidth": 1.5
 			}
 		],
@@ -1445,7 +1452,7 @@
 				"inv-50"
 			],
 			{
-				"stroke": "#111827",
+				"stroke": "#2563eb",
 				"lineWidth": 1.5
 			}
 		],
@@ -1459,7 +1466,7 @@
 				"order-53"
 			],
 			{
-				"stroke": "#111827",
+				"stroke": "#94a3b8",
 				"lineWidth": 1.5,
 				"lineDash": [
 					6,
@@ -1477,7 +1484,7 @@
 				"notify-56"
 			],
 			{
-				"stroke": "#111827",
+				"stroke": "#2563eb",
 				"lineWidth": 1.5
 			}
 		],
@@ -1491,7 +1498,7 @@
 				"cust-59"
 			],
 			{
-				"stroke": "#111827",
+				"stroke": "#2563eb",
 				"lineWidth": 1.5
 			}
 		]
