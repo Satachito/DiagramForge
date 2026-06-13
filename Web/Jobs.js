@@ -1,5 +1,3 @@
-console.log( 'Jobs.js' )
-
 export	const
 dones	= []
 export	const

@@ -1,6 +1,9 @@
 export	const
 Report = alert
 
+export	const
+STORAGE_KEY	= 'tokyo.828.diagramforge'
+
 window.app		= {
 	model	: {
 		nodes	: []	//	[ ID, S, P ]	(S)hape		, (P)aint
@@ -10,15 +13,44 @@ window.app		= {
 }
 
 export	const
+CANVAS_DEFAULT	= 4096
+
+export	const
+CANVAS_STORAGE_KEY	= `${ STORAGE_KEY }.canvas`
+
+const
+loadCanvasSize	= () => {
+	try {
+		const
+		[ w, h ] = JSON.parse( localStorage.getItem( CANVAS_STORAGE_KEY ) )
+		if	( w > 0 && h > 0 )	return [ w, h ]
+	} catch {}
+	return [ CANVAS_DEFAULT, CANVAS_DEFAULT ]
+}
+
+let
+canvasWidth		= CANVAS_DEFAULT
+,	canvasHeight	= CANVAS_DEFAULT
+
+;[ canvasWidth, canvasHeight ] = loadCanvasSize()
+
+export	const
+CanvasSize		= () => [ canvasWidth, canvasHeight ]
+
+export	const
+SetCanvasSize	= ( width, height ) => {
+	canvasWidth		= width
+	canvasHeight	= height
+	localStorage.setItem( CANVAS_STORAGE_KEY, JSON.stringify( [ width, height ] ) )
+}
+
+export	const
 FindNode		= ID => app.model.nodes.find( _ => _[ 0 ] === ID )
 
 export	const
 FindReform		= ID => app.reforms.find( _ => _[ 0 ] === ID )
 
 import Do from './Jobs.js'
-
-export	const
-STORAGE_KEY	= 'tokyo.828.diagramforge'
 
 const
 Persist		= () => localStorage.setItem( STORAGE_KEY, JSONString() )
@@ -245,8 +277,11 @@ export	const		//	THROWS EXCEPTION
 Load		= _ => DoTypical(
 	'Load'
 ,	() => {
-		app.model = JSON.parse( _ )
-		app.reforms = []
+		const
+		$ = JSON.parse( _ )
+		app.model.nodes	= $.nodes
+		app.model.links	= $.links
+		app.reforms		= []
 	}
 )
 

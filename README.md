@@ -42,6 +42,23 @@ Full schema and authoring rules for AI edits: **[Web/SCHEMA.md](Web/SCHEMA.md)**
 
 Sample files live in **[Samples/](Samples/)**.
 
+## Editing with Cursor or Claude
+
+DiagramForge has no in-app AI panel. The intended workflow is to **create and edit `.cde` files in your editor or with an AI assistant**, then load them in the browser (↑ or a Sample button).
+
+1. Open this repo in **Cursor** or **Claude Code** (or any editor).
+2. Read **[Web/SCHEMA.md](Web/SCHEMA.md)** — node/link shape, paint fields, and rules for safe edits (especially for AI).
+3. Start from a sample in **[Samples/](Samples/)** or ask the model to produce a new `.cde` from a description (e.g. “AWS 3-tier web app”, “mind map about learning Spanish”, “checkout sequence diagram”).
+4. Save the file, load it in the [demo](https://satachito.github.io/DiagramForge/) with **↑**, and iterate.
+
+Tips for AI edits:
+
+- Prefer **rect / ellipse / rhombus** over embedding new base64 icons unless you need a specific cloud glyph.
+- Keep **node IDs stable**; every link must reference existing IDs.
+- Use the samples as style and layout references — **[Samples/Sequence.cde](Samples/Sequence.cde)** for sequence charts, **[Samples/MindMap.cde](Samples/MindMap.cde)** for mind maps, cloud samples for architecture diagrams.
+
+In Cursor, project rules in **[Web/.cursorrules](Web/.cursorrules)** and **[Web/CLAUDE.md](Web/CLAUDE.md)** point agents at `SCHEMA.md` automatically.
+
 ## Run locally
 
 The app is static files under `Web/`. Serve that folder and open `index.html`:

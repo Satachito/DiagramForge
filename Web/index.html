@@ -136,13 +136,29 @@ summary {
 ;	white-space		: pre-wrap
 }
 
-paint-editor	input		{ width	: 128px }
-paint-editor	select		{ width	: 128px }
-link-editor		input		{ width	: 128px }
-link-editor		select		{ width	: 128px }
-shape-editor	input		{ width	: 128px }
-shape-editor	select		{ width	: 128px }
-shape-editor	textarea	{ width	: 100%; height : 6em }
+paint-editor > div:not( :has( textarea ) )
+,	link-editor > div:not( :has( textarea ) )
+,	shape-editor > div:not( :has( textarea ) ) {
+;	display				: grid
+;	grid-template-columns	: 1fr 120px
+;	align-items			: center
+;	column-gap			: 8px
+;	margin-bottom		: 4px
+}
+paint-editor input
+,	paint-editor select
+,	link-editor input
+,	link-editor select
+,	shape-editor input
+,	shape-editor select {
+;	width				: 100%
+;	box-sizing			: border-box
+;	min-width			: 0
+}
+shape-editor > div:has( textarea ) {
+;	margin-bottom		: 4px
+}
+shape-editor textarea	{ width	: 100%; height : 6em; box-sizing: border-box }
 
 </style>
 
@@ -161,6 +177,15 @@ shape-editor	textarea	{ width	: 100%; height : 6em }
 			<option value=link>Link</option>
 		</select>
 	</label>
+	<label style="display:inline-flex; align-items:center; gap:4px;font-size:12px; margin-left:12px">
+		W
+		<input id=CANVAS_W type=number min=256 step=256 value=4096 style="width:64px">
+	</label>
+	<label style="display:inline-flex; align-items:center; gap:4px;font-size:12px">
+		H
+		<input id=CANVAS_H type=number min=256 step=256 value=4096 style="width:64px">
+	</label>
+	<button id=CANVAS_APPLY style="margin-left:4px">Apply</button>
 </header>
 <header style="font-family: cursive; text-align: right; font-size: 11px">
 	<a href=https://github.com/Satachito/DiagramForge target=_blank rel=noopener>GitHub</a>
@@ -226,6 +251,8 @@ import {
 ,	JSONString
 ,	Load
 ,	STORAGE_KEY
+,	CanvasSize
+,	SetCanvasSize
 } from './Application.js'
 
 import	{ DumpJobs } from './Jobs.js'
@@ -249,6 +276,14 @@ window.UpdateApplyNodeLabel = UpdateApplyNodeLabel
 */
 
 const
+SyncCanvasInputs = () => {
+	const
+	[ w, h ] = CanvasSize()
+	CANVAS_W.value	= w
+	CANVAS_H.value	= h
+}
+
+const
 LoadSample = async path => {
 	const
 	res = await fetch( new URL( path, import.meta.url ), { cache: 'no-store' } )
@@ -256,6 +291,15 @@ LoadSample = async path => {
 	await Load( await res.text() )
 	MAIN_EDITOR.Draw()
 	FILE_NAME.value	= path.replace( /^.*\//, '' )
+}
+
+CANVAS_APPLY	.onclick = async () => {
+	const
+	w = Math.round( Number( CANVAS_W.value ) )
+,	h = Math.round( Number( CANVAS_H.value ) )
+	if	( !( w >= 256 && h >= 256 ) )	return Report( 'Canvas width and height must be at least 256.' )
+	SetCanvasSize( w, h )
+	MAIN_EDITOR.Draw()
 }
 
 SAMPLE_JSONS	.onclick = () => LoadSample( 'Samples/JSONs.cde'	).catch( Report )
@@ -321,6 +365,7 @@ onload = async () => {
 	_ = localStorage.getItem( STORAGE_KEY )
 	_	? await Load( _ ).catch( Report )	//	Load() draws on success
 		: MAIN_EDITOR.Draw()
+	SyncCanvasInputs()
 //	UpdateApplyNodeLabel()
 }
 

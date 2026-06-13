@@ -37,10 +37,7 @@ Labeled		= ( parent, label, _ ) => {
 	const
 	$ = AE( parent, 'div' )
 
-	$.style.display			= 'flex'
-	$.style.alignItems		= 'center'
-	$.style.justifyContent	= 'space-between'
-	$.innerHTML				= label
+	AE( $, 'span' ).textContent	= label
 
 	return AC( $, _ )
 }

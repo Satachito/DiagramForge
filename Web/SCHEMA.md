@@ -7,8 +7,9 @@ A `.cde` file is the JSON of the diagram model, tab-indented:
 ```
 
 `index.html` loads it via the `↑` upload button, and the last session is
-auto-restored from `localStorage` (`tokyo.828.diagramforge`). It is drawn on a
-**4096 × 4096** canvas, origin top-left, **y axis pointing down**.
+auto-restored from `localStorage` (`tokyo.828.diagramforge`). The editor canvas
+defaults to **4096 × 4096** pixels (origin top-left, **y axis pointing down**);
+canvas size is editor-only and is not stored in `.cde`.
 
 ## Node
 
@@ -71,4 +72,4 @@ Example:
 - **Keep IDs stable.** Preserve existing IDs, links, and coordinates unless the
   request asks to change them. New nodes get fresh unique string IDs.
 - **Every link must reference existing node IDs.** Place new nodes near related
-  ones and keep the diagram readable (mind the 4096×4096 bounds).
+  ones and keep the diagram readable (within the canvas bounds).

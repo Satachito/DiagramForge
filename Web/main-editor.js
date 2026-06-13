@@ -9,6 +9,7 @@ import {
 ,	Delete
 ,	Copy
 ,	Paste
+,	CanvasSize
 }	from './Application.js'
 
 import {
@@ -308,7 +309,16 @@ export default class
 MainEditor extends HTMLElement {
 
 	Draw() {
+		this.ApplyCanvasSize()
 		Promise.all( [ this.DrawNodes(), this.DrawReforms() ] ).catch( Report )
+	}
+
+	ApplyCanvasSize() {
+		const
+		[ w, h ] = CanvasSize()
+		if	( !( w > 0 && h > 0 ) )	throw new Error( `Invalid canvas size: ${ w }×${ h }` )
+		this.drawer.width		= this.reformer.width		= w
+		this.drawer.height		= this.reformer.height		= h
 	}
 
 	async DrawNodes() {
@@ -448,8 +458,6 @@ MainEditor extends HTMLElement {
 
 		this.drawer					= AE( this, 'canvas' )
 		this.reformer				= AE( this, 'canvas' )
-		this.drawer.width			= this.reformer.width			= 4096
-		this.drawer.height			= this.reformer.height			= 4096
 		this.drawer.style.position	= this.reformer.style.position	= 'absolute'
 		this.linkMenuKey			= null
 
