@@ -1,5 +1,5 @@
-import { Node		}	from './Application.js'
-import { unzipSync	}	from 'https://cdn.jsdelivr.net/npm/fflate@0.6.4/esm/browser.js'
+import { Report, Node	}	from './Application.js'
+import { unzip		}	from './unzip.js'
 import FetchProgression	from './fetch-progression.js'
 import {
 	E
@@ -7,6 +7,11 @@ import {
 ,	AE
 ,	RoleE
 }	from './DomUtils.js'
+
+const
+iconFilter = path =>
+	!path.startsWith( '__MACOSX' )
+&&	( path.endsWith( '.png' ) || path.endsWith( '.svg' ) )
 
 const
 TE		= ( tag, innerHTML ) => {
@@ -38,6 +43,7 @@ IMG		= url => {
 	$.height = 40
 	return $
 }
+
 const
 Base64 = bytes => {
 	let
@@ -51,50 +57,113 @@ Base64 = bytes => {
 	return btoa( binary )
 }
 
+const
+clearIcons = root => {
+	for	( const child of Array.from( root.children ) ) {
+		child.tagName !== 'SUMMARY' && child.remove()
+	}
+}
+
 export default class
 CloudIcons extends HTMLElement {
 
 	constructor() {
 		super()
+		this._buildGen = 0
 
 		this.innerHTML = `
 			<div
 				style="display: flex; font-size: 9px; align-items: flex-end; margin-top: 4px"
 			>	SVG:<input data-role=SVG type=checkbox checked>
 				PNG:<input data-role=PNG type=checkbox>
-				<fetch-progression value=${this.getAttribute( 'url' )} style="margin: 4px 8px 0 8px"></fetch-progression>
+				<fetch-progression style="margin: 4px 8px 0 8px"></fetch-progression>
 			</div>
 		`
 		const
 		root = this.appendChild( DETAILS( this.getAttribute( 'name' ) ) )
-		root.ontoggle = () => this.BuildICONs( root )
+		,	build = () => root.open && this.BuildICONs( root ).catch( Report )
+		root.ontoggle = build
 
-		RoleE( this, 'SVG' ).onclick = () => this.BuildICONs( root )
-		RoleE( this, 'PNG' ).onclick = () => this.BuildICONs( root )
+		RoleE( this, 'SVG' ).onclick = build
+		RoleE( this, 'PNG' ).onclick = build
+	}
+
+	connectedCallback() {
+		this.querySelector( 'fetch-progression' ).value = this.getAttribute( 'url' ) ?? ''
+		this.querySelector( ':scope > details' ).open = true
+	}
+
+	async	fetchZip() {
+		this._fetchPromise || (
+			this._fetchPromise = this.querySelector( 'fetch-progression' ).Fetch().then(
+				buf => {
+					this.FETCHED = buf
+					return buf
+				}
+			,	er => {
+					this._fetchPromise = null
+					throw er
+				}
+			)
+		)
+		return	this._fetchPromise
+	}
+
+	async	unzipIcons() {
+		if	( this.UNZIPPED ) return this.UNZIPPED
+		this._unzipPromise || (
+			this._unzipPromise = unzip(
+				new Uint8Array( this.FETCHED )
+			,	iconFilter
+			).then(
+				icons => {
+					this.UNZIPPED = icons
+					return icons
+				}
+			,	er => {
+					this._unzipPromise = null
+					throw er
+				}
+			)
+		)
+		return	this._unzipPromise
 	}
 
 	async	BuildICONs( root ) {
-		if	( !root.open ) return
+		const
+		showPNG = RoleE( this, 'PNG' ).checked
+		,	showSVG = RoleE( this, 'SVG' ).checked
+		if	( !( showPNG || showSVG ) ) {
+			clearIcons( root )
+			AE( root, 'p' ).textContent = 'Check SVG and/or PNG.'
+			return
+		}
 
-		const showPNG = RoleE( this, 'PNG' ).checked
-		const showSVG = RoleE( this, 'SVG' ).checked
+		const
+		gen = ++this._buildGen
+		clearIcons( root )
+		const
+		status = AE( root, 'p' )
+		status.textContent = 'Loading…'
 
-		for	( const child of Array.from( root.children ) ) child.tagName !== 'SUMMARY' && child.remove()
+		try {
+			await this.fetchZip()
+			if	( gen !== this._buildGen || !root.open ) return
 
-		if	( !( showPNG || showSVG ) ) return
+			const
+			icons = await this.unzipIcons()
+			if	( gen !== this._buildGen || !root.open ) return
 
-		this.FETCHED || ( this.FETCHED = await this.querySelector( 'fetch-progression' ).Fetch() )
-
-		Object.entries( unzipSync( new Uint8Array( this.FETCHED ) ) ).forEach(
-			( [ path, bytes ] ) => {
-				if	( path.startsWith( '__MACOSX' ) || !( path.endsWith( '.png' ) || path.endsWith( '.svg' ) ) ) return
-
-				if	( path.endsWith( '.png' ) && !showPNG ) return
-				if	( path.endsWith( '.svg' ) && !showSVG ) return
+			status.remove()
+			let
+			shown = 0
+			for ( const [ path, bytes ] of Object.entries( icons ) ) {
+				if	( gen !== this._buildGen || !root.open ) return
+				if	( path.endsWith( '.png' ) && !showPNG ) continue
+				if	( path.endsWith( '.svg' ) && !showSVG ) continue
 
 				const
 				pathComponents = path.split( '/' )
-				if ( pathComponents.length == 0 ) return
 				let
 				current = root
 				let
@@ -125,17 +194,20 @@ CloudIcons extends HTMLElement {
 						URL.createObjectURL(
 							new Blob(
 								[ bytes ]
-							,	{ type: path.endsWith( '.svg' ) ? 'image/svg+xml;charset=utf-8' : 'image/png' }
+							,	{
+									type: path.endsWith( '.svg' )
+										?	'image/svg+xml;charset=utf-8'
+										:	'image/png'
+								}
 							)
 						)
 					)
 				)
 				img.onload = () => {
-					row.onclick = async ev => {
+					row.onclick = async () => {
 						const
 						rH	= img.naturalWidth	/ 2
-						const
-						rV	= img.naturalHeight / 2
+						,	rV	= img.naturalHeight / 2
 						await Node(
 							path.endsWith( '.svg' )
 							?	[	null
@@ -149,13 +221,7 @@ CloudIcons extends HTMLElement {
 								,	{}
 								]
 							:	[	null
-								,	{	type	: 'PNG'
-									,	cX		: rH
-									,	cY		: rV
-									,	rH
-									,	rV
-									,	PNG		: Base64( bytes )
-									}
+								,	{ type: 'PNG', cX: rH, cY: rV, rH, rV, PNG: Base64( bytes ) }
 								,	{}
 								]
 						)
@@ -165,8 +231,17 @@ CloudIcons extends HTMLElement {
 				span = row.appendChild( SPAN( pathComponents[ i ] ) )
 				span.style.height = '100%'
 				span.style.padding = '4px'
+				shown++
 			}
-		)
+			if	( !shown ) {
+				AE( root, 'p' ).textContent = 'Check SVG and/or PNG.'
+			}
+		} catch ( er ) {
+			if	( gen === this._buildGen ) {
+				status.textContent = String( er )
+			}
+			throw er
+		}
 	}
 }
 

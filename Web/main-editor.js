@@ -19,49 +19,28 @@ import {
 
 import {
 	AE
-,	EscapeXML
 }	from './DomUtils.js'
+
+import {
+	XYWH
+,	TLBR
+,	XYWH_TLBR
+,	TLBR_XYXY
+,	BBox
+,	ContentBounds
+,	RectPath2D
+,	EllipsePath2D
+,	RhombusPath2D
+,	LinkPath2D
+}	from './diagram-geometry.js'
+
+import { drawLinkCanvas } from './link-draw.js'
 
 const	
 mouse			= [ null, null ]
 
 const
-XYWH			= ( { cX, cY, rH, rV } ) => [ cX - rH, cY - rV, rH + rH, rV + rV ]
-
-const
-T				= ( { cX, cY, rH, rV } ) => rV > 0 ? cY - rV : cY + rV
-const
-B				= ( { cX, cY, rH, rV } ) => rV > 0 ? cY + rV : cY - rV
-const
-L				= ( { cX, cY, rH, rV } ) => rH > 0 ? cX - rH : cX + rH
-const
-R				= ( { cX, cY, rH, rV } ) => rH > 0 ? cX + rH : cX - rH
-
-//const
-//TLBR			= S => [ T( S ), L( S ), B( S ), R( S ) ]
-//	OPTIMIZED
-const
-TLBR			= ( { cX, cY, rH, rV } ) => 0 < rH
-?	0 < rV
-	?	[ cY - rV, cX - rH, cY + rV, cX + rH ]
-	:	[ cY + rV, cX - rH, cY - rV, cX + rH ]
-:	0 < rV
-	?	[ cY - rV, cX + rH, cY + rV, cX - rH ]
-	:	[ cY + rV, cX + rH, cY - rV, cX - rH ]
-;
-
-
-const
-XYWH_TLBR		= ( [ T, L, B, R ] ) => [ L, T, R - L, B - T ]
-const
 XYWH_XYXY		= ( [ [ x, y ], [ X, Y ] ] ) => [ x, y, X - x, Y - y ]
-const
-TLBR_XYXY		= ( [ [ x, y ], [ X, Y ] ] ) => [
-	y < Y ? y : Y
-,	x < X ? x : X
-,	y < Y ? Y : y
-,	x < X ? X : x
-]
 
 const
 XY_EV			= ev => [ ev.offsetX, ev.offsetY ]
@@ -94,147 +73,6 @@ EdgeDist		= ( [ T, L, B, R ], [ x, y ] ) => [
 //	Outside	: min( ...__ ) < -4
 //	Edge	: -4 <= min( ...__ ) <= 0
 //	Inside	: 0 < min( ..._ )
-	
-const
-Union			= ( [ T, L, B, R ], [ t, l, b, r ] ) => [
-	T < t ? T : t
-,	L < l ? L : l
-,	b < B ? B : b
-,	r < R ? R : r
-]
-
-const
-RectPath2D		= S => {
-	const	$ = new Path2D
-	$.roundRect( ...XYWH( S ), S.radii ?? 0 )
-	return	$
-}
-const
-EllipsePath2D	= ( { cX, cY, rH, rV } ) => {
-	const	$ = new Path2D
-	$.ellipse( cX, cY, rH, rV, 0, 0, 2 * Math.PI )
-	return	$
-}
-const
-RhombusPath2D	= ( { cX, cY, rH, rV } ) => {
-	const	$ = new Path2D
-	$.moveTo( cX, cY - rV )
-	$.lineTo( cX + rH, cY )
-	$.lineTo( cX, cY + rV )
-	$.lineTo( cX - rH, cY )
-	$.closePath()
-	return	$
-}
-
-const
-LinkCoordinates	= ( sF, aF, sT, aT ) => {
-	const
-	$ = ( S, A, s, a ) => {
-		switch	( A ) {
-		case "TL"	: return [ L( S ), T( S ) ]
-		case "TR"	: return [ R( S ), T( S ) ]
-		case "BL"	: return [ L( S ), B( S ) ]
-		case "BR"	: return [ R( S ), B( S ) ]
-		case "T"	: switch	( a ) {
-			case "TL"	: return [ L( s )	, T( S )	]
-			case "TR"	: return [ R( s )	, T( S )	]
-			case "BL"	: return [ L( s )	, T( S )	]
-			case "BR"	: return [ R( s )	, T( S )	]
-			default		: return [ S.cX		, T( S )	]
-			}
-		case "L"	: switch	( a ) {
-			case "TL"	: return [ L( S )	, T( s )	]
-			case "TR"	: return [ L( S )	, T( s )	]
-			case "BL"	: return [ L( S )	, B( s )	]
-			case "BR"	: return [ L( S )	, B( s )	]
-			default		: return [ L( S )	, S.cY		]
-			}
-		case "B"	: switch	( a ) {
-			case "TL"	: return [ L( s )	, B( S )	]
-			case "TR"	: return [ R( s )	, B( S )	]
-			case "BL"	: return [ L( s )	, B( S )	]
-			case "BR"	: return [ R( s )	, B( S )	]
-			default		: return [ S.cX		, B( S )	]
-			}
-		case "R"	: switch	( a ) {
-			case "TL"	: return [ R( S )	, T( s )	]
-			case "TR"	: return [ R( S )	, T( s )	]
-			case "BL"	: return [ R( S )	, B( s )	]
-			case "BR"	: return [ R( S )	, B( s )	]
-			default		: return [ R( S )	, S.cY		]
-			}
-		default:
-			{	const	dX = s.cX - S.cX
-				const	dY = s.cY - S.cY
-				if	( !dX && !dY ) return [ S.cX, S.cY ]
-				const	sH = dX ? Math.abs( S.rH / dX ) : Infinity
-				const	sV = dY ? Math.abs( S.rV / dY ) : Infinity
-				const	$ = sH < sV ? sH : sV
-				return	[ S.cX + dX * $, S.cY + dY * $ ]
-			}
-		}
-	}
-	return [
-		$( sF, aF, sT, aT )
-	,	$( sT, aT, sF, aF )
-	]
-}
-
-/*	Horizontal canonical link shaft + affine map to segment pA → pB	*/
-const
-LinkPath2D		= ( shapeF, { headF, headT, anchorF, anchorT }, shapeT ) => {
-	const	[ [ pFX, pFY ], [ pTX, pTY ] ] = LinkCoordinates( shapeF, anchorF, shapeT, anchorT )
-	const	dX = pTX - pFX
-	const	dY = pTY - pFY
-	const	len = Math.hypot( dX, dY )
-	const	$ = new Path2D
-	if	( len < 1 ) return $
-
-	const	headLen = Math.min( 14, len * 0.35 )
-	const	headHalf = Math.max( 5, headLen * 0.5 )
-	const	shaftHalf = Math.max( 2, headHalf * 0.45 )
-
-	const	fNeckX = headF ? headLen : 0
-	const	tNeckX = len - ( headT ? headLen : 0 )
-	const	points = []
-	if	( headF ) {
-		points.push( [ 0, 0 ] )
-		points.push( [ fNeckX, headHalf ] )
-		points.push( [ fNeckX, shaftHalf ] )
-	} else {
-		points.push( [ 0, shaftHalf ] )
-	}
-	points.push( [ tNeckX, shaftHalf ] )
-	if	( headT ) {
-		points.push( [ tNeckX, headHalf ] )
-		points.push( [ len, 0 ] )
-		points.push( [ tNeckX, -headHalf ] )
-	} else {
-		points.push( [ len, shaftHalf ] )
-		points.push( [ len, -shaftHalf ] )
-	}
-	points.push( [ tNeckX, -shaftHalf ] )
-	points.push( [ fNeckX, -shaftHalf ] )
-	if	( headF ) {
-		points.push( [ fNeckX, -headHalf ] )
-	} else {
-		points.push( [ 0, -shaftHalf ] )
-	}
-
-	const	toW = ( lx, ly ) => [
-		pFX + lx * ( dX / len ) - ly * ( dY / len )
-	,	pFY + lx * ( dY / len ) + ly * ( dX / len )
-	]
-
-	const	[ x0, y0 ] = toW( ...points[ 0 ] )
-	$.moveTo( x0, y0 )
-	for	( let i = 1; i < points.length; i++ ) {
-		const	[ wx, wy ] = toW( ...points[ i ] )
-		$.lineTo( wx, wy )
-	}
-	$.closePath()
-	return	$
-}
 
 const
 DrawPath		= ( c2D, path, P ) => {
@@ -249,12 +87,108 @@ DrawPath		= ( c2D, path, P ) => {
 		const	lineWidth		= P[ 'lineWidth'		]; lineWidth		&& ( c2D.lineWidth		= lineWidth			)
 		const	lineCap			= P[ 'lineCap'			]; lineCap			&& ( c2D.lineCap		= lineCap			)
 		const	lineJoin		= P[ 'lineJoin'			]; lineJoin			&& ( c2D.lineJoin		= lineJoin			)
-		const	lineDash		= P[ 'lineDash'			]; lineDash			&& ( c2D.lineDash		= lineDash			)
+		const	lineDash		= P[ 'lineDash'			]; c2D.setLineDash( lineDash?.length ? lineDash : [] )
 		const	lineDashOffset	= P[ 'lineDashOffset'	]; lineDashOffset	&& ( c2D.lineDashOffset	= lineDashOffset	)
 		const	miterLimit		= P[ 'miterLimit'		]; miterLimit		&& ( c2D.miterLimit		= miterLimit		)
 		c2D.strokeStyle = stroke
 		c2D.stroke( path )
 	}
+	c2D.restore()
+}
+
+const
+parseStyle		= style => {
+	const	out = {}
+	if	( !style ) return out
+	style.replace( /\n/g, '' ).split( ';' ).forEach(
+		part => {
+			const
+			i = part.indexOf( ':' )
+			if	( i < 0 ) return
+			const
+			key = part.slice( 0, i ).trim().toLowerCase()
+			,	val = part.slice( i + 1 ).trim()
+			key && val && ( out[ key ] = val )
+		}
+	)
+	return	out
+}
+
+const
+decodeHtml		= html => {
+	const	$ = document.createElement( 'textarea' )
+	$.innerHTML = html
+	return	$.value
+}
+
+const
+wrapLines		= ( c2D, text, maxWidth ) => {
+	const
+	lines = []
+	text.split( /\n|<br\s*\/?>/i ).forEach(
+		paragraph => {
+			const
+			words = paragraph.trim().split( /\s+/ ).filter( Boolean )
+			if	( !words.length ) {
+				lines.push( '' )
+				return
+			}
+			let
+			line = words[ 0 ]
+			for	( let i = 1; i < words.length; i++ ) {
+				const
+				next = `${ line } ${ words[ i ] }`
+				if	( c2D.measureText( next ).width > maxWidth && line ) {
+					lines.push( line )
+					line = words[ i ]
+				} else	line = next
+			}
+			lines.push( line )
+		}
+	)
+	return	lines.length ? lines : [ '' ]
+}
+
+const
+DrawHtmlLabel	= ( c2D, S ) => {
+	const
+	st = parseStyle( S.style )
+	,	fontSize = parseFloat( st[ 'font-size' ] ) || 12
+	,	fontWeight = st[ 'font-weight' ] || 'normal'
+	,	fontFamily = st[ 'font-family' ] || 'courier, monospace'
+	,	lineHeight = parseFloat( st[ 'line-height' ] ) || 1.2
+	,	textAlign = st[ 'text-align' ] || 'center'
+	,	[ x, y, w, h ] = XYWH( S )
+	,	pad = 4
+	,	innerW = Math.max( 0, w - pad * 2 )
+	,	color = matchMedia( '(prefers-color-scheme: dark)' ).matches ? '#ffffff' : '#000000'
+
+	c2D.save()
+	c2D.fillStyle = color
+	c2D.font = `${ fontWeight } ${ fontSize }px ${ fontFamily }`
+	c2D.textAlign = textAlign === 'right' ? 'right' : textAlign === 'left' ? 'left' : 'center'
+	c2D.textBaseline = 'alphabetic'
+
+	const
+	lines = wrapLines( c2D, decodeHtml( S.html ), innerW )
+	,	linePx = fontSize * lineHeight
+	,	blockH = lines.length * linePx
+	,	alignItems = st[ 'align-items' ] || st[ 'place-items' ] || 'center'
+	let
+	startY = y + ( h - blockH ) / 2 + fontSize
+	if	( /flex-end|end/.test( alignItems ) )	startY = y + h - pad - blockH + fontSize
+	else if	( /flex-start|start/.test( alignItems ) )	startY = y + pad + fontSize
+
+	const
+	textX = textAlign === 'right'
+	?	x + w - pad
+	:	textAlign === 'left'
+	?	x + pad
+	:	x + w / 2
+
+	lines.forEach(
+		( line, i ) => c2D.fillText( line, textX, startY + i * linePx )
+	)
 	c2D.restore()
 }
 
@@ -283,12 +217,6 @@ Node_XY		= ( [ x, y ] ) => {
 	,	drafts[ 0 ]
 	)[ 0 ]
 }
-
-const
-BBox		= _ => _.slice( 1 ).reduce(
-	( $, _ ) => Union( $, TLBR( _[ 1 ] ) )
-,	TLBR( _[ 0 ][ 1 ] )
-)
 
 const
 UpdateHoverLabel = ev => {
@@ -326,28 +254,14 @@ MainEditor extends HTMLElement {
 
 		const
 		drawSVG		= async ( svg, S ) => {
-			const	url = URL.createObjectURL(
-				new Blob(
-					svg
-				,	{ type: 'image/svg+xml;charset=utf-8' }
-				)
-			)
+			const
+			blob = new Blob( svg, { type: 'image/svg+xml;charset=utf-8' } )
+			const
+			bitmap = await createImageBitmap( blob )
 			try {
-				const	image = new Image()
-				image.src = url
-				if	( image.decode ) {
-					await image.decode()
-				} else {
-					await new Promise(
-						( S, J ) => (
-							image.onload = () => S()
-						,	image.onerror = () => J( new Error( 'SVG: loading failed' ) )
-						)
-					)
-				}
-				c2D.drawImage( image, ...XYWH( S ) )
+				c2D.drawImage( bitmap, ...XYWH( S ) )
 			} finally {
-				URL.revokeObjectURL( url )
+				bitmap.close()
 			}
 		}
 
@@ -386,22 +300,7 @@ MainEditor extends HTMLElement {
 					console.log( 'Unknown:', S.type )
 					break
 				}
-				if	( S.html ) {
-					const	color = matchMedia( '(prefers-color-scheme: dark)' ).matches
-					?	'#ffffff'
-					:	'#000000'
-					const	style = `width:100%;height:100%;box-sizing:border-box;color-scheme:light dark;color:${ color };${ S.style }`
-					const	[ w, h ] = [ S.rH * 2, S.rV * 2 ]
-					await drawSVG(
-						[	`<svg xmlns="http://www.w3.org/2000/svg" width="${ w }" height="${ h }" viewBox="0 0 ${ w } ${ h }">
-								<foreignObject x="0" y="0" width="100%" height="100%">
-								<div xmlns="http://www.w3.org/1999/xhtml" style="${ EscapeXML( style ) }">
-								${ EscapeXML( S.html ) }
-							</div></foreignObject></svg>`
-						]
-					,	S
-					)
-				}
+				if	( S.html )	DrawHtmlLabel( c2D, S )
 			} catch ( er ) {
 				console.error( 'DrawNodes failed:', ID, er )
 			}
@@ -412,7 +311,7 @@ MainEditor extends HTMLElement {
 			( [ [ F, A, T ], P ] ) => {
 				const	nF = FindNode( F )
 				const	nT = FindNode( T )
-				nF && nT && DrawPath( c2D, LinkPath2D( nF[ 1 ], A, nT[ 1 ] ), P )
+				nF && nT && drawLinkCanvas( c2D, nF[ 1 ], A, nT[ 1 ], P )
 			}
 		)
 	}
@@ -424,11 +323,7 @@ MainEditor extends HTMLElement {
 		for ( const [ [ F, A, T ], S ] of app.model.links ) {
 			const	rF = FindReform( F )
 			const	rT = FindReform( T )
-			rF && rT && DrawPath(
-				c2D
-			,	LinkPath2D( rF[ 1 ], A, rT[ 1 ] )
-			,	S
-			)
+			rF && rT && drawLinkCanvas( c2D, rF[ 1 ], A, rT[ 1 ], S )
 		}
 
 		if	( app.reforms.length ) {
@@ -815,6 +710,39 @@ MainEditor extends HTMLElement {
 			'change'
 		,	() => this.Draw()
 		)
+	}
+
+	async	exportCanvas( pad = 32 ) {
+		this.ApplyCanvasSize()
+		await this.DrawNodes()
+
+		const
+		[ cw, ch ] = CanvasSize()
+		if	( !app.model.nodes.length ) {
+			const
+			out = document.createElement( 'canvas' )
+			out.width = cw
+			out.height = ch
+			const
+			c2D = out.getContext( '2d' )
+			c2D.fillStyle = matchMedia( '(prefers-color-scheme: dark)' ).matches ? '#000000' : '#ffffff'
+			c2D.fillRect( 0, 0, cw, ch )
+			c2D.drawImage( this.drawer, 0, 0 )
+			return out
+		}
+
+		const
+		{ x, y, width, height } = ContentBounds( app.model.nodes, pad, CanvasSize )
+		const
+		out = document.createElement( 'canvas' )
+		out.width = width
+		out.height = height
+		const
+		c2D = out.getContext( '2d' )
+		c2D.fillStyle = matchMedia( '(prefers-color-scheme: dark)' ).matches ? '#000000' : '#ffffff'
+		c2D.fillRect( 0, 0, width, height )
+		c2D.drawImage( this.drawer, x, y, width, height, 0, 0, width, height )
+		return out
 	}
 }
 
