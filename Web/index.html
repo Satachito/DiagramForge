@@ -2,6 +2,10 @@
 <html lang=en>
 <meta charset=utf-8>
 <meta name=viewport content="width=device-width, initial-scale=1">
+<meta name=description content="DiagramForge — canvas diagram editor for cloud architecture, mind maps, and sequence diagrams. JSON-native .cde format.">
+<meta property=og:title content=DiagramForge>
+<meta property=og:description content="Canvas diagram editor for cloud architecture, mind maps, and sequence diagrams.">
+<meta property=og:url content=https://satachito.github.io/DiagramForge/>
 <title>DiagramForge</title>
 <style>
 :root {
@@ -37,6 +41,12 @@ header {
 ;	border-bottom			: 1px solid gray
 ;	padding					: 8px
 }
+header a {
+;	color					: inherit
+}
+header a:hover {
+;	text-decoration			: underline
+}
 footer {
 ;	border-top				: 1px solid gray
 ;	padding					: 8px
@@ -51,6 +61,14 @@ aside > button {
 ;	display					: block
 ;	margin-top				: 4px
 ;	width					: 100%
+}
+aside details {
+;	margin-top				: 8px
+}
+aside summary {
+;	cursor					: pointer
+;	font-size				: 12px
+;	margin-bottom			: 4px
 }
 nav {
 ;	border-right			: 1px solid gray
@@ -128,8 +146,11 @@ shape-editor	textarea	{ width	: 100%; height : 6em }
 
 </style>
 
-<header style="font-family: fantasy; margin-right: 16px; font-size: 24px">
+<header style="font-family: fantasy; margin-right: 16px; font-size: 24px; line-height: 1.15">
 	DiagramForge
+	<div style="font-family: courier; font-size: 10px; font-weight: normal; margin-top: 3px">
+		Cloud · Mind map · Sequence · JSON .cde
+	</div>
 </header>
 <header>
 	<label style="display:inline-flex; align-items:center; gap:4px;font-size:12px">
@@ -141,8 +162,11 @@ shape-editor	textarea	{ width	: 100%; height : 6em }
 		</select>
 	</label>
 </header>
-<header style="font-family: cursive; text-align: right">
-	<div style="font-size: 10px">Written by Satoru Ogura, and AIs.</div>
+<header style="font-family: cursive; text-align: right; font-size: 11px">
+	<a href=https://github.com/Satachito/DiagramForge target=_blank rel=noopener>GitHub</a>
+	·
+	<a href=https://github.com/Satachito/DiagramForge/blob/main/Web/SCHEMA.md target=_blank rel=noopener>.cde schema</a>
+	<div style="font-size: 10px; margin-top: 4px">Written by Satoru Ogura, and AIs.</div>
 </header>
 
 <nav>
@@ -177,12 +201,13 @@ shape-editor	textarea	{ width	: 100%; height : 6em }
 	<input			id=NODE_ID style="width: 100%">
 	<button			id=NODE				>Apply/Create Node	</button>
 
-	<hr>
-
-	<button			id=DUMP_CDE			>Dump CDE			</button>
-	<button			id=DUMP_JOBS		>Dump Jobs			</button>
-	<button			id=DUMP_CLIPBOARD	>Dump Clipboard		</button>
-	<button			id=FORCE_DRAW		>Force Draw			</button>
+	<details>
+		<summary>Debug</summary>
+		<button			id=DUMP_CDE			>Dump CDE			</button>
+		<button			id=DUMP_JOBS		>Dump Jobs			</button>
+		<button			id=DUMP_CLIPBOARD	>Dump Clipboard		</button>
+		<button			id=FORCE_DRAW		>Force Draw			</button>
+	</details>
 </aside>
 
 <footer>
