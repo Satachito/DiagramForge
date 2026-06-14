@@ -48,7 +48,7 @@ import {
 ,	Node_XY
 }	from './selection-hit.js'
 
-import { DrawLabel		} from './DrawLabel.js'
+import { DrawForeignLabel	} from './ForeignLabel.js'
 import { DrawLinkCanvas	} from './DrawLink.js'
 
 const
@@ -190,7 +190,7 @@ MainEditor extends HTMLElement {
 					console.log( 'Unknown:', S.type )
 					break
 				}
-				if	( S.html )	DrawLabel( c2D, S )
+				if	( S.html )	await DrawForeignLabel( drawSVG, S )
 			} catch ( er ) {
 				console.error( 'DrawNodes failed:', ID, er )
 			}
@@ -712,41 +712,6 @@ MainEditor extends HTMLElement {
 			)
 			await this.DrawReforms()
 		}
-	}
-
-	async	exportCanvas( pad = 32 ) {
-		this.ApplyCanvasSize()
-		await this.DrawNodes()
-
-		const
-		[ cw, ch ] = CanvasSize()
-		if	( !app.model.nodes.length ) {
-			const
-			out = document.createElement( 'canvas' )
-			out.width = cw
-			out.height = ch
-			const
-			c2D = out.getContext( '2d' )
-			c2D.fillStyle = matchMedia( '(prefers-color-scheme: dark)' ).matches ? '#000000' : '#ffffff'
-			c2D.fillRect( 0, 0, cw, ch )
-			c2D.drawImage( this.drawer, 0, 0 )
-			return out
-		}
-
-		const
-		out = document.createElement( 'canvas' )
-		out.width = cw
-		out.height = ch
-		const
-		c2D = out.getContext( '2d' )
-		c2D.fillStyle = matchMedia( '(prefers-color-scheme: dark)' ).matches ? '#000000' : '#ffffff'
-		c2D.fillRect( 0, 0, cw, ch )
-		if ( app.model.nodes.length ) {
-			const
-			[ X, Y, W, H ] = XYWH_TLBR( BBox( app.model.nodes ) )
-			c2D.drawImage( this.drawer, X, Y, W, H, 0, 0, W, H )
-		}
-		return out
 	}
 }
 

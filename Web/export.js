@@ -1,8 +1,8 @@
-import { FindNode	, CanvasSize	} from './Application.js'
+import { FindNode	} from './Application.js'
 import { EscapeXML					} from './DomUtils.js'
 import { XYWH		, XYWH_TLBR		} from './geo2D.js'
 import { BBox						} from './geoDF.js'
-import { LabelLayout				} from './DrawLabel.js'
+import { drawForeignLabelSvg		} from './ForeignLabel.js'
 import { DrawLinkSvg				} from './DrawLink.js'
 
 const
@@ -77,41 +77,6 @@ drawShape		= ( parts, X, Y, S, P ) => {
 }
 
 const
-drawLabel		= ( parts, X, Y, S ) => {
-	if	( !S.html ) return
-	const
-	{
-		lines
-	,	fontSize
-	,	fontWeight
-	,	fontFamily
-	,	textAlign
-	,	textX
-	,	startY
-	,	linePx
-	,	color
-	,	textBaseline
-	} = LabelLayout( S )
-	const
-	anchor = textAlign === 'right' ? 'end' : textAlign === 'left' ? 'start' : 'middle'
-	const
-	x = X( textX )
-	,	y0 = Y( startY )
-	,	baselineAttr = textBaseline === 'middle' ? ' dominant-baseline="middle"' : ''
-	parts.push(
-		`<text x="${ x }" y="${ y0 }" text-anchor="${ anchor }"${ baselineAttr } font-size="${ fontSize }" font-family="${ EscapeXML( fontFamily ) }" font-weight="${ EscapeXML( fontWeight ) }" fill="${ EscapeXML( color ) }">`
-	)
-	lines.forEach(
-		( line, i ) => parts.push(
-			i
-			?	`<tspan x="${ x }" dy="${ linePx }">${ EscapeXML( line ) }</tspan>`
-			:	`<tspan x="${ x }">${ EscapeXML( line ) }</tspan>`
-		)
-	)
-	parts.push( '</text>' )
-}
-
-const
 drawSvgNode		= ( parts, X, Y, S ) => {
 	const
 	[ x, y, w, h ] = XYWH( S )
@@ -167,16 +132,16 @@ saveVectorSVG	= filename => {
 	for ( const [ , S, P ] of app.model.nodes ) {
 		if	( S.type === 'SVG' ) {
 			drawSvgNode( parts, X, Y, S )
-			drawLabel( parts, X, Y, S )
+			drawForeignLabelSvg( parts, X, Y, S )
 			continue
 		}
 		if	( S.type === 'PNG' ) {
 			drawPngNode( parts, X, Y, S )
-			drawLabel( parts, X, Y, S )
+			drawForeignLabelSvg( parts, X, Y, S )
 			continue
 		}
 		drawShape( parts, X, Y, S, P )
-		drawLabel( parts, X, Y, S )
+		drawForeignLabelSvg( parts, X, Y, S )
 	}
 
 	for ( const [ [ F, A, T ], P ] of app.model.links ) {
@@ -192,20 +157,6 @@ saveVectorSVG	= filename => {
 		new Blob( [ parts.join( '\n' ) ], { type: 'image/svg+xml' } )
 	,	`${ baseName( filename ) }.svg`
 	)
-}
-
-export const
-savePNG = async ( editor, filename ) => {
-	const
-	canvas = await editor.exportCanvas()
-	const
-	blob = await new Promise(
-		( S, J ) => canvas.toBlob(
-			b => b ? S( b ) : J( new Error( 'PNG export failed' ) )
-		,	'image/png'
-		)
-	)
-	downloadBlob( blob, `${ baseName( filename ) }.png` )
 }
 
 export const

@@ -9,7 +9,7 @@
 				"rH": 640,
 				"rV": 24,
 				"html": "Architecture (E-commerce Sample)",
-				"style": "display:flex;align-items:flex-end;justify-content:center;text-align:center;width:100%;height:100%;font-size:30px;font-weight:600;font-family:Inter, Segoe UI, Arial, sans-serif;line-height:1.2;box-sizing:border-box;padding:0 10px 10px 10px"
+				"style": ";display         : flex\n;align-items     : flex-end\n;justify-content : center\n;text-align      : center\n;width           : 100%\n;height          : 100%\n;font-size       : 30px\n;font-weight     : 600\n;font-family     : Inter, Segoe UI, Arial, sans-serif\n;line-height     : 1.2\n;box-sizing      : border-box\n;padding         : 0 10px 10px 10px"
 			},
 			{}
 		],
@@ -131,7 +131,7 @@
 				"rV": 46,
 				"radii": 14,
 				"html": "Application Gateway",
-				"style": "display\t\t: flex\n;\talign-items\t: flex-end\n;\tjustify-content\t: center\n;\ttext-align\t: center\n;\tfont-size\t: 14px\n;\tline-height\t: 1.2\n;\tpadding\t\t: 8px"
+				"style": ";display         : flex\n;align-items     : flex-end\n;justify-content : center\n;text-align      : center\n;font-size       : 14px\n;line-height     : 1.2\n;padding         : 8px"
 			},
 			{
 				"stroke": "dodgerblue"
@@ -147,7 +147,7 @@
 				"rV": 46,
 				"radii": 14,
 				"html": "App Service",
-				"style": "display\t\t: flex\n;\talign-items\t: flex-end\n;\tjustify-content\t: center\n;\ttext-align\t: center\n;\tfont-size\t: 16px\n;\tline-height\t: 1.2\n;\tpadding\t\t: 8px"
+				"style": ";display         : flex\n;align-items     : flex-end\n;justify-content : center\n;text-align      : center\n;font-size       : 16px\n;line-height     : 1.2\n;padding         : 8px"
 			},
 			{
 				"stroke": "dodgerblue"
@@ -163,7 +163,7 @@
 				"rV": 46,
 				"radii": 14,
 				"html": "SQL Database",
-				"style": "display\t\t: flex\n;\talign-items\t: flex-end\n;\tjustify-content\t: center\n;\ttext-align\t: center\n;\tfont-size\t: 16px\n;\tline-height\t: 1.2\n;\tpadding\t\t: 8px"
+				"style": ";display         : flex\n;align-items     : flex-end\n;justify-content : center\n;text-align      : center\n;font-size       : 16px\n;line-height     : 1.2\n;padding         : 8px"
 			},
 			{
 				"stroke": "dodgerblue"
@@ -179,7 +179,7 @@
 				"rV": 46,
 				"radii": 14,
 				"html": "Cache for Redis",
-				"style": "display\t\t: flex\n;\talign-items\t: flex-end\n;\tjustify-content\t: center\n;\ttext-align\t: center\n;\tfont-size\t: 16px\n;\tline-height\t: 1.2\n;\tpadding\t\t: 8px"
+				"style": ";display         : flex\n;align-items     : flex-end\n;justify-content : center\n;text-align      : center\n;font-size       : 16px\n;line-height     : 1.2\n;padding         : 8px"
 			},
 			{
 				"stroke": "dodgerblue"
@@ -195,7 +195,7 @@
 				"rV": 46,
 				"radii": 14,
 				"html": "Storage Account",
-				"style": "display\t\t: flex\n;\talign-items\t: flex-end\n;\tjustify-content\t: center\n;\ttext-align\t: center\n;\tfont-size\t: 16px\n;\tline-height\t: 1.2\n;\tpadding\t\t: 8px"
+				"style": ";display         : flex\n;align-items     : flex-end\n;justify-content : center\n;text-align      : center\n;font-size       : 16px\n;line-height     : 1.2\n;padding         : 8px"
 			},
 			{
 				"stroke": "dodgerblue"
@@ -211,7 +211,7 @@
 				"rV": 46,
 				"radii": 14,
 				"html": "Log Analytics",
-				"style": "display\t\t: flex\n;\talign-items\t: flex-end\n;\tjustify-content\t: center\n;\ttext-align\t: center\n;\tfont-size\t: 16px\n;\tline-height\t: 1.2\n;\tpadding\t\t: 8px"
+				"style": ";display         : flex\n;align-items     : flex-end\n;justify-content : center\n;text-align      : center\n;font-size       : 16px\n;line-height     : 1.2\n;padding         : 8px"
 			},
 			{
 				"stroke": "dodgerblue"
@@ -227,7 +227,7 @@
 				"rV": 46,
 				"radii": 14,
 				"html": "Functions",
-				"style": "display\t\t: flex\n;\talign-items\t: flex-end\n;\tjustify-content\t: center\n;\ttext-align\t: center\n;\tfont-size\t: 16px\n;\tline-height\t: 1.2\n;\tpadding\t\t: 8px"
+				"style": ";display         : flex\n;align-items     : flex-end\n;justify-content : center\n;text-align      : center\n;font-size       : 16px\n;line-height     : 1.2\n;padding         : 8px"
 			},
 			{
 				"stroke": "dodgerblue"
@@ -243,7 +243,7 @@
 				"rV": 46,
 				"radii": 14,
 				"html": "Service Bus",
-				"style": "display\t\t: flex\n;\talign-items\t: flex-end\n;\tjustify-content\t: center\n;\ttext-align\t: center\n;\tfont-size\t: 16px\n;\tline-height\t: 1.2\n;\tpadding\t\t: 8px"
+				"style": ";display         : flex\n;align-items     : flex-end\n;justify-content : center\n;text-align      : center\n;font-size       : 16px\n;line-height     : 1.2\n;padding         : 8px"
 			},
 			{
 				"stroke": "dodgerblue"
@@ -258,7 +258,7 @@
 				"rH": 640,
 				"rV": 15,
 				"html": "Dark mode optimized / streamlined for readability",
-				"style": "display:flex;align-items:flex-end;justify-content:center;text-align:center;width:100%;height:100%;font-size:16px;font-weight:600;font-family:Inter, Segoe UI, Arial, sans-serif;line-height:1.2;box-sizing:border-box;padding:0 10px 10px 10px"
+				"style": ";display         : flex\n;align-items     : flex-end\n;justify-content : center\n;text-align      : center\n;width           : 100%\n;height          : 100%\n;font-size       : 16px\n;font-weight     : 600\n;font-family     : Inter, Segoe UI, Arial, sans-serif\n;line-height     : 1.2\n;box-sizing      : border-box\n;padding         : 0 10px 10px 10px"
 			},
 			{}
 		],
@@ -296,7 +296,7 @@
 				"rV": 46,
 				"radii": 14,
 				"html": "Front Door",
-				"style": "display\t\t: flex\n;\talign-items\t: flex-end\n;\tjustify-content\t: center\n;\ttext-align\t: center\n;\tfont-size\t: 16px\n;\tline-height\t: 1.2\n;\tpadding\t\t: 8px"
+				"style": ";display         : flex\n;align-items     : flex-end\n;justify-content : center\n;text-align      : center\n;font-size       : 16px\n;line-height     : 1.2\n;padding         : 8px"
 			},
 			{
 				"stroke": "dodgerblue"
@@ -312,7 +312,7 @@
 				"rV": 46,
 				"radii": 14,
 				"html": "Web Application Firewall (WAF)",
-				"style": "display\t\t: flex\n;\talign-items\t: flex-end\n;\tjustify-content\t: center\n;\ttext-align\t: center\n;\tfont-size\t: 16px\n;\tline-height\t: 1.2\n;\tpadding\t\t: 8px"
+				"style": ";display         : flex\n;align-items     : flex-end\n;justify-content : center\n;text-align      : center\n;font-size       : 16px\n;line-height     : 1.2\n;padding         : 8px"
 			},
 			{
 				"stroke": "dodgerblue"
@@ -340,7 +340,7 @@
 				"rV": 46,
 				"radii": 14,
 				"html": "DNS",
-				"style": "display\t\t: flex\n;\talign-items\t: flex-end\n;\tjustify-content\t: center\n;\ttext-align\t: center\n;\tfont-size\t: 16px\n;\tline-height\t: 1.2\n;\tpadding\t\t: 8px"
+				"style": ";display         : flex\n;align-items     : flex-end\n;justify-content : center\n;text-align      : center\n;font-size       : 16px\n;line-height     : 1.2\n;padding         : 8px"
 			},
 			{
 				"stroke": "dodgerblue"
@@ -356,7 +356,7 @@
 				"rV": 46,
 				"radii": 14,
 				"html": "Monitor",
-				"style": "display\t\t: flex\n;\talign-items\t: flex-end\n;\tjustify-content\t: center\n;\ttext-align\t: center\n;\tfont-size\t: 16px\n;\tline-height\t: 1.2\n;\tpadding\t\t: 8px"
+				"style": ";display         : flex\n;align-items     : flex-end\n;justify-content : center\n;text-align      : center\n;font-size       : 16px\n;line-height     : 1.2\n;padding         : 8px"
 			},
 			{
 				"stroke": "dodgerblue"
@@ -372,7 +372,7 @@
 				"rV": 150,
 				"radii": 18,
 				"html": "Operations &amp; Event Layer",
-				"style": "padding\t: 8px 16px"
+				"style": ";display         : flex\n;align-items     : flex-start\n;justify-content : flex-start\n;text-align      : left\n;width           : 100%\n;height          : 100%\n;box-sizing      : border-box\n;padding         : 8px 16px"
 			},
 			{
 				"stroke": "dodgerblue",
@@ -389,7 +389,7 @@
 				"rV": 115,
 				"radii": 18,
 				"html": "Data Layer",
-				"style": "padding\t: 8px 16px"
+				"style": ";display         : flex\n;align-items     : flex-start\n;justify-content : flex-start\n;text-align      : left\n;width           : 100%\n;height          : 100%\n;box-sizing      : border-box\n;padding         : 8px 16px"
 			},
 			{
 				"stroke": "dodgerblue",
@@ -406,7 +406,7 @@
 				"rV": 125,
 				"radii": 18,
 				"html": "Application Layer",
-				"style": "padding\t: 8px 16px"
+				"style": ";display         : flex\n;align-items     : flex-start\n;justify-content : flex-start\n;text-align      : left\n;width           : 100%\n;height          : 100%\n;box-sizing      : border-box\n;padding         : 8px 16px"
 			},
 			{
 				"stroke": "dodgerblue",
@@ -423,7 +423,7 @@
 				"rV": 582.5,
 				"radii": 16,
 				"html": "Virtual Network (VNet)",
-				"style": "padding\t: 8px 16px"
+				"style": ";display         : flex\n;align-items     : flex-start\n;justify-content : flex-start\n;text-align      : left\n;width           : 100%\n;height          : 100%\n;box-sizing      : border-box\n;padding         : 8px 16px"
 			},
 			{
 				"stroke": "dodgerblue",
@@ -440,7 +440,7 @@
 				"rV": 115,
 				"radii": 18,
 				"html": "Link Layer",
-				"style": "padding\t: 8px 16px"
+				"style": ";display         : flex\n;align-items     : flex-start\n;justify-content : flex-start\n;text-align      : left\n;width           : 100%\n;height          : 100%\n;box-sizing      : border-box\n;padding         : 8px 16px"
 			},
 			{
 				"stroke": "dodgerblue",
@@ -452,7 +452,10 @@
 		[
 			[
 				"dns-label",
-				{ "headF": true, "headT": true },
+				{
+					"headF": true,
+					"headT": true
+				},
 				"cdn-label"
 			],
 			{
@@ -462,7 +465,10 @@
 		[
 			[
 				"cdn-label",
-				{ "headF": true, "headT": true },
+				{
+					"headF": true,
+					"headT": true
+				},
 				"armor-label"
 			],
 			{
@@ -472,7 +478,10 @@
 		[
 			[
 				"armor-label",
-				{ "headF": true, "headT": true },
+				{
+					"headF": true,
+					"headT": true
+				},
 				"lb-label"
 			],
 			{
@@ -482,7 +491,10 @@
 		[
 			[
 				"lb-label",
-				{ "headF": true, "headT": true },
+				{
+					"headF": true,
+					"headT": true
+				},
 				"app-label"
 			],
 			{
@@ -492,7 +504,10 @@
 		[
 			[
 				"app-label",
-				{ "headF": true, "headT": true },
+				{
+					"headF": true,
+					"headT": true
+				},
 				"sql-label"
 			],
 			{
@@ -502,7 +517,10 @@
 		[
 			[
 				"app-label",
-				{ "headF": true, "headT": true },
+				{
+					"headF": true,
+					"headT": true
+				},
 				"redis-label"
 			],
 			{
@@ -512,7 +530,10 @@
 		[
 			[
 				"app-label",
-				{ "headF": true, "headT": true },
+				{
+					"headF": true,
+					"headT": true
+				},
 				"gcs-label"
 			],
 			{
@@ -522,7 +543,10 @@
 		[
 			[
 				"app-label",
-				{ "headF": true, "headT": true },
+				{
+					"headF": true,
+					"headT": true
+				},
 				"pubsub-label"
 			],
 			{
@@ -532,7 +556,10 @@
 		[
 			[
 				"pubsub-label",
-				{ "headF": true, "headT": true },
+				{
+					"headF": true,
+					"headT": true
+				},
 				"functions-label"
 			],
 			{
@@ -542,7 +569,10 @@
 		[
 			[
 				"functions-label",
-				{ "headF": true, "headT": true },
+				{
+					"headF": true,
+					"headT": true
+				},
 				"logging-label"
 			],
 			{
@@ -552,7 +582,10 @@
 		[
 			[
 				"functions-label",
-				{ "headF": true, "headT": true },
+				{
+					"headF": true,
+					"headT": true
+				},
 				"monitoring-label"
 			],
 			{
@@ -562,7 +595,10 @@
 		[
 			[
 				"app-label",
-				{ "headF": true, "headT": true },
+				{
+					"headF": true,
+					"headT": true
+				},
 				"logging-label"
 			],
 			{
@@ -572,7 +608,10 @@
 		[
 			[
 				"sql-label",
-				{ "headF": true, "headT": true },
+				{
+					"headF": true,
+					"headT": true
+				},
 				"logging-label"
 			],
 			{

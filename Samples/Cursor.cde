@@ -9,7 +9,7 @@
 				"rH": 760,
 				"rV": 24,
 				"html": "Terraform Architecture (Diaz core / dev-stg)",
-				"style": "display:flex;align-items:flex-end;justify-content:center;text-align:center;width:100%;height:100%;font-size:30px;font-weight:600;font-family:Inter, Segoe UI, Arial, sans-serif;line-height:1.2;box-sizing:border-box;padding:0 10px 10px 10px"
+				"style": ";display         : flex\n;align-items     : flex-end\n;justify-content : center\n;text-align      : center\n;width           : 100%\n;height          : 100%\n;font-size       : 30px\n;font-weight     : 600\n;font-family     : Inter, Segoe UI, Arial, sans-serif\n;line-height     : 1.2\n;box-sizing      : border-box\n;padding         : 0 10px 10px 10px"
 			},
 			{}
 		],
@@ -22,7 +22,7 @@
 				"rH": 760,
 				"rV": 16,
 				"html": "Derived from this repository Terraform. Focused on the shared Portal / Flow stack and related data / ops services.",
-				"style": "display:flex;align-items:flex-end;justify-content:center;text-align:center;width:100%;height:100%;font-size:15px;font-weight:600;font-family:Inter, Segoe UI, Arial, sans-serif;line-height:1.2;box-sizing:border-box;padding:0 10px 10px 10px"
+				"style": ";display         : flex\n;align-items     : flex-end\n;justify-content : center\n;text-align      : center\n;width           : 100%\n;height          : 100%\n;font-size       : 15px\n;font-weight     : 600\n;font-family     : Inter, Segoe UI, Arial, sans-serif\n;line-height     : 1.2\n;box-sizing      : border-box\n;padding         : 0 10px 10px 10px"
 			},
 			{}
 		],
@@ -36,7 +36,7 @@
 				"rV": 155,
 				"radii": 18,
 				"html": "Edge / Global Layer",
-				"style": "padding:8px 16px"
+				"style": ";display         : flex\n;align-items     : flex-start\n;justify-content : flex-start\n;text-align      : left\n;width           : 100%\n;height          : 100%\n;box-sizing      : border-box\n;padding         : 8px 16px"
 			},
 			{
 				"stroke": "dodgerblue",
@@ -53,7 +53,7 @@
 				"rV": 167,
 				"radii": 18,
 				"html": "Regional Ingress / Compute Layer",
-				"style": "padding:8px 16px"
+				"style": ";display         : flex\n;align-items     : flex-start\n;justify-content : flex-start\n;text-align      : left\n;width           : 100%\n;height          : 100%\n;box-sizing      : border-box\n;padding         : 8px 16px"
 			},
 			{
 				"stroke": "dodgerblue",
@@ -70,7 +70,7 @@
 				"rV": 155,
 				"radii": 18,
 				"html": "Data Layer",
-				"style": "padding:8px 16px"
+				"style": ";display         : flex\n;align-items     : flex-start\n;justify-content : flex-start\n;text-align      : left\n;width           : 100%\n;height          : 100%\n;box-sizing      : border-box\n;padding         : 8px 16px"
 			},
 			{
 				"stroke": "dodgerblue",
@@ -87,7 +87,7 @@
 				"rV": 85,
 				"radii": 18,
 				"html": "Operations / Event Layer",
-				"style": "padding:8px 16px"
+				"style": ";display         : flex\n;align-items     : flex-start\n;justify-content : flex-start\n;text-align      : left\n;width           : 100%\n;height          : 100%\n;box-sizing      : border-box\n;padding         : 8px 16px"
 			},
 			{
 				"stroke": "dodgerblue",
@@ -104,7 +104,7 @@
 				"rV": 460,
 				"radii": 16,
 				"html": "Amazon VPC (ap-northeast-1 private networking, subnets, NAT, endpoints, TGW attachment)",
-				"style": "padding:8px 16px"
+				"style": ";display         : flex\n;align-items     : flex-start\n;justify-content : flex-start\n;text-align      : left\n;width           : 100%\n;height          : 100%\n;box-sizing      : border-box\n;padding         : 8px 16px"
 			},
 			{
 				"stroke": "dodgerblue",
@@ -121,7 +121,7 @@
 				"rV": 47,
 				"radii": 14,
 				"html": "Amazon Route 53",
-				"style": "display:flex;flex-direction:row;align-items:center;justify-content:flex-start;text-align:left;white-space:pre-wrap;width:100%;height:100%;padding:6px 10px 6px 46px;box-sizing:border-box;font-size:15px;line-height:1.25;font-weight:500"
+				"style": ";display         : flex\n;flex-direction  : row\n;align-items     : center\n;justify-content : flex-start\n;text-align      : left\n;white-space     : pre-wrap\n;width           : 100%\n;height          : 100%\n;padding         : 6px 10px 6px 46px\n;box-sizing      : border-box\n;font-size       : 15px\n;line-height     : 1.25\n;font-weight     : 500"
 			},
 			{
 				"stroke": "dodgerblue"
@@ -137,7 +137,7 @@
 				"rV": 54,
 				"radii": 14,
 				"html": "CloudFront\nPortal",
-				"style": "display:flex;flex-direction:row;align-items:center;justify-content:flex-start;text-align:left;white-space:pre-wrap;width:100%;height:100%;padding:6px 10px 6px 46px;box-sizing:border-box;font-size:15px;line-height:1.25;font-weight:500"
+				"style": ";display         : flex\n;flex-direction  : row\n;align-items     : center\n;justify-content : flex-start\n;text-align      : left\n;white-space     : pre-wrap\n;width           : 100%\n;height          : 100%\n;padding         : 6px 10px 6px 46px\n;box-sizing      : border-box\n;font-size       : 15px\n;line-height     : 1.25\n;font-weight     : 500"
 			},
 			{
 				"stroke": "dodgerblue"
@@ -153,7 +153,7 @@
 				"rV": 54,
 				"radii": 14,
 				"html": "CloudFront\nFlow",
-				"style": "display:flex;flex-direction:row;align-items:center;justify-content:flex-start;text-align:left;white-space:pre-wrap;width:100%;height:100%;padding:6px 10px 6px 46px;box-sizing:border-box;font-size:15px;line-height:1.25;font-weight:500"
+				"style": ";display         : flex\n;flex-direction  : row\n;align-items     : center\n;justify-content : flex-start\n;text-align      : left\n;white-space     : pre-wrap\n;width           : 100%\n;height          : 100%\n;padding         : 6px 10px 6px 46px\n;box-sizing      : border-box\n;font-size       : 15px\n;line-height     : 1.25\n;font-weight     : 500"
 			},
 			{
 				"stroke": "dodgerblue"
@@ -169,7 +169,7 @@
 				"rV": 49,
 				"radii": 14,
 				"html": "AWS WAF\nCloudFront scope",
-				"style": "display:flex;flex-direction:row;align-items:center;justify-content:flex-start;text-align:left;white-space:pre-wrap;width:100%;height:100%;padding:6px 10px 6px 46px;box-sizing:border-box;font-size:15px;line-height:1.25;font-weight:500"
+				"style": ";display         : flex\n;flex-direction  : row\n;align-items     : center\n;justify-content : flex-start\n;text-align      : left\n;white-space     : pre-wrap\n;width           : 100%\n;height          : 100%\n;padding         : 6px 10px 6px 46px\n;box-sizing      : border-box\n;font-size       : 15px\n;line-height     : 1.25\n;font-weight     : 500"
 			},
 			{
 				"stroke": "dodgerblue"
@@ -185,7 +185,7 @@
 				"rV": 58,
 				"radii": 14,
 				"html": "Shared Internal ALB\nPortal owns listener, Flow shares rules",
-				"style": "display:flex;flex-direction:row;align-items:center;justify-content:flex-start;text-align:left;white-space:pre-wrap;width:100%;height:100%;padding:6px 10px 6px 46px;box-sizing:border-box;font-size:15px;line-height:1.25;font-weight:500"
+				"style": ";display         : flex\n;flex-direction  : row\n;align-items     : center\n;justify-content : flex-start\n;text-align      : left\n;white-space     : pre-wrap\n;width           : 100%\n;height          : 100%\n;padding         : 6px 10px 6px 46px\n;box-sizing      : border-box\n;font-size       : 15px\n;line-height     : 1.25\n;font-weight     : 500"
 			},
 			{
 				"stroke": "dodgerblue"
@@ -201,7 +201,7 @@
 				"rV": 58,
 				"radii": 14,
 				"html": "ECS Fargate\nDiaz Portal",
-				"style": "display:flex;flex-direction:row;align-items:center;justify-content:flex-start;text-align:left;white-space:pre-wrap;width:100%;height:100%;padding:6px 10px 6px 46px;box-sizing:border-box;font-size:15px;line-height:1.25;font-weight:500"
+				"style": ";display         : flex\n;flex-direction  : row\n;align-items     : center\n;justify-content : flex-start\n;text-align      : left\n;white-space     : pre-wrap\n;width           : 100%\n;height          : 100%\n;padding         : 6px 10px 6px 46px\n;box-sizing      : border-box\n;font-size       : 15px\n;line-height     : 1.25\n;font-weight     : 500"
 			},
 			{
 				"stroke": "dodgerblue"
@@ -217,7 +217,7 @@
 				"rV": 58,
 				"radii": 14,
 				"html": "ECS Fargate\nDiaz Flow",
-				"style": "display:flex;flex-direction:row;align-items:center;justify-content:flex-start;text-align:left;white-space:pre-wrap;width:100%;height:100%;padding:6px 10px 6px 46px;box-sizing:border-box;font-size:15px;line-height:1.25;font-weight:500"
+				"style": ";display         : flex\n;flex-direction  : row\n;align-items     : center\n;justify-content : flex-start\n;text-align      : left\n;white-space     : pre-wrap\n;width           : 100%\n;height          : 100%\n;padding         : 6px 10px 6px 46px\n;box-sizing      : border-box\n;font-size       : 15px\n;line-height     : 1.25\n;font-weight     : 500"
 			},
 			{
 				"stroke": "dodgerblue"
@@ -233,7 +233,7 @@
 				"rV": 52,
 				"radii": 14,
 				"html": "Amazon RDS\nMySQL",
-				"style": "display:flex;flex-direction:row;align-items:center;justify-content:flex-start;text-align:left;white-space:pre-wrap;width:100%;height:100%;padding:6px 10px 6px 46px;box-sizing:border-box;font-size:15px;line-height:1.25;font-weight:500"
+				"style": ";display         : flex\n;flex-direction  : row\n;align-items     : center\n;justify-content : flex-start\n;text-align      : left\n;white-space     : pre-wrap\n;width           : 100%\n;height          : 100%\n;padding         : 6px 10px 6px 46px\n;box-sizing      : border-box\n;font-size       : 15px\n;line-height     : 1.25\n;font-weight     : 500"
 			},
 			{
 				"stroke": "dodgerblue"
@@ -249,7 +249,7 @@
 				"rV": 52,
 				"radii": 14,
 				"html": "DynamoDB\nNewton subscription",
-				"style": "display:flex;flex-direction:row;align-items:center;justify-content:flex-start;text-align:left;white-space:pre-wrap;width:100%;height:100%;padding:6px 10px 6px 46px;box-sizing:border-box;font-size:15px;line-height:1.25;font-weight:500"
+				"style": ";display         : flex\n;flex-direction  : row\n;align-items     : center\n;justify-content : flex-start\n;text-align      : left\n;white-space     : pre-wrap\n;width           : 100%\n;height          : 100%\n;padding         : 6px 10px 6px 46px\n;box-sizing      : border-box\n;font-size       : 15px\n;line-height     : 1.25\n;font-weight     : 500"
 			},
 			{
 				"stroke": "dodgerblue"
@@ -265,7 +265,7 @@
 				"rV": 52,
 				"radii": 14,
 				"html": "Amazon S3\nlogs / assets / CSV transfer",
-				"style": "display:flex;flex-direction:row;align-items:center;justify-content:flex-start;text-align:left;white-space:pre-wrap;width:100%;height:100%;padding:6px 10px 6px 46px;box-sizing:border-box;font-size:15px;line-height:1.25;font-weight:500"
+				"style": ";display         : flex\n;flex-direction  : row\n;align-items     : center\n;justify-content : flex-start\n;text-align      : left\n;white-space     : pre-wrap\n;width           : 100%\n;height          : 100%\n;padding         : 6px 10px 6px 46px\n;box-sizing      : border-box\n;font-size       : 15px\n;line-height     : 1.25\n;font-weight     : 500"
 			},
 			{
 				"stroke": "dodgerblue"
@@ -281,7 +281,7 @@
 				"rV": 52,
 				"radii": 14,
 				"html": "ElastiCache Valkey\nmodule.diaz_portal",
-				"style": "display:flex;flex-direction:row;align-items:center;justify-content:flex-start;text-align:left;white-space:pre-wrap;width:100%;height:100%;padding:6px 10px 6px 46px;box-sizing:border-box;font-size:15px;line-height:1.25;font-weight:500"
+				"style": ";display         : flex\n;flex-direction  : row\n;align-items     : center\n;justify-content : flex-start\n;text-align      : left\n;white-space     : pre-wrap\n;width           : 100%\n;height          : 100%\n;padding         : 6px 10px 6px 46px\n;box-sizing      : border-box\n;font-size       : 15px\n;line-height     : 1.25\n;font-weight     : 500"
 			},
 			{
 				"stroke": "dodgerblue"
@@ -297,7 +297,7 @@
 				"rV": 52,
 				"radii": 14,
 				"html": "ElastiCache Serverless Valkey\nmodule.diaz_portal_serverless_valkey",
-				"style": "display:flex;flex-direction:row;align-items:center;justify-content:flex-start;text-align:left;white-space:pre-wrap;width:100%;height:100%;padding:6px 10px 6px 46px;box-sizing:border-box;font-size:15px;line-height:1.25;font-weight:500"
+				"style": ";display         : flex\n;flex-direction  : row\n;align-items     : center\n;justify-content : flex-start\n;text-align      : left\n;white-space     : pre-wrap\n;width           : 100%\n;height          : 100%\n;padding         : 6px 10px 6px 46px\n;box-sizing      : border-box\n;font-size       : 15px\n;line-height     : 1.25\n;font-weight     : 500"
 			},
 			{
 				"stroke": "dodgerblue"
@@ -313,7 +313,7 @@
 				"rV": 52,
 				"radii": 14,
 				"html": "Secrets Manager / KMS",
-				"style": "display:flex;flex-direction:row;align-items:center;justify-content:flex-start;text-align:left;white-space:pre-wrap;width:100%;height:100%;padding:6px 10px 6px 46px;box-sizing:border-box;font-size:15px;line-height:1.25;font-weight:500"
+				"style": ";display         : flex\n;flex-direction  : row\n;align-items     : center\n;justify-content : flex-start\n;text-align      : left\n;white-space     : pre-wrap\n;width           : 100%\n;height          : 100%\n;padding         : 6px 10px 6px 46px\n;box-sizing      : border-box\n;font-size       : 15px\n;line-height     : 1.25\n;font-weight     : 500"
 			},
 			{
 				"stroke": "dodgerblue"
@@ -329,7 +329,7 @@
 				"rV": 50,
 				"radii": 14,
 				"html": "Amazon SNS\nalerts / events",
-				"style": "display:flex;flex-direction:row;align-items:center;justify-content:flex-start;text-align:left;white-space:pre-wrap;width:100%;height:100%;padding:6px 10px 6px 46px;box-sizing:border-box;font-size:15px;line-height:1.25;font-weight:500"
+				"style": ";display         : flex\n;flex-direction  : row\n;align-items     : center\n;justify-content : flex-start\n;text-align      : left\n;white-space     : pre-wrap\n;width           : 100%\n;height          : 100%\n;padding         : 6px 10px 6px 46px\n;box-sizing      : border-box\n;font-size       : 15px\n;line-height     : 1.25\n;font-weight     : 500"
 			},
 			{
 				"stroke": "dodgerblue"
@@ -345,7 +345,7 @@
 				"rV": 50,
 				"radii": 14,
 				"html": "AWS Lambda\ndeploy hooks / Newton jobs / presigned API",
-				"style": "display:flex;flex-direction:row;align-items:center;justify-content:flex-start;text-align:left;white-space:pre-wrap;width:100%;height:100%;padding:6px 10px 6px 46px;box-sizing:border-box;font-size:15px;line-height:1.25;font-weight:500"
+				"style": ";display         : flex\n;flex-direction  : row\n;align-items     : center\n;justify-content : flex-start\n;text-align      : left\n;white-space     : pre-wrap\n;width           : 100%\n;height          : 100%\n;padding         : 6px 10px 6px 46px\n;box-sizing      : border-box\n;font-size       : 15px\n;line-height     : 1.25\n;font-weight     : 500"
 			},
 			{
 				"stroke": "dodgerblue"
@@ -361,7 +361,7 @@
 				"rV": 50,
 				"radii": 14,
 				"html": "CloudWatch\nlogs / metrics / alarms",
-				"style": "display:flex;flex-direction:row;align-items:center;justify-content:flex-start;text-align:left;white-space:pre-wrap;width:100%;height:100%;padding:6px 10px 6px 46px;box-sizing:border-box;font-size:15px;line-height:1.25;font-weight:500"
+				"style": ";display         : flex\n;flex-direction  : row\n;align-items     : center\n;justify-content : flex-start\n;text-align      : left\n;white-space     : pre-wrap\n;width           : 100%\n;height          : 100%\n;padding         : 6px 10px 6px 46px\n;box-sizing      : border-box\n;font-size       : 15px\n;line-height     : 1.25\n;font-weight     : 500"
 			},
 			{
 				"stroke": "dodgerblue"
@@ -564,7 +564,10 @@
 		[
 			[
 				"route53",
-				{ "headF": true, "headT": true },
+				{
+					"headF": true,
+					"headT": true
+				},
 				"cf-portal"
 			],
 			{
@@ -574,7 +577,10 @@
 		[
 			[
 				"route53",
-				{ "headF": true, "headT": true },
+				{
+					"headF": true,
+					"headT": true
+				},
 				"cf-flow"
 			],
 			{
@@ -584,7 +590,10 @@
 		[
 			[
 				"cf-portal",
-				{ "headF": true, "headT": true },
+				{
+					"headF": true,
+					"headT": true
+				},
 				"waf"
 			],
 			{
@@ -594,7 +603,10 @@
 		[
 			[
 				"cf-flow",
-				{ "headF": true, "headT": true },
+				{
+					"headF": true,
+					"headT": true
+				},
 				"waf"
 			],
 			{
@@ -604,7 +616,10 @@
 		[
 			[
 				"waf",
-				{ "headF": true, "headT": true },
+				{
+					"headF": true,
+					"headT": true
+				},
 				"alb"
 			],
 			{
@@ -614,7 +629,10 @@
 		[
 			[
 				"alb",
-				{ "headF": true, "headT": true },
+				{
+					"headF": true,
+					"headT": true
+				},
 				"ecs-portal"
 			],
 			{
@@ -624,7 +642,10 @@
 		[
 			[
 				"alb",
-				{ "headF": true, "headT": true },
+				{
+					"headF": true,
+					"headT": true
+				},
 				"ecs-flow"
 			],
 			{
@@ -634,7 +655,10 @@
 		[
 			[
 				"ecs-portal",
-				{ "headF": true, "headT": true },
+				{
+					"headF": true,
+					"headT": true
+				},
 				"rds"
 			],
 			{
@@ -644,7 +668,10 @@
 		[
 			[
 				"ecs-portal",
-				{ "headF": true, "headT": true },
+				{
+					"headF": true,
+					"headT": true
+				},
 				"ddb"
 			],
 			{
@@ -654,7 +681,10 @@
 		[
 			[
 				"ecs-flow",
-				{ "headF": true, "headT": true },
+				{
+					"headF": true,
+					"headT": true
+				},
 				"ddb"
 			],
 			{
@@ -664,7 +694,10 @@
 		[
 			[
 				"ecs-portal",
-				{ "headF": true, "headT": true },
+				{
+					"headF": true,
+					"headT": true
+				},
 				"s3"
 			],
 			{
@@ -674,7 +707,10 @@
 		[
 			[
 				"ecs-flow",
-				{ "headF": true, "headT": true },
+				{
+					"headF": true,
+					"headT": true
+				},
 				"s3"
 			],
 			{
@@ -684,7 +720,10 @@
 		[
 			[
 				"ecs-portal",
-				{ "headF": true, "headT": true },
+				{
+					"headF": true,
+					"headT": true
+				},
 				"elasticache"
 			],
 			{
@@ -694,7 +733,10 @@
 		[
 			[
 				"ecs-portal",
-				{ "headF": true, "headT": true },
+				{
+					"headF": true,
+					"headT": true
+				},
 				"serverless-valkey"
 			],
 			{
@@ -704,7 +746,10 @@
 		[
 			[
 				"ecs-flow",
-				{ "headF": true, "headT": true },
+				{
+					"headF": true,
+					"headT": true
+				},
 				"serverless-valkey"
 			],
 			{
@@ -714,7 +759,10 @@
 		[
 			[
 				"ecs-portal",
-				{ "headF": true, "headT": true },
+				{
+					"headF": true,
+					"headT": true
+				},
 				"secrets-kms"
 			],
 			{
@@ -724,7 +772,10 @@
 		[
 			[
 				"ecs-flow",
-				{ "headF": true, "headT": true },
+				{
+					"headF": true,
+					"headT": true
+				},
 				"secrets-kms"
 			],
 			{
@@ -734,7 +785,10 @@
 		[
 			[
 				"sns",
-				{ "headF": true, "headT": true },
+				{
+					"headF": true,
+					"headT": true
+				},
 				"lambda"
 			],
 			{
@@ -744,7 +798,10 @@
 		[
 			[
 				"s3",
-				{ "headF": true, "headT": true },
+				{
+					"headF": true,
+					"headT": true
+				},
 				"lambda"
 			],
 			{
@@ -754,7 +811,10 @@
 		[
 			[
 				"lambda",
-				{ "headF": true, "headT": true },
+				{
+					"headF": true,
+					"headT": true
+				},
 				"ddb"
 			],
 			{
@@ -764,7 +824,10 @@
 		[
 			[
 				"lambda",
-				{ "headF": true, "headT": true },
+				{
+					"headF": true,
+					"headT": true
+				},
 				"s3"
 			],
 			{
@@ -774,7 +837,10 @@
 		[
 			[
 				"ecs-portal",
-				{ "headF": true, "headT": true },
+				{
+					"headF": true,
+					"headT": true
+				},
 				"cloudwatch"
 			],
 			{
@@ -784,7 +850,10 @@
 		[
 			[
 				"ecs-flow",
-				{ "headF": true, "headT": true },
+				{
+					"headF": true,
+					"headT": true
+				},
 				"cloudwatch"
 			],
 			{
@@ -794,7 +863,10 @@
 		[
 			[
 				"lambda",
-				{ "headF": true, "headT": true },
+				{
+					"headF": true,
+					"headT": true
+				},
 				"cloudwatch"
 			],
 			{
@@ -804,7 +876,10 @@
 		[
 			[
 				"sns",
-				{ "headF": true, "headT": true },
+				{
+					"headF": true,
+					"headT": true
+				},
 				"cloudwatch"
 			],
 			{
