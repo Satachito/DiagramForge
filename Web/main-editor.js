@@ -37,7 +37,7 @@ import {
 ,	EllipsePath2D
 ,	RhombusPath2D
 ,	LinkPath2D
-}	from './diagram-geometry.js'
+}	from './geoDF.js'
 
 import {
 	GRAB
@@ -48,8 +48,8 @@ import {
 ,	Node_XY
 }	from './selection-hit.js'
 
-import { DrawHtmlLabel } from './label-draw.js'
-import { drawLinkCanvas } from './link-draw.js'
+import { DrawLabel		} from './DrawLabel.js'
+import { DrawLinkCanvas	} from './DrawLink.js'
 
 const
 mouse			= [ null, null ]
@@ -190,7 +190,7 @@ MainEditor extends HTMLElement {
 					console.log( 'Unknown:', S.type )
 					break
 				}
-				if	( S.html )	DrawHtmlLabel( c2D, S )
+				if	( S.html )	DrawLabel( c2D, S )
 			} catch ( er ) {
 				console.error( 'DrawNodes failed:', ID, er )
 			}
@@ -201,7 +201,7 @@ MainEditor extends HTMLElement {
 			( [ [ F, A, T ], P ] ) => {
 				const	nF = FindNode( F )
 				const	nT = FindNode( T )
-				nF && nT && drawLinkCanvas( c2D, nF[ 1 ], A, nT[ 1 ], P )
+				nF && nT && DrawLinkCanvas( c2D, nF[ 1 ], A, nT[ 1 ], P )
 			}
 		)
 	}
@@ -213,7 +213,7 @@ MainEditor extends HTMLElement {
 		for ( const [ [ F, A, T ], S ] of app.model.links ) {
 			const	rF = FindReform( F )
 			const	rT = FindReform( T )
-			rF && rT && drawLinkCanvas( c2D, rF[ 1 ], A, rT[ 1 ], S )
+			rF && rT && DrawLinkCanvas( c2D, rF[ 1 ], A, rT[ 1 ], S )
 		}
 
 		if	( app.reforms.length ) {

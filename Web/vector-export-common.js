@@ -131,23 +131,23 @@ export const
 labelLayout		= S => {
 	const
 	st = parseStyle( S.style )
-	,	fontSize = parseFloat( st[ 'font-size' ] ) || 12
-	,	fontWeight = st[ 'font-weight' ] || 'normal'
-	,	fontFamily = st[ 'font-family' ] || 'courier, monospace'
-	,	textAlign = st[ 'text-align' ] || 'center'
-	,	[ x, y, w, h ] = XYWH( S )
-	,	{ t: padT, r: padR, b: padB, l: padL } = parsePadding( st )
-	,	innerW = Math.max( 0, w - padL - padR )
-	,	color = matchMedia( '(prefers-color-scheme: dark)' ).matches ? '#ffffff' : '#000000'
-	,	middle = st[ 'text-baseline' ] === 'middle'
-	,	measureCanvas = document.createElement( 'canvas' ).getContext( '2d' )
+,	fontSize = parseFloat( st[ 'font-size' ] ) || 12
+,	fontWeight = st[ 'font-weight' ] || 'normal'
+,	fontFamily = st[ 'font-family' ] || 'courier, monospace'
+,	textAlign = st[ 'text-align' ] || 'center'
+,	[ x, y, w, h ] = XYWH( S )
+,	{ t: padT, r: padR, b: padB, l: padL } = parsePadding( st )
+,	innerW = Math.max( 0, w - padL - padR )
+,	color = matchMedia( '(prefers-color-scheme: dark)' ).matches ? '#ffffff' : '#000000'
+,	middle = st[ 'text-baseline' ] === 'middle'
+,	measureCanvas = document.createElement( 'canvas' ).getContext( '2d' )
 	measureCanvas.font = `${ fontWeight } ${ fontSize }px ${ fontFamily }`
 	const
 	lines = wrapLines( _ => measureCanvas.measureText( _ ).width, decodeHtml( S.html ), innerW )
-	,	linePx = parseLinePx( st, fontSize )
-	,	blockH = lines.length * linePx
-	,	alignItems = st[ 'align-items' ] || st[ 'place-items' ] || 'center'
-	,	startY = labelY( { y, h, blockH, linePx, fontSize, padT, padB, alignItems, middle } )
+,	linePx = parseLinePx( st, fontSize )
+,	blockH = lines.length * linePx
+,	alignItems = st[ 'align-items' ] || st[ 'place-items' ] || 'center'
+,	startY = labelY( { y, h, blockH, linePx, fontSize, padT, padB, alignItems, middle } )
 	const
 	textX = textAlign === 'right'
 	?	x + w - padR

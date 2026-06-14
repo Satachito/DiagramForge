@@ -1,6 +1,6 @@
 import { Report, Node	}	from './Application.js'
-import { unzip		}	from './unzip.js'
-import FetchProgression	from './fetch-progression.js'
+import { unzip			}	from './unzip.js'
+import FetchProgression		from './fetch-progression.js'
 import {
 	E
 ,	AC

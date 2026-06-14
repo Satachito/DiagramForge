@@ -1,11 +1,11 @@
-import { LinkParts } from './diagram-geometry.js'
+import { LinkParts } from './geoDF.js'
 import { EscapeXML } from './DomUtils.js'
 
 const
 linkColor		= P => P.stroke || P.fill
 
 export const
-drawLinkCanvas	= ( c2D, shapeF, ends, shapeT, P ) => {
+DrawLinkCanvas	= ( c2D, shapeF, ends, shapeT, P ) => {
 	const
 	g = LinkParts( shapeF, ends, shapeT )
 	const
@@ -56,7 +56,7 @@ pointsAttr		= ( X, Y, points ) => points.map(
 ).join( ' ' )
 
 export const
-drawLinkSvg		= ( parts, X, Y, shapeF, ends, shapeT, P ) => {
+DrawLinkSvg		= ( parts, X, Y, shapeF, ends, shapeT, P ) => {
 	const
 	g = LinkParts( shapeF, ends, shapeT )
 	const

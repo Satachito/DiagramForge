@@ -18,7 +18,7 @@ import {
 
 import {
 	BBox
-}	from './diagram-geometry.js'
+}	from './geoDF.js'
 
 import { FindReform } from './Application.js'
 
