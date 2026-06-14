@@ -209,7 +209,7 @@ MinEdge			= ( tlbr, xy ) => Math.min( ...EdgeDist( tlbr, xy ) )
 const
 PointContains	= ( tlbr, xy ) => MinEdge( tlbr, xy ) >= 0
 
-const
+export const
 NodeInterior	= ( tlbr, xy ) => MinEdge( tlbr, xy ) > GRAB
 
 const
@@ -251,7 +251,7 @@ UnselectedAt		= xy => ClosestNodeWhere(
 ,	( node, tlbr, p ) => !FindReform( node[ 0 ] ) && PointContains( tlbr, p )
 )
 
-const
+export const
 SelectionInteriorAt	= xy => {
 	if	( !app.reforms.length ) return false
 	const
@@ -260,7 +260,7 @@ SelectionInteriorAt	= xy => {
 	&&	!UnselectedAt( xy )
 }
 
-const
+export const
 SelectionGrabAt		= xy => app.reforms.length && SelectionGrab( BBox( app.reforms ), xy )
 
 export const

@@ -38,9 +38,11 @@ import {
 ,	RhombusPath2D
 ,	LinkPath2D
 ,	GRAB
-,	HitSelect
 ,	UnselectedAt
 ,	SelectedMemberAt
+,	SelectionGrabAt
+,	SelectionInteriorAt
+,	NodeInterior
 ,	SelectionGrabCursor
 ,	Node_XY
 }	from './geoDF.js'
@@ -255,7 +257,6 @@ MainEditor extends HTMLElement {
 		this.reformer				= AE( this, 'canvas' )
 		this.drawer.style.position	= this.reformer.style.position	= 'absolute'
 		this.linkMenuKey			= null
-		this.modeBeforeModifier		= null
 
 		LINK_MENU_REMOVE.onclick	= ev => (
 			ev.stopPropagation()
@@ -279,13 +280,9 @@ MainEditor extends HTMLElement {
 
 		//	window-level so shortcuts work without the canvas being focused
 		addEventListener( 'keydown', ev => this.onKeyDown( ev ) )
-		addEventListener( 'keyup', ev => this.syncModeSelector( ev ) )
-		addEventListener( 'blur', () => {
-			if	( this.modeBeforeModifier === null ) return
-			MODE_TOOL.value = this.modeBeforeModifier
-			this.modeBeforeModifier = null
-			this.updateModeCursor()
-		} )
+		//	⌘/⌥ momentarily act as Create-node / Create-link; refresh cursor on release
+		addEventListener( 'keyup', ev => this.refreshModeCursor( ev ) )
+		CREATE_NODE.onchange = CREATE_LINK.onchange = () => this.refreshModeCursor()
 
 		this.reformer.onmouseleave	= () => (
 			UNDER_HOVER.style.display = 'none'
@@ -307,31 +304,17 @@ MainEditor extends HTMLElement {
 		this.linkMenuKey		= null
 	}
 
-	updateModeCursor() {
-		this.reformer.style.cursor = MODE_TOOL.value === 'select' ? 'default' : 'crosshair'
-	}
+	//	the two toggles, each temporarily forced on by a modifier key
+	nodeMode( ev ) { return CREATE_NODE.checked || !!( ev && ev.metaKey ) }	//	create node / select area
+	linkMode( ev ) { return CREATE_LINK.checked || !!( ev && ev.altKey ) }	//	create link / select node
 
-	//	⌘ / ⌥ held → temporarily switch the mode selector to node / link
-	syncModeSelector( ev ) {
-		const	t = ev.target
-		if	( t && ( /^(INPUT|TEXTAREA|SELECT)$/.test( t.tagName ) || t.isContentEditable ) ) return
-
-		if	( ev.metaKey || ev.altKey ) {
-			const	next = ev.metaKey ? 'node' : 'link'
-			this.modeBeforeModifier === null && ( this.modeBeforeModifier = MODE_TOOL.value )
-			if	( MODE_TOOL.value !== next ) {
-				MODE_TOOL.value = next
-				this.updateModeCursor()
-			}
-		} else if	( this.modeBeforeModifier !== null ) {
-			MODE_TOOL.value = this.modeBeforeModifier
-			this.modeBeforeModifier = null
-			this.updateModeCursor()
-		}
+	//	coarse cursor for the current mode ( refined per-position by cursorAt on move )
+	refreshModeCursor( ev ) {
+		this.reformer.style.cursor = ( this.nodeMode( ev ) || this.linkMode( ev ) ) ? 'crosshair' : 'default'
 	}
 
 	async onKeyDown( ev ) {
-		this.syncModeSelector( ev )
+		this.refreshModeCursor( ev )
 		const	t = ev.target
 		if	( t && ( /^(INPUT|TEXTAREA|SELECT)$/.test( t.tagName ) || t.isContentEditable ) ) return
 		switch ( ev.key ) {
@@ -363,27 +346,26 @@ MainEditor extends HTMLElement {
 		}
 	}
 
-	//	effective mode for an event: ⌘ forces node, ⌥ forces link, else the selector
-	mode( ev ) {
-		if	( ev.metaKey	) return 'node'
-		if	( ev.altKey		) return 'link'
-		return MODE_TOOL.value	//	select, node, link
-	}
-
 	cursorAt( ev ) {
-		if	( this.mode( ev ) !== 'select' ) return 'crosshair'
 		const	xy = XY_EV( ev )
-		switch ( HitSelect( xy ) ) {
-		case 'selected':
-		case 'selectionInside':
-		case 'nodeInside':
-		case 'nodeGrab':
-			return 'move'
-		case 'selectionGrab':
-			return SelectionGrabCursor( BBox( app.reforms ), xy )
-		default:
-			return 'default'
+		//	acting on the existing selection
+		if	( app.reforms.length ) {
+			if	( SelectionGrabAt( xy ) )		return SelectionGrabCursor( BBox( app.reforms ), xy )
+			if	( SelectionInteriorAt( xy ) )	return 'move'
 		}
+		//	over a link line → a click selects its endpoints
+		if	( this.linkEndpointsAt( xy ) )		return 'pointer'
+		//	over a node
+		const
+		node = UnselectedAt( xy )
+		if	( node ) {
+			if	( this.linkMode( ev ) )			return 'crosshair'	//	would start a link
+			return NodeInterior( TLBR( node[ 1 ] ), xy )
+			?	'move'											//	select + move
+			:	SelectionGrabCursor( TLBR( node[ 1 ] ), xy )	//	select + resize
+		}
+		//	empty canvas
+		return this.nodeMode( ev ) ? 'crosshair' : 'default'
 	}
 
 	//	add a node (clone) to the selection if not already present
@@ -513,8 +495,6 @@ MainEditor extends HTMLElement {
 		const
 		xy	= mouse[ 0 ] = XY_EV( ev )
 
-		if	( this.mode( ev ) != 'select' ) return
-
 		//	Shift+click extends the selection: add the node under the cursor plus
 		//	everything it contains (or a link's two endpoints), keeping the rest.
 		if	( ev.shiftKey ) {
@@ -531,20 +511,16 @@ MainEditor extends HTMLElement {
 			return
 		}
 
-		switch ( HitSelect( xy ) ) {
-		case 'selectionGrab':
-			mouseDrag = 'resize'
-			return
-		case 'selected':
-		case 'selectionInside':
-			//	inside the current selection: keep it, drag moves all
-			mouseDrag = 'move'
+		//	1. act on the current selection: resize the edge, move the interior,
+		//	   or ( clicked outside ) drop it and carry on
+		if	( app.reforms.length ) {
+			if	( SelectionGrabAt( xy ) )		{ mouseDrag = 'resize'; return }
+			if	( SelectionInteriorAt( xy ) )	{ mouseDrag = 'move'; await this.DrawReforms(); return }
+			app.reforms = []
 			await this.DrawReforms()
-			return
 		}
 
-		//	plain click on a node / link / empty space replaces the selection
-		app.reforms = []
+		//	2. a click on a link selects its two endpoints
 		const
 		link = this.linkEndpointsAt( xy )
 		if	( link ) {
@@ -553,15 +529,20 @@ MainEditor extends HTMLElement {
 			await this.DrawReforms()
 			return
 		}
+
+		//	3. a node under the cursor: start a link from it ( link mode ),
+		//	   else select it and move / resize
 		const
 		node = UnselectedAt( xy )
 		if	( node ) {
-			mouseDrag = 'move'
+			if	( this.linkMode( ev ) ) { mouseDrag = 'link'; return }
 			await this.selectSingle( node )
+			mouseDrag = NodeInterior( TLBR( node[ 1 ] ), xy ) ? 'move' : 'resize'
 			return
 		}
-		mouseDrag = null
-		await this.DrawReforms()
+
+		//	4. empty canvas: drag creates a node ( node mode ) or selects an area
+		mouseDrag = this.nodeMode( ev ) ? 'create' : 'area'
 	}
 
 	async onMouseMove( ev ) {
@@ -586,37 +567,37 @@ MainEditor extends HTMLElement {
 		mouse[ 1 ] = [ ev.offsetX, ev.offsetY ]
 		if	( EqualXY( mouse[ 0 ], mouse[ 1 ] ) ) return
 
-		switch	( this.mode( ev ) ) {
-		case 'link':
-			{	const
-				_ = PAINT_EDITOR.$
-				c2D.save()
-				c2D.strokeStyle = _.stroke || 'dodgerblue'
-				c2D.lineWidth = Number( _.lineWidth || 2 )
-				c2D.lineCap = _.lineCap || 'butt'
-				c2D.beginPath()
-				c2D.moveTo( ...mouse[ 0 ] )
-				c2D.lineTo( ...mouse[ 1 ] )
-				c2D.stroke()
-				c2D.restore()
-			}
-			return
-		case 'node':
-			{	const
-				_ = PAINT_EDITOR.$
-				c2D.save()
-				c2D.strokeStyle = _.stroke || 'dodgerblue'
-				c2D.lineWidth = Number( _.lineWidth || 2 )
-				c2D.lineCap = _.lineCap || 'butt'
-				c2D.strokeRect( ...XYWH_XYXY( mouse ) )
-				c2D.restore()
-			}
-			return
-		}
+		const
+		paint = PAINT_EDITOR.$
 
-		if	( app.reforms.length ) {
-			if	( mouseDrag === 'resize' ) {
-				let		edgeMode = false
+		switch	( mouseDrag ) {
+		case 'link':
+			c2D.save()
+			c2D.strokeStyle = paint.stroke || 'dodgerblue'
+			c2D.lineWidth = Number( paint.lineWidth || 2 )
+			c2D.lineCap = paint.lineCap || 'butt'
+			c2D.beginPath()
+			c2D.moveTo( ...mouse[ 0 ] )
+			c2D.lineTo( ...mouse[ 1 ] )
+			c2D.stroke()
+			c2D.restore()
+			return
+		case 'create':
+			c2D.save()
+			c2D.strokeStyle = paint.stroke || 'dodgerblue'
+			c2D.lineWidth = Number( paint.lineWidth || 2 )
+			c2D.lineCap = paint.lineCap || 'butt'
+			c2D.strokeRect( ...XYWH_XYXY( mouse ) )
+			c2D.restore()
+			return
+		case 'area':
+			c2D.save()
+			c2D.strokeStyle = 'lightgray'
+			c2D.strokeRect( ...XYWH_XYXY( mouse ) )
+			c2D.restore()
+			return
+		case 'resize':
+			{	let		edgeMode = false
 
 				const	tlbr = BBox( app.reforms.map( _ => FindNode( _[ 0 ] ) ) )
 				const	edgeDist = EdgeDist( tlbr, mouse[ 0 ] )
@@ -646,8 +627,11 @@ MainEditor extends HTMLElement {
 						}
 					)
 				}
-			} else {
-				const	[ dX, dY ] = DeltaXY( ...mouse )
+			}
+			await this.DrawReforms()
+			return
+		case 'move':
+			{	const	[ dX, dY ] = DeltaXY( ...mouse )
 				app.reforms.forEach(
 					( [ ID, S ] ) => {
 						const	s = FindNode( ID )[ 1 ]
@@ -657,17 +641,15 @@ MainEditor extends HTMLElement {
 				)
 			}
 			await this.DrawReforms()
-		} else {
-			c2D.save()
-			c2D.strokeStyle = 'lightgray'
-			c2D.strokeRect( ...XYWH_XYXY( mouse ) )
-			c2D.restore()
+			return
 		}
 	}
 
 	async onMouseUp( ev ) {
+		void ev
 		const
 		[ mouseD, mouseU ] = mouse
+		,	drag = mouseDrag
 		mouse[ 0 ] = mouse[ 1 ] = null
 		mouseDrag = null
 		if	( mouseD === null || mouseU === null ) return
@@ -677,7 +659,7 @@ MainEditor extends HTMLElement {
 		c2D = this.reformer.getContext( '2d' )
 		c2D.clearRect( 0, 0, this.reformer.width, this.reformer.height )
 
-		switch	( this.mode( ev ) ) {
+		switch	( drag ) {
 		case 'link':
 			{	const	F = Node_XY( mouseD );	if	( F === null ) return
 				const	T = Node_XY( mouseU );	if	( T === null ) return
@@ -686,7 +668,7 @@ MainEditor extends HTMLElement {
 				await Link( $ )
 			}
 			return
-		case 'node':
+		case 'create':
 			{	const	S = SHAPE_EDITOR.$
 				const	r = DivXY( DeltaXY( mouseD, mouseU ), 2 )
 				const	c = AddXY( mouseD, r )
@@ -697,17 +679,19 @@ MainEditor extends HTMLElement {
 				await Node( [ NODE_ID.value, S, PAINT_EDITOR.$ ] )
 			}
 			return
-		}
-
-		if	( app.reforms.length ) {
+		case 'resize':
+		case 'move':
 			await Reform()
-		} else {	//	Make selection or Creation
-			const
-			tlbr = TLBR_XYXY( [ mouseD, mouseU ] )
-			app.model.nodes.forEach(
-				_ => ContainsTLBR( tlbr, TLBR( _[ 1 ] ) ) && this.registReform( _ )
-			)
-			await this.DrawReforms()
+			return
+		case 'area':
+			{	const
+				tlbr = TLBR_XYXY( [ mouseD, mouseU ] )
+				app.model.nodes.forEach(
+					_ => ContainsTLBR( tlbr, TLBR( _[ 1 ] ) ) && this.registReform( _ )
+				)
+				await this.DrawReforms()
+			}
+			return
 		}
 	}
 }
