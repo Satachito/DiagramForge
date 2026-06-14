@@ -1,11 +1,9 @@
-import { FindNode, CanvasSize } from './Application.js'
-import { EscapeXML } from './DomUtils.js'
-import {
-	XYWH
-,	ContentBounds
-}	from './diagram-geometry.js'
-import { labelLayout } from './vector-export-common.js'
-import { drawLinkSvg } from './link-draw.js'
+import { FindNode	, CanvasSize	} from './Application.js'
+import { EscapeXML					} from './DomUtils.js'
+import { XYWH		, XYWH_TLBR		} from './geo2D.js'
+import { BBox						} from './diagram-geometry.js'
+import { labelLayout				} from './vector-export-common.js'
+import { drawLinkSvg				} from './link-draw.js'
 
 const
 baseName = filename => ( filename ?? 'Untitled' ).replace( /\.[^.]+$/, '' ) || 'Untitled'
@@ -151,18 +149,18 @@ drawLink		= ( parts, X, Y, shapeF, A, shapeT, P ) => drawLinkSvg(
 )
 
 export const
-saveVectorSVG	= filename => {
+SaveVectorSVG	= filename => {
 	const
-	{ x: ox, y: oy, width, height } = ContentBounds( app.model.nodes, 32, CanvasSize )
-	const
-	X = _ => _ - ox
-	,	Y = _ => _ - oy
+	[ x, y, w, h ] = XYWH_TLBR( BBox( app.model.nodes ) )
+,	X = _ => _ - x
+,	Y = _ => _ - y
+
 	const
 	bg = matchMedia( '(prefers-color-scheme: dark)' ).matches ? '#000000' : '#ffffff'
 	const
 	parts = [
 		'<?xml version="1.0" encoding="UTF-8"?>'
-	,	`<svg xmlns="http://www.w3.org/2000/svg" width="${ width }" height="${ height }" viewBox="0 0 ${ width } ${ height }">`
+	,	`<svg xmlns="http://www.w3.org/2000/svg" width="${ w }" height="${ h }" viewBox="0 0 ${ w } ${ h }">`
 	,	`<rect width="100%" height="100%" fill="${ bg }"/>`
 	]
 

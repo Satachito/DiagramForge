@@ -3,9 +3,21 @@
 //	`app` (model + reforms); pure otherwise.
 
 import {
-	TLBR
-,	BBox
+	XYWH
+,	T
+,	B
+,	L
+,	R
+,	TLBR
+,	XYWH_TLBR
+,	TLBR_XYXY
+,	Union
 ,	EdgeDist
+,	ContainsTLBR
+} from './geo2D.js'
+
+import {
+	BBox
 }	from './diagram-geometry.js'
 
 import { FindReform } from './Application.js'

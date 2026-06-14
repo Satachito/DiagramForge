@@ -1,4 +1,4 @@
-import { saveVectorSVG } from './export-svg.js'
+import { SaveVectorSVG } from './export-svg.js'
 
 const
 baseName = filename => ( filename ?? 'Untitled' ).replace( /\.[^.]+$/, '' ) || 'Untitled'
@@ -31,5 +31,5 @@ savePNG = async ( editor, filename ) => {
 export const
 saveSVG = ( editor, filename ) => {
 	void editor
-	saveVectorSVG( filename )
+	SaveVectorSVG( filename )
 }

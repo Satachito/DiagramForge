@@ -41,9 +41,9 @@ extractEntry = async ( buf, { localOffset, method, compressedSize, uncompressedS
 	}
 	const
 	nameLen = u16( buf, localOffset + 26 )
-	,	extraLen = u16( buf, localOffset + 28 )
-	,	dataOffset = localOffset + 30 + nameLen + extraLen
-	,	compressed = buf.subarray( dataOffset, dataOffset + compressedSize )
+,	extraLen = u16( buf, localOffset + 28 )
+,	dataOffset = localOffset + 30 + nameLen + extraLen
+,	compressed = buf.subarray( dataOffset, dataOffset + compressedSize )
 	if	( method === 0 ) return compressed.slice( 0, uncompressedSize )
 	if	( method === 8 ) return inflateRaw( compressed )
 	throw new Error( `ZIP: unsupported compression method ${ method }` )
@@ -53,23 +53,23 @@ const
 readEntries = ( buf, filter ) => {
 	const
 	eocd = findEocd( buf )
-	,	cdOffset = u32( buf, eocd + 16 )
-	,	cdSize = u32( buf, eocd + 12 )
-	,	cdEnd = cdOffset + cdSize
-	,	entries = []
+,	cdOffset = u32( buf, eocd + 16 )
+,	cdSize = u32( buf, eocd + 12 )
+,	cdEnd = cdOffset + cdSize
+,	entries = []
 	let
 	p = cdOffset
 	while ( p < cdEnd ) {
 		if	( u32( buf, p ) !== SIG.CENTRAL ) break
 		const
 		method = u16( buf, p + 10 )
-		,	compressedSize = u32( buf, p + 20 )
-		,	uncompressedSize = u32( buf, p + 24 )
-		,	nameLen = u16( buf, p + 28 )
-		,	extraLen = u16( buf, p + 30 )
-		,	commentLen = u16( buf, p + 32 )
-		,	localOffset = u32( buf, p + 42 )
-		,	name = new TextDecoder().decode( buf.subarray( p + 46, p + 46 + nameLen ) )
+	,	compressedSize = u32( buf, p + 20 )
+	,	uncompressedSize = u32( buf, p + 24 )
+	,	nameLen = u16( buf, p + 28 )
+	,	extraLen = u16( buf, p + 30 )
+	,	commentLen = u16( buf, p + 32 )
+	,	localOffset = u32( buf, p + 42 )
+	,	name = new TextDecoder().decode( buf.subarray( p + 46, p + 46 + nameLen ) )
 		p += 46 + nameLen + extraLen + commentLen
 		if	( filter && !filter( name ) ) continue
 		entries.push( { name, localOffset, method, compressedSize, uncompressedSize } )
@@ -103,7 +103,7 @@ export const
 unzip = async ( data, filter ) => {
 	const
 	buf = data instanceof Uint8Array ? data : new Uint8Array( data )
-	,	entries = readEntries( buf, filter )
+,	entries = readEntries( buf, filter )
 	if	( !entries.length ) throw new Error( 'ZIP: no matching entries' )
 	const
 	results = await mapPool(

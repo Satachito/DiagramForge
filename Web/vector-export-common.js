@@ -1,4 +1,4 @@
-import { XYWH } from './diagram-geometry.js'
+import { XYWH } from './geo2D.js'
 
 export const
 parseStyle		= style => {

@@ -1,7 +1,7 @@
 //	Render a node's HTML `label` (S.html) as wrapped text on a 2D canvas,
 //	honoring a small subset of CSS from S.style (font, alignment, padding).
 
-import { XYWH } from './diagram-geometry.js'
+import { XYWH } from './geo2D.js'
 import { parsePadding, parseLinePx, labelY } from './vector-export-common.js'
 
 const

@@ -26,10 +26,13 @@ import {
 ,	TLBR
 ,	XYWH_TLBR
 ,	TLBR_XYXY
-,	BBox
-,	ContentBounds
 ,	EdgeDist
 ,	ContainsTLBR
+,	Union
+}	from './geo2D.js'
+
+import {
+	BBox
 ,	RectPath2D
 ,	EllipsePath2D
 ,	RhombusPath2D
@@ -731,16 +734,18 @@ MainEditor extends HTMLElement {
 		}
 
 		const
-		{ x, y, width, height } = ContentBounds( app.model.nodes, pad, CanvasSize )
-		const
 		out = document.createElement( 'canvas' )
-		out.width = width
-		out.height = height
+		out.width = cw
+		out.height = ch
 		const
 		c2D = out.getContext( '2d' )
 		c2D.fillStyle = matchMedia( '(prefers-color-scheme: dark)' ).matches ? '#000000' : '#ffffff'
-		c2D.fillRect( 0, 0, width, height )
-		c2D.drawImage( this.drawer, x, y, width, height, 0, 0, width, height )
+		c2D.fillRect( 0, 0, cw, ch )
+		if ( app.model.nodes.length ) {
+			const
+			[ X, Y, W, H ] = XYWH_TLBR( BBox( app.model.nodes ) )
+			c2D.drawImage( this.drawer, X, Y, W, H, 0, 0, W, H )
+		}
 		return out
 	}
 }

@@ -1,78 +1,19 @@
-export const
-XYWH			= ( { cX, cY, rH, rV } ) => [ cX - rH, cY - rV, rH + rH, rV + rV ]
+import {
+	XYWH
+,	T
+,	B
+,	L
+,	R
+,	TLBR
+,	XYWH_TLBR
+,	TLBR_XYXY
+,	EdgeDist
+,	ContainsTLBR
+,	Union
+} from './geo2D.js'
 
 export const
-T				= ( { cX, cY, rH, rV } ) => rV > 0 ? cY - rV : cY + rV
-
-export const
-B				= ( { cX, cY, rH, rV } ) => rV > 0 ? cY + rV : cY - rV
-
-export const
-L				= ( { cX, cY, rH, rV } ) => rH > 0 ? cX - rH : cX + rH
-
-export const
-R				= ( { cX, cY, rH, rV } ) => rH > 0 ? cX + rH : cX - rH
-
-export const
-TLBR			= ( { cX, cY, rH, rV } ) => 0 < rH
-?	0 < rV
-	?	[ cY - rV, cX - rH, cY + rV, cX + rH ]
-	:	[ cY + rV, cX - rH, cY - rV, cX + rH ]
-:	0 < rV
-	?	[ cY - rV, cX + rH, cY + rV, cX - rH ]
-	:	[ cY + rV, cX + rH, cY - rV, cX - rH ]
-
-export const
-XYWH_TLBR		= ( [ T, L, B, R ] ) => [ L, T, R - L, B - T ]
-
-export const
-TLBR_XYXY		= ( [ [ x, y ], [ X, Y ] ] ) => [
-	y < Y ? y : Y
-,	x < X ? x : X
-,	y < Y ? Y : y
-,	x < X ? X : x
-]
-
-export const
-Union			= ( [ T, L, B, R ], [ t, l, b, r ] ) => [
-	T < t ? T : t
-,	L < l ? L : l
-,	b < B ? B : b
-,	r < R ? R : r
-]
-
-//	signed distance from a point to each edge of a tlbr ( + inside, - outside )
-export const
-EdgeDist		= ( [ T, L, B, R ], [ x, y ] ) => [
-	y - T
-,	x - L
-,	B - y
-,	R - x
-]
-
-export const
-ContainsTLBR	= ( [ T, L, B, R ], [ t, l, b, r ] ) => T <= t && b <= B && L <= l && r <= R
-
-export const
-BBox		= _ => _.slice( 1 ).reduce(
-	( $, node ) => Union( $, TLBR( node[ 1 ] ) )
-,	TLBR( _[ 0 ][ 1 ] )
-)
-
-export const
-ContentBounds	= ( nodes, pad = 32, canvasSize ) => {
-	const
-	[ cw, ch ] = canvasSize()
-	if	( !nodes.length ) return { x: 0, y: 0, width: cw, height: ch }
-	const
-	[ T, L, B, R ] = BBox( nodes )
-	const
-	x = Math.max( 0, L - pad )
-	,	y = Math.max( 0, T - pad )
-	,	X = Math.min( cw, R + pad )
-	,	Y = Math.min( ch, B + pad )
-	return { x, y, width: X - x, height: Y - y }
-}
+BBox			= _ => Union( _.map( _ => TLBR( _[ 1 ] ) ) )
 
 export const
 RectPath2D		= S => {
