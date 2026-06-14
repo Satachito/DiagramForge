@@ -152,12 +152,6 @@ DeltaXY			= ( [ X, Y ], [ x, y ] )	=> [ x - X, y - Y ]
 
 const
 ContainsTLBR	= ( [ T, L, B, R ], [ t, l, b, r ] ) => T <= t && b <= B && L <= l && r <= R
-const
-ContersectsTLBR	= ( [ T, L, B, R ], [ t, l, b, r ] ) => {
-	if	( R < l || r < L || ( l < L && R < r ) ) return false
-	if	( B < t || b < T || ( t < T && B < b ) ) return false
-	return true
-}
 
 const
 EdgeDist		= ( [ T, L, B, R ], [ x, y ] ) => [
@@ -635,26 +629,12 @@ MainEditor extends HTMLElement {
 		RegistReform	= _ => FindReform( _[ 0 ] ) || app.reforms.push( structuredClone( _ ) )
 
 		const
-		ApplyMultiClick	= async ( tlbr, ev ) => {
-			switch ( ev.detail % 4 ) {
-			case 1:
-				break
-			case 2:
-				app.reforms.splice( 1 )
-				break
-			case 3:
-				app.model.nodes.forEach(
-					_ => ContersectsTLBR( tlbr, TLBR( _[ 1 ] ) ) && RegistReform( _ )
-				)
-				break
-			default:
-				app.model.nodes.forEach(
-					_ => ContainsTLBR( TLBR( _[ 1 ] ), tlbr ) && RegistReform( _ )
-				)
-				break
-			}
-			await this.DrawReforms()
-		}
+		RollSelectedToTop	= () => app.model.nodes.forEach(
+			$ => app.reforms.find( _ => _[ 0 ] === $[ 0 ] ) && (
+				app.model.nodes = app.model.nodes.filter( _ => _ !== $ )
+			,	app.model.nodes.push( $ )
+			)
+		)
 
 		const
 		SelectAll	= async () => {
@@ -662,23 +642,28 @@ MainEditor extends HTMLElement {
 			await this.DrawReforms()
 		}
 
+		//	plain click: select just the one node, replacing any selection
 		const
-		SelectNode	= async node => {
+		SelectSingle	= async node => {
+			SHAPE_EDITOR.$ = node[ 1 ]
+			PAINT_EDITOR.$ = node[ 2 ]
+			RegistReform( node )
+			RollSelectedToTop()
+			await this.DrawReforms()
+		}
+
+		//	shift+click: extend the selection with the node and everything it contains
+		const
+		AddWithContained	= async node => {
+			SHAPE_EDITOR.$ = node[ 1 ]
+			PAINT_EDITOR.$ = node[ 2 ]
 			const
-			$ = node
-			SHAPE_EDITOR.$ = $[ 1 ]
-			PAINT_EDITOR.$ = $[ 2 ]
-			const
-			tlbr = TLBR( $[ 1 ] )
+			tlbr = TLBR( node[ 1 ] )
+			RegistReform( node )
 			app.model.nodes.forEach(
 				_ => ContainsTLBR( tlbr, TLBR( _[ 1 ] ) ) && RegistReform( _ )
 			)
-			app.model.nodes.forEach(
-				$ => app.reforms.find( _ => _[ 0 ] === $[ 0 ] ) && (
-					app.model.nodes = app.model.nodes.filter( _ => _ !== $ )
-				,	app.model.nodes.push( $ )
-				)
-			)
+			RollSelectedToTop()
 			await this.DrawReforms()
 		}
 
@@ -692,63 +677,74 @@ MainEditor extends HTMLElement {
 
 			if	( Mode( ev ) != 'select' ) return
 
+			//	link hit-test (returns both endpoints); used by plain and shift paths
 			const
-			hit = HitSelect( xy )
-			,	selTLBR = app.reforms.length ? TLBR( app.reforms[ 0 ][ 1 ] ) : null
-
-			switch ( hit ) {
-			case 'nodeInside':
-			case 'nodeGrab':
-				mouseDrag = 'move'
-				app.reforms = []
+			linkEndpointsAt	= () => {
+				let	$ = null
 				app.model.links.forEach(
 					( [ [ F, A, T ], P ] ) => {
 						const
 						[ nF, nT ]	= [ FindNode( F ), FindNode( T ) ]
 						nF && nT && this.reformer.getContext( '2d' ).isPointInPath( LinkPath2D( nF[ 1 ], A, nT[ 1 ] ), ...xy ) && (
-							RegistReform( nF )
-						,	RegistReform( nT )
-						,	LINK_EDITOR.$ = [ F, A, T ]
+							$ = [ nF, nT, [ F, A, T ] ]
 						)
 					}
 				)
-				if	( app.reforms.length ) {
-					await this.DrawReforms()
-					return
-				}
-				RegistReform( UnselectedAt( xy ) )
-				await SelectNode( app.reforms[ 0 ] )
-				return
-			case 'selected':
-			case 'selectionInside':
+				return	$
+			}
+			const
+			RegistLink	= link => (
+				RegistReform( link[ 0 ] )
+			,	RegistReform( link[ 1 ] )
+			,	LINK_EDITOR.$ = link[ 2 ]
+			)
+
+			//	Shift+click extends the selection: add the node under the cursor plus
+			//	everything it contains (or a link's two endpoints), keeping the rest.
+			if	( ev.shiftKey ) {
 				mouseDrag = 'move'
-				await ApplyMultiClick( selTLBR, ev )
-				return
-			case 'selectionGrab':
-				mouseDrag = 'resize'
+				const
+				node = UnselectedAt( xy ) || SelectedMemberAt( xy )
+				if	( node ) {
+					await AddWithContained( node )
+				} else {
+					const	link = linkEndpointsAt()
+					link && RegistLink( link )
+					await this.DrawReforms()
+				}
 				return
 			}
 
-			mouseDrag = null
-			app.reforms = []
-
-			app.model.links.forEach(
-				( [ [ F, A, T ], P ] ) => {
-					const
-					[ nF, nT ]	= [ FindNode( F ), FindNode( T ) ]
-					nF && nT && this.reformer.getContext( '2d' ).isPointInPath( LinkPath2D( nF[ 1 ], A, nT[ 1 ] ), ...xy ) && (
-						RegistReform( nF )
-					,	RegistReform( nT )
-					,	LINK_EDITOR.$ = [ F, A, T ]
-					)
-				}
-			)
-			if	( app.reforms.length ) {
+			switch ( HitSelect( xy ) ) {
+			case 'selectionGrab':
+				mouseDrag = 'resize'
+				return
+			case 'selected':
+			case 'selectionInside':
+				//	inside the current selection: keep it, drag moves all
 				mouseDrag = 'move'
 				await this.DrawReforms()
 				return
 			}
 
+			//	plain click on a node / link / empty space replaces the selection
+			app.reforms = []
+			const
+			link = linkEndpointsAt()
+			if	( link ) {
+				mouseDrag = 'move'
+				RegistLink( link )
+				await this.DrawReforms()
+				return
+			}
+			const
+			node = UnselectedAt( xy )
+			if	( node ) {
+				mouseDrag = 'move'
+				await SelectSingle( node )
+				return
+			}
+			mouseDrag = null
 			await this.DrawReforms()
 		}
 
