@@ -573,7 +573,7 @@ MainEditor extends HTMLElement {
 				if ( ev.metaKey || ev.ctrlKey ) { ev.preventDefault(); await SelectAll() }
 				break
 			case 'e':	case 'E':
-				if ( !( ev.metaKey || ev.ctrlKey ) ) { ev.preventDefault(); await Expand() }
+				if ( ev.metaKey || ev.ctrlKey ) { ev.preventDefault(); await Expand() }
 				break
 			case 'Escape':
 				mouse[ 0 ] = mouse[ 1 ] = null
