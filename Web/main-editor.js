@@ -569,6 +569,9 @@ MainEditor extends HTMLElement {
 			case 'a':	case 'A':
 				if ( ev.metaKey || ev.ctrlKey ) { ev.preventDefault(); await SelectAll() }
 				break
+			case 'e':	case 'E':
+				if ( !( ev.metaKey || ev.ctrlKey ) ) { ev.preventDefault(); await Expand() }
+				break
 			case 'Escape':
 				mouse[ 0 ] = mouse[ 1 ] = null
 				mouseDrag = null
@@ -662,6 +665,28 @@ MainEditor extends HTMLElement {
 			RegistReform( node )
 			app.model.nodes.forEach(
 				_ => ContainsTLBR( tlbr, TLBR( _[ 1 ] ) ) && RegistReform( _ )
+			)
+			RollSelectedToTop()
+			await this.DrawReforms()
+		}
+
+		//	E key: expand the current selection to include everything it contains
+		//	(a node with nothing inside it simply stays as-is). Selection only,
+		//	so it is not part of the undo history.
+		const
+		Expand	= async () => {
+			if	( !app.reforms.length ) return
+			app.reforms.slice().forEach(
+				reform => {
+					const
+					node = FindNode( reform[ 0 ] )
+					if	( !node ) return
+					const
+					tlbr = TLBR( node[ 1 ] )
+					app.model.nodes.forEach(
+						_ => ContainsTLBR( tlbr, TLBR( _[ 1 ] ) ) && RegistReform( _ )
+					)
+				}
 			)
 			RollSelectedToTop()
 			await this.DrawReforms()
