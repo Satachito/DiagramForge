@@ -81,7 +81,7 @@ CloudIcons extends HTMLElement {
 		`
 		const
 		root = this.appendChild( DETAILS( this.getAttribute( 'name' ) ) )
-		,	build = () => root.open && this.BuildICONs( root ).catch( Report )
+	,	build = () => root.open && this.BuildICONs( root ).catch( Report )
 		root.ontoggle = build
 
 		RoleE( this, 'SVG' ).onclick = build
@@ -131,7 +131,7 @@ CloudIcons extends HTMLElement {
 	async	BuildICONs( root ) {
 		const
 		showPNG = RoleE( this, 'PNG' ).checked
-		,	showSVG = RoleE( this, 'SVG' ).checked
+	,	showSVG = RoleE( this, 'SVG' ).checked
 		if	( !( showPNG || showSVG ) ) {
 			clearIcons( root )
 			AE( root, 'p' ).textContent = 'Check SVG and/or PNG.'
