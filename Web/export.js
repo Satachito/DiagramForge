@@ -166,7 +166,7 @@ saveVectorSVG	= filename => {
 }
 
 export const
-saveSVG = ( editor, filename ) => {
+saveSVG = async ( editor, filename ) => {
 	void editor
 	saveVectorSVG( filename )
 }
