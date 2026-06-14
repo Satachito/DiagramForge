@@ -7,7 +7,10 @@ const
 labelWrapperStyle	= S => {
 	const
 	color = matchMedia( '(prefers-color-scheme: dark)' ).matches ? '#ffffff' : '#000000'
-	return	`color:${ color };${ ( S.style || '' ).replace( /\n/g, '' ) }`
+	//	the div must fill the foreignObject so the node's own flex/grid alignment
+	//	( place-items:center etc. ) can center the text vertically — without
+	//	height:100% the div shrinks to its content and the text sticks to the top
+	return	`width:100%;height:100%;box-sizing:border-box;color-scheme:light dark;color:${ color };${ ( S.style || '' ).replace( /\n/g, '' ) }`
 }
 
 const
