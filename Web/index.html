@@ -257,10 +257,7 @@ aside .node-id-row input {
 		<input id=FILE_NAME style="width: 100%">
 		<button id=DOWNLOAD title="Download .cde">↓</button>
 	</div>
-	<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-top: 4px">
-		<button id=EXPORT_PNG>PNG</button>
-		<button id=EXPORT_SVG>SVG</button>
-	</div>
+	<button id=EXPORT_SVG>Export SVG</button>
 	<button			id=SAMPLE_JSONS		>Sample( JSONs )	</button>
 	<button			id=SAMPLE_AWS		>Sample( AWS )		</button>
 	<button			id=SAMPLE_GCP		>Sample( GCP )		</button>
@@ -316,7 +313,7 @@ import './shape-editor.js'
 import './link-editor.js'
 import './cloud-icons.js'
 import './main-editor.js'
-import { savePNG, saveSVG } from './export.js'
+import { saveSVG } from './export.js'
 
 import	{ AE } from './DomUtils.js'
 
@@ -399,7 +396,6 @@ DOWNLOAD		.onclick = () => {
 const
 exportName = () => FILE_NAME.value
 
-EXPORT_PNG		.onclick = () => savePNG( MAIN_EDITOR, exportName() ).catch( Report )
 EXPORT_SVG		.onclick = () => saveSVG( MAIN_EDITOR, exportName() ).catch( Report )
 
 UPLOAD			.onchange = async ev => {

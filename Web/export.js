@@ -155,40 +155,6 @@ buildVectorSVG	= () => {
 }
 
 const
-rasterizeSvg		= async ( svg, w, h ) => {
-	const
-	url = URL.createObjectURL( new Blob( [ svg ], { type: 'image/svg+xml;charset=utf-8' } ) )
-	try {
-		const
-		image = new Image()
-		image.src = url
-		image.decode ? await image.decode() : await new Promise(
-			( Res, Rej ) => (
-				image.onload	= () => Res()
-			,	image.onerror	= () => Rej( new Error( 'SVG rasterize failed' ) )
-			)
-		)
-
-		const
-		canvas = document.createElement( 'canvas' )
-		canvas.width = w
-		canvas.height = h
-		const
-		c2D = canvas.getContext( '2d' )
-		c2D.drawImage( image, 0, 0, w, h )
-
-		return	await new Promise(
-			( Res, Rej ) => canvas.toBlob(
-				b => b ? Res( b ) : Rej( new Error( 'PNG export failed' ) )
-			,	'image/png'
-			)
-		)
-	} finally {
-		URL.revokeObjectURL( url )
-	}
-}
-
-const
 saveVectorSVG	= filename => {
 	const
 	built = buildVectorSVG()
@@ -196,18 +162,6 @@ saveVectorSVG	= filename => {
 	downloadBlob(
 		new Blob( [ built.svg ], { type: 'image/svg+xml' } )
 	,	`${ baseName( filename ) }.svg`
-	)
-}
-
-export const
-savePNG = async ( editor, filename ) => {
-	void editor
-	const
-	built = buildVectorSVG()
-	if	( !built ) throw new Error( 'Nothing to export' )
-	downloadBlob(
-		await rasterizeSvg( built.svg, built.w, built.h )
-	,	`${ baseName( filename ) }.png`
 	)
 }
 
