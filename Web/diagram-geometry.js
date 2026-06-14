@@ -41,6 +41,18 @@ Union			= ( [ T, L, B, R ], [ t, l, b, r ] ) => [
 ,	r < R ? R : r
 ]
 
+//	signed distance from a point to each edge of a tlbr ( + inside, - outside )
+export const
+EdgeDist		= ( [ T, L, B, R ], [ x, y ] ) => [
+	y - T
+,	x - L
+,	B - y
+,	R - x
+]
+
+export const
+ContainsTLBR	= ( [ T, L, B, R ], [ t, l, b, r ] ) => T <= t && b <= B && L <= l && r <= R
+
 export const
 BBox		= _ => _.slice( 1 ).reduce(
 	( $, node ) => Union( $, TLBR( node[ 1 ] ) )

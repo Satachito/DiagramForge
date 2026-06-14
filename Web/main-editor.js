@@ -28,116 +28,31 @@ import {
 ,	TLBR_XYXY
 ,	BBox
 ,	ContentBounds
+,	EdgeDist
+,	ContainsTLBR
 ,	RectPath2D
 ,	EllipsePath2D
 ,	RhombusPath2D
 ,	LinkPath2D
 }	from './diagram-geometry.js'
 
+import {
+	GRAB
+,	HitSelect
+,	UnselectedAt
+,	SelectedMemberAt
+,	SelectionGrabCursor
+,	Node_XY
+}	from './selection-hit.js'
+
+import { DrawHtmlLabel } from './label-draw.js'
 import { drawLinkCanvas } from './link-draw.js'
-import { parsePadding, parseLinePx, labelY } from './vector-export-common.js'
 
 const
 mouse			= [ null, null ]
 
 let
 mouseDrag		= null	//	'move' | 'resize'
-
-//	px tolerance for grabbing a selection edge (resize handles) / click-selecting a node
-const
-GRAB			= 8
-
-const
-MinEdge			= ( tlbr, xy ) => Math.min( ...EdgeDist( tlbr, xy ) )
-
-const
-PointContains		= ( tlbr, xy ) => MinEdge( tlbr, xy ) >= 0
-
-const
-NodeInterior		= ( tlbr, xy ) => MinEdge( tlbr, xy ) > GRAB
-
-const
-SelectionGrab		= ( tlbr, xy ) => {
-	const
-	m = MinEdge( tlbr, xy )
-	return	m > -GRAB && m <= GRAB
-}
-
-const
-ClosestNodeWhere	= ( xy, pred ) => {
-	let
-	top = null
-	,	best = Infinity
-	for ( const node of app.model.nodes ) {
-		const
-		tlbr = TLBR( node[ 1 ] )
-		if	( !pred( node, tlbr, xy ) ) continue
-		const
-		d = MinEdge( tlbr, xy )
-		if	( d < best ) {
-			best = d
-			top = node
-		}
-	}
-	return	top
-}
-
-const
-SelectedMemberAt	= xy => ClosestNodeWhere(
-	xy
-,	( node, tlbr, p ) => FindReform( node[ 0 ] ) && PointContains( tlbr, p )
-)
-
-const
-UnselectedAt		= xy => ClosestNodeWhere(
-	xy
-,	( node, tlbr, p ) => !FindReform( node[ 0 ] ) && PointContains( tlbr, p )
-)
-
-const
-SelectionInteriorAt	= xy => {
-	if	( !app.reforms.length ) return false
-	const
-	sel = BBox( app.reforms )
-	return	MinEdge( sel, xy ) > GRAB
-	&&	!UnselectedAt( xy )
-}
-
-const
-SelectionGrabAt		= xy => app.reforms.length && SelectionGrab( BBox( app.reforms ), xy )
-
-const
-HitSelect		= xy => {
-	//	Resize handles on the current selection win over any node underneath, so a
-	//	selected box can be resized even when other nodes overlap its edge band
-	//	(an icon inside a container, a container's children, adjacent boxes…).
-	if	( SelectionGrabAt( xy ) )			return 'selectionGrab'
-	const
-	unsel = UnselectedAt( xy )
-	if	( unsel ) {
-		const
-		tlbr = TLBR( unsel[ 1 ] )
-		return NodeInterior( tlbr, xy ) ? 'nodeInside' : 'nodeGrab'
-	}
-	if	( SelectedMemberAt( xy ) )			return 'selected'
-	if	( SelectionInteriorAt( xy ) )		return 'selectionInside'
-	return	'none'
-}
-
-const
-SelectionGrabCursor	= ( sel, xy ) => {
-	const
-	[ dT, dL, dB, dR ] = EdgeDist( sel, xy )
-	,	top = dT <= GRAB
-	,	bottom = dB <= GRAB
-	,	left = dL <= GRAB
-	,	right = dR <= GRAB
-	if	( ( top && left ) || ( bottom && right ) )	return 'nwse-resize'
-	if	( ( top && right ) || ( bottom && left ) )	return 'nesw-resize'
-	if	( top || bottom )	return 'ns-resize'
-	if	( left || right )	return 'ew-resize'
-	return	'move'
-}
 
 const
 XYWH_XYXY		= ( [ [ x, y ], [ X, Y ] ] ) => [ x, y, X - x, Y - y ]
@@ -152,21 +67,6 @@ const
 EqualXY			= ( [ X, Y ], [ x, y ] )	=> X === x && Y === y
 const
 DeltaXY			= ( [ X, Y ], [ x, y ] )	=> [ x - X, y - Y ]
-
-const
-ContainsTLBR	= ( [ T, L, B, R ], [ t, l, b, r ] ) => T <= t && b <= B && L <= l && r <= R
-
-const
-EdgeDist		= ( [ T, L, B, R ], [ x, y ] ) => [
-	y - T
-,	x - L
-,	B - y
-,	R - x
-]
-//	min( ..._ )
-//	Outside	: min( ...__ ) < -4
-//	Edge	: -4 <= min( ...__ ) <= 0
-//	Inside	: 0 < min( ..._ )
 
 const
 DrawPath		= ( c2D, path, P ) => {
@@ -189,112 +89,6 @@ DrawPath		= ( c2D, path, P ) => {
 	}
 	c2D.restore()
 }
-
-const
-parseStyle		= style => {
-	const	out = {}
-	if	( !style ) return out
-	style.replace( /\n/g, '' ).split( ';' ).forEach(
-		part => {
-			const
-			i = part.indexOf( ':' )
-			if	( i < 0 ) return
-			const
-			key = part.slice( 0, i ).trim().toLowerCase()
-			,	val = part.slice( i + 1 ).trim()
-			key && val && ( out[ key ] = val )
-		}
-	)
-	return	out
-}
-
-const
-decodeHtml		= html => {
-	const	$ = document.createElement( 'textarea' )
-	$.innerHTML = html
-	return	$.value
-}
-
-const
-wrapLines		= ( c2D, text, maxWidth ) => {
-	const
-	lines = []
-	text.split( /\n|<br\s*\/?>/i ).forEach(
-		paragraph => {
-			const
-			words = paragraph.trim().split( /\s+/ ).filter( Boolean )
-			if	( !words.length ) {
-				lines.push( '' )
-				return
-			}
-			let
-			line = words[ 0 ]
-			for	( let i = 1; i < words.length; i++ ) {
-				const
-				next = `${ line } ${ words[ i ] }`
-				if	( c2D.measureText( next ).width > maxWidth && line ) {
-					lines.push( line )
-					line = words[ i ]
-				} else	line = next
-			}
-			lines.push( line )
-		}
-	)
-	return	lines.length ? lines : [ '' ]
-}
-
-const
-DrawHtmlLabel	= ( c2D, S ) => {
-	const
-	st = parseStyle( S.style )
-	,	fontSize = parseFloat( st[ 'font-size' ] ) || 12
-	,	fontWeight = st[ 'font-weight' ] || 'normal'
-	,	fontFamily = st[ 'font-family' ] || 'courier, monospace'
-	,	textAlign = ( () => {
-			//	explicit text-align wins; else derive horizontal from the
-			//	flex/grid justify-*; else HTML block default = left.
-			const	t = st[ 'text-align' ]
-			if	( t ) return t
-			const	j = st[ 'justify-items' ] || st[ 'justify-content' ] || st[ 'place-items' ] || ''
-			return /center/.test( j ) ? 'center' : /end/.test( j ) ? 'right' : 'left'
-		} )()
-	,	[ x, y, w, h ] = XYWH( S )
-	,	{ t: padT, r: padR, b: padB, l: padL } = parsePadding( st )
-	,	innerW = Math.max( 0, w - padL - padR )
-	,	color = matchMedia( '(prefers-color-scheme: dark)' ).matches ? '#ffffff' : '#000000'
-	,	middle = st[ 'text-baseline' ] === 'middle'
-
-	c2D.save()
-	c2D.fillStyle = color
-	c2D.font = `${ fontWeight } ${ fontSize }px ${ fontFamily }`
-	c2D.textAlign = textAlign === 'right' ? 'right' : textAlign === 'left' ? 'left' : 'center'
-	c2D.textBaseline = middle ? 'middle' : 'alphabetic'
-
-	const
-	lines = wrapLines( c2D, decodeHtml( S.html ), innerW )
-	,	linePx = parseLinePx( st, fontSize )
-	,	blockH = lines.length * linePx
-	,	alignItems = st[ 'align-items' ] || st[ 'place-items' ] || 'start'
-	,	startY = labelY( { y, h, blockH, linePx, fontSize, padT, padB, alignItems, middle } )
-
-	const
-	textX = textAlign === 'right'
-	?	x + w - padR
-	:	textAlign === 'left'
-	?	x + padL
-	:	x + w / 2
-
-	lines.forEach(
-		( line, i ) => c2D.fillText( line, textX, startY + i * linePx )
-	)
-	c2D.restore()
-}
-
-const
-Node_XY		= xy => ClosestNodeWhere(
-	xy
-,	( _, tlbr, p ) => PointContains( tlbr, p )
-)
 
 const
 UpdateHoverLabel = ev => {
