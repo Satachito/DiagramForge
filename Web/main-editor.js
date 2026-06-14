@@ -37,16 +37,13 @@ import {
 ,	EllipsePath2D
 ,	RhombusPath2D
 ,	LinkPath2D
-}	from './geoDF.js'
-
-import {
-	GRAB
+,	GRAB
 ,	HitSelect
 ,	UnselectedAt
 ,	SelectedMemberAt
 ,	SelectionGrabCursor
 ,	Node_XY
-}	from './selection-hit.js'
+}	from './geoDF.js'
 
 import { DrawForeignLabel	} from './ForeignLabel.js'
 import { DrawLinkCanvas	} from './DrawLink.js'
