@@ -2,7 +2,7 @@ import { FindNode	, CanvasSize	} from './Application.js'
 import { EscapeXML					} from './DomUtils.js'
 import { XYWH		, XYWH_TLBR		} from './geo2D.js'
 import { BBox						} from './geoDF.js'
-import { labelLayout				} from './vector-export-common.js'
+import { LabelLayout				} from './DrawLabel.js'
 import { DrawLinkSvg				} from './DrawLink.js'
 
 const
@@ -91,7 +91,7 @@ drawLabel		= ( parts, X, Y, S ) => {
 	,	linePx
 	,	color
 	,	textBaseline
-	} = labelLayout( S )
+	} = LabelLayout( S )
 	const
 	anchor = textAlign === 'right' ? 'end' : textAlign === 'left' ? 'start' : 'middle'
 	const
