@@ -108,6 +108,10 @@ SelectionGrabAt		= xy => app.reforms.length && SelectionGrab( BBox( app.reforms 
 
 const
 HitSelect		= xy => {
+	//	Resize handles on the current selection win over any node underneath, so a
+	//	selected box can be resized even when other nodes overlap its edge band
+	//	(an icon inside a container, a container's children, adjacent boxes…).
+	if	( SelectionGrabAt( xy ) )			return 'selectionGrab'
 	const
 	unsel = UnselectedAt( xy )
 	if	( unsel ) {
@@ -117,7 +121,6 @@ HitSelect		= xy => {
 	}
 	if	( SelectedMemberAt( xy ) )			return 'selected'
 	if	( SelectionInteriorAt( xy ) )		return 'selectionInside'
-	if	( SelectionGrabAt( xy ) )			return 'selectionGrab'
 	return	'none'
 }
 
