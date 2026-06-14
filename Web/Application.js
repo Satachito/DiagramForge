@@ -62,6 +62,7 @@ SyncReformsFromModel	= () => {
 }
 
 import Do from './Jobs.js'
+import { TLBR, Union } from './geo2D.js'
 
 const
 Persist		= () => localStorage.setItem( STORAGE_KEY, JSONString() )
@@ -291,7 +292,10 @@ Paste		= async _ => {	//	ClipboardData
 }
 
 export	const
-JSONString	= () => JSON.stringify( app.model, null, '\t' )
+JSONString	= () => JSON.stringify( { ...app.model, canvasWidth, canvasHeight }, null, '\t' )
+
+const
+MARGIN	= 256
 
 export	const		//	THROWS EXCEPTION
 Load		= _ => DoTypical(
@@ -302,6 +306,14 @@ Load		= _ => DoTypical(
 		app.model.nodes	= $.nodes
 		app.model.links	= $.links
 		app.reforms		= []
+		if	( $.canvasWidth > 0 && $.canvasHeight > 0 ) {
+			SetCanvasSize( $.canvasWidth, $.canvasHeight )
+		} else if ( $.nodes.length ) {
+			const	[ t, l, b, r ] = Union( $.nodes.map( n => TLBR( n[ 1 ] ) ) )
+			const	cw = Math.ceil( ( r + MARGIN ) / 256 ) * 256
+			const	ch = Math.ceil( ( b + MARGIN ) / 256 ) * 256
+			SetCanvasSize( Math.max( 256, cw ), Math.max( 256, ch ) )
+		}
 	}
 )
 

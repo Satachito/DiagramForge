@@ -341,6 +341,7 @@ LoadSample = async path => {
 	if	( ! res.ok )	throw new Error( `${ res.status } ${ path }` )
 	await Load( await res.text() )
 	FILE_NAME.value	= path.replace( /^.*\//, '' )
+	SyncCanvasInputs()
 }
 
 CANVAS_APPLY	.onclick = async () => {
@@ -406,6 +407,7 @@ UPLOAD			.onchange = async ev => {
 				)
 			)
 			FILE_NAME.value = files.map( _ => _.name ).join( ',' )
+			SyncCanvasInputs()
 		} catch ( er ) {
 			Report( er )
 		} finally {
