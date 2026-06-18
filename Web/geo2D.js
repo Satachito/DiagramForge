@@ -43,6 +43,9 @@ EdgeDist		= ( [ T, L, B, R ], [ x, y ] ) => [
 ]
 
 export const
+ContainsXY		= ( [ T, L, B, R ], [ x, y ] ) => T <= y && y <= B && L <= x && x <= R
+
+export const
 ContainsTLBR	= ( [ T, L, B, R ], [ t, l, b, r ] ) => T <= t && b <= B && L <= l && r <= R
 
 export const
