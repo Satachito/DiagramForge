@@ -1,9 +1,9 @@
-import { FindNode	} from './Application.js'
-import { EscapeXML					} from './DomUtils.js'
-import { XYWH		, XYWH_TLBR		} from './geo2D.js'
-import { BBox						} from './geoDF.js'
-import { drawForeignLabelSvg		} from './ForeignLabel.js'
-import { DrawLinkSvg				} from './DrawLink.js'
+import { FindNode				} from './Application.js'
+import { EscapeXML				} from './DomUtils.js'
+import { XYWH_TLBR				} from './geo2D.js'
+import { XYWH, BBox				} from './geoDF.js'
+import { drawForeignLabelSvg	} from './ForeignLabel.js'
+import { DrawLinkSvg			} from './DrawLink.js'
 
 const
 baseName = filename => ( filename ?? 'Untitled' ).replace( /\.[^.]+$/, '' ) || 'Untitled'

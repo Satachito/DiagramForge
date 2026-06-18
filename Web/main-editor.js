@@ -22,9 +22,7 @@ import {
 }	from './DomUtils.js'
 
 import {
-	XYWH
-,	TLBR
-,	XYWH_TLBR
+	XYWH_TLBR
 ,	TLBR_XYXY
 ,	EdgeDist
 ,	ContainsXY
@@ -41,7 +39,9 @@ import {
 }	from './geo2D.js'
 
 import {
-	BBox
+	XYWH
+,	TLBR
+,	BBox
 ,	RectPath2D
 ,	EllipsePath2D
 ,	RhombusPath2D

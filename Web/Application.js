@@ -62,7 +62,8 @@ SyncReformsFromModel	= () => {
 }
 
 import Do from './Jobs.js'
-import { TLBR, Union } from './geo2D.js'
+import { Union } from './geo2D.js'
+import { TLBR } from './geoDF.js'
 
 const
 Persist		= () => localStorage.setItem( STORAGE_KEY, JSONString() )

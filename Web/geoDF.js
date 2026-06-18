@@ -1,16 +1,34 @@
 import {
-	XYWH
-,	T
-,	B
-,	L
-,	R
-,	TLBR
-,	XYWH_TLBR
+	XYWH_TLBR
 ,	TLBR_XYXY
 ,	EdgeDist
 ,	ContainsTLBR
 ,	Union
 } from './geo2D.js'
+
+export const
+XYWH			= ( { cX, cY, rH, rV } ) => [ cX - rH, cY - rV, rH + rH, rV + rV ]
+
+export const
+T				= ( { cX, cY, rH, rV } ) => rV > 0 ? cY - rV : cY + rV
+
+export const
+B				= ( { cX, cY, rH, rV } ) => rV > 0 ? cY + rV : cY - rV
+
+export const
+L				= ( { cX, cY, rH, rV } ) => rH > 0 ? cX - rH : cX + rH
+
+export const
+R				= ( { cX, cY, rH, rV } ) => rH > 0 ? cX + rH : cX - rH
+
+export const
+TLBR			= ( { cX, cY, rH, rV } ) => 0 < rH
+?	0 < rV
+	?	[ cY - rV, cX - rH, cY + rV, cX + rH ]
+	:	[ cY + rV, cX - rH, cY - rV, cX + rH ]
+:	0 < rV
+	?	[ cY - rV, cX + rH, cY + rV, cX - rH ]
+	:	[ cY + rV, cX + rH, cY - rV, cX - rH ]
 
 import { FindReform } from './Application.js'
 

@@ -1,26 +1,14 @@
 export const
-XYWH			= ( { cX, cY, rH, rV } ) => [ cX - rH, cY - rV, rH + rH, rV + rV ]
+XY_EV			= ev => [ ev.offsetX, ev.offsetY ]
 
 export const
-T				= ( { cX, cY, rH, rV } ) => rV > 0 ? cY - rV : cY + rV
-
+AddXY			= ( [ X, Y ], [ x, y ] )	=> [ X + x, Y + y ]
 export const
-B				= ( { cX, cY, rH, rV } ) => rV > 0 ? cY + rV : cY - rV
-
+DivXY			= ( [ X, Y ], _ )			=> [ X / _, Y / _ ]
 export const
-L				= ( { cX, cY, rH, rV } ) => rH > 0 ? cX - rH : cX + rH
-
+EqualXY			= ( [ X, Y ], [ x, y ] )	=> X === x && Y === y
 export const
-R				= ( { cX, cY, rH, rV } ) => rH > 0 ? cX + rH : cX - rH
-
-export const
-TLBR			= ( { cX, cY, rH, rV } ) => 0 < rH
-?	0 < rV
-	?	[ cY - rV, cX - rH, cY + rV, cX + rH ]
-	:	[ cY + rV, cX - rH, cY - rV, cX + rH ]
-:	0 < rV
-	?	[ cY - rV, cX + rH, cY + rV, cX - rH ]
-	:	[ cY + rV, cX + rH, cY - rV, cX - rH ]
+DeltaXY			= ( [ X, Y ], [ x, y ] )	=> [ x - X, y - Y ]
 
 export const
 XYWH_TLBR		= ( [ T, L, B, R ] ) => [ L, T, R - L, B - T ]
@@ -69,15 +57,4 @@ Union			= _ => _.slice( 1 ).reduce(
 
 export const
 XYWH_XYXY		= ( [ [ x, y ], [ X, Y ] ] ) => [ x, y, X - x, Y - y ]
-
-export const
-XY_EV			= ev => [ ev.offsetX, ev.offsetY ]
-export const
-AddXY			= ( [ X, Y ], [ x, y ] )	=> [ X + x, Y + y ]
-export const
-DivXY			= ( [ X, Y ], _ )			=> [ X / _, Y / _ ]
-export const
-EqualXY			= ( [ X, Y ], [ x, y ] )	=> X === x && Y === y
-export const
-DeltaXY			= ( [ X, Y ], [ x, y ] )	=> [ x - X, y - Y ]
 
