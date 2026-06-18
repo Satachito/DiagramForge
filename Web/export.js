@@ -109,8 +109,8 @@ drawPngNode		= ( parts, X, Y, S ) => {
 }
 
 const
-drawLink		= ( parts, X, Y, shapeF, A, shapeT, P ) => DrawLinkSvg(
-	parts, X, Y, shapeF, A, shapeT, P
+drawLink		= ( parts, X, Y, shapeF, A, shapeT, P, paints ) => DrawLinkSvg(
+	parts, X, Y, shapeF, A, shapeT, P, paints
 )
 
 const
@@ -147,7 +147,9 @@ buildVectorSVG	= () => {
 		const
 		nF = FindNode( F )
 		,	nT = FindNode( T )
-		nF && nT && drawLink( parts, X, Y, nF[ 1 ], A, nT[ 1 ], P )
+		nF && nT && drawLink(
+			parts, X, Y, nF[ 1 ], A, nT[ 1 ], P, { paintF: nF[ 2 ], paintT: nT[ 2 ] }
+		)
 	}
 
 	parts.push( '</svg>' )

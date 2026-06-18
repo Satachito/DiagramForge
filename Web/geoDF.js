@@ -114,6 +114,15 @@ pathLength		= pts => {
 }
 
 const
+distAlongSeg	= ( a, b, p ) => {
+	const
+	dx = b[ 0 ] - a[ 0 ]
+	,	dy = b[ 1 ] - a[ 1 ]
+	,	len = Math.hypot( dx, dy )
+	return	len < 1e-9 ? 0 : ( ( p[ 0 ] - a[ 0 ] ) * dx + ( p[ 1 ] - a[ 1 ] ) * dy ) / len
+}
+
+const
 subPath			= ( pts, d0, d1 ) => {
 	const
 	out = []
@@ -167,17 +176,90 @@ headTriangle		= ( tip, dir, headLen, headHalf ) => {
 }
 
 const
-routePoints		= ( shapeF, { anchorF, anchorT }, shapeT ) => {
+frameHalf		= paint => paint?.stroke ? ( Number( paint.lineWidth ) || 1 ) / 2 : 0
+
+const
+ellipseOutward	= ( S, px, py ) => unit(
+	( px - S.cX ) / ( S.rH * S.rH )
+,	( py - S.cY ) / ( S.rV * S.rV )
+)
+
+const
+rectEdgeOutward	= ( S, px, py ) => {
+	const
+	l = S.cX - S.rH
+	,	r = S.cX + S.rH
+	,	t = S.cY - S.rV
+	,	b = S.cY + S.rV
+	,	dL = Math.abs( px - l )
+	,	dR = Math.abs( px - r )
+	,	dT = Math.abs( py - t )
+	,	dB = Math.abs( py - b )
+	,	m = Math.min( dL, dR, dT, dB )
+	if	( m === dT )	return [ 0, -1 ]
+	if	( m === dB )	return [ 0, 1 ]
+	if	( m === dL )	return [ -1, 0 ]
+	return	[ 1, 0 ]
+}
+
+const
+boundaryOutward	= ( S, anchor, [ px, py ] ) => {
+	switch ( anchor ) {
+	case 'T'	: return [ 0, -1 ]
+	case 'B'	: return [ 0, 1 ]
+	case 'L'	: return [ -1, 0 ]
+	case 'R'	: return [ 1, 0 ]
+	case 'TL'	: return unit( -S.rH, -S.rV )
+	case 'TR'	: return unit( S.rH, -S.rV )
+	case 'BL'	: return unit( -S.rH, S.rV )
+	case 'BR'	: return unit( S.rH, S.rV )
+	default		:
+		switch ( S.type ) {
+		case 'rect':
+		case 'SVG':
+		case 'PNG'	: return rectEdgeOutward( S, px, py )
+		case 'ellipse'	: return ellipseOutward( S, px, py )
+		default		: return unit( px - S.cX, py - S.cY )
+		}
+	}
+}
+
+const
+offsetOutward	= ( p, outward, dist ) => [
+	p[ 0 ] + outward[ 0 ] * dist
+,	p[ 1 ] + outward[ 1 ] * dist
+]
+
+const
+linkAttach		= ( S, anchor, paint, shaftHalf, p ) => {
+	const
+	outward	= boundaryOutward( S, anchor, p )
+	,	frame = frameHalf( paint )
+	return	{
+		route	: offsetOutward( p, outward, frame + shaftHalf )
+	,	tip	: offsetOutward( p, outward, frame )
+	,	outward
+	}
+}
+
+const
+routePoints		= ( shapeF, { anchorF, anchorT }, shapeT, shaftHalf = 0, { paintF, paintT } = {} ) => {
 	const	[ [ pFX, pFY ], [ pTX, pTY ] ] = LinkCoordinates( shapeF, anchorF, shapeT, anchorT )
-	if	( anchorF || anchorT )	return [ [ pFX, pFY ], [ pTX, pTY ] ]
+	const
+	f = linkAttach( shapeF, anchorF, paintF, shaftHalf, [ pFX, pFY ] )
+	,	t = linkAttach( shapeT, anchorT, paintT, shaftHalf, [ pTX, pTY ] )
+	,	{ route: pF, tip: tipF } = f
+	,	{ route: pT, tip: tipT } = t
+	if	( anchorF || anchorT )	return { points: [ pF, pT ], tipF, tipT }
 
 	const
-	midX = ( pFX + pTX ) / 2
-	,	midY = ( pFY + pTY ) / 2
-	if	( Math.abs( pTX - pFX ) >= Math.abs( pTY - pFY ) ) {
-		return [ [ pFX, pFY ], [ midX, pFY ], [ midX, pTY ], [ pTX, pTY ] ]
+	midX = ( pF[ 0 ] + pT[ 0 ] ) / 2
+	,	midY = ( pF[ 1 ] + pT[ 1 ] ) / 2
+	,	[ oFX, oFY ] = f.outward
+	if	( Math.abs( oFX ) >= Math.abs( oFY ) ) {
+		return { points: [ pF, [ midX, pF[ 1 ] ], [ midX, pT[ 1 ] ], pT ], tipF, tipT }
 	}
-	return [ [ pFX, pFY ], [ pFX, midY ], [ pTX, midY ], [ pTX, pTY ] ]
+	return { points: [ pF, [ pF[ 0 ], midY ], [ pT[ 0 ], midY ], pT ], tipF, tipT }
 }
 
 const
@@ -213,9 +295,20 @@ outlinePath		= ( pts, half ) => {
 }
 
 const
-linkMetrics		= ( shapeF, { headF, headT, anchorF, anchorT }, shapeT ) => {
+linkMetrics		= ( shapeF, { headF, headT, anchorF, anchorT }, shapeT, { paintF, paintT } = {} ) => {
 	const
-	route = routePoints( shapeF, { anchorF, anchorT }, shapeT )
+	{ points: route0 } = routePoints( shapeF, { anchorF, anchorT }, shapeT, 0, { paintF, paintT } )
+	,	len0 = pathLength( route0 )
+	if	( len0 < 1 ) return null
+
+	const
+	gapHalf = Math.max(
+		2
+	,	Math.max( 5, Math.min( 14, len0 * 0.35 ) * 0.5 ) * 0.45
+	)
+	,	{ points: route, tipF, tipT } = routePoints(
+		shapeF, { anchorF, anchorT }, shapeT, gapHalf, { paintF, paintT }
+	)
 	,	len = pathLength( route )
 	if	( len < 1 ) return null
 
@@ -223,23 +316,50 @@ linkMetrics		= ( shapeF, { headF, headT, anchorF, anchorT }, shapeT ) => {
 	headLen = Math.min( 14, len * 0.35 )
 	,	headHalf = Math.max( 5, headLen * 0.5 )
 	,	shaftHalf = Math.max( 2, headHalf * 0.45 )
-	,	fDist = headF ? headLen : 0
-	,	tDist = len - ( headT ? headLen : 0 )
-	,	shaft = subPath( route, fDist, tDist )
-	if	( shaft.length < 2 ) return null
 
+	let
+	fDist = 0
+	,	tDist = len
+	,	neckF = null
+	,	neckT = null
 	const
 	heads = []
 	if	( headF ) {
 		const
 		dir = unit( route[ 1 ][ 0 ] - route[ 0 ][ 0 ], route[ 1 ][ 1 ] - route[ 0 ][ 1 ] )
-		heads.push( headTriangle( route[ 0 ], dir, headLen, headHalf ) )
+		neckF = [ tipF[ 0 ] + dir[ 0 ] * headLen, tipF[ 1 ] + dir[ 1 ] * headLen ]
+		fDist = Math.max( 0, distAlongSeg( route[ 0 ], route[ 1 ], neckF ) )
+		heads.push( headTriangle( tipF, dir, headLen, headHalf ) )
 	}
 	if	( headT ) {
 		const
 		n = route.length - 1
-		,	dir = unit( route[ n ][ 0 ] - route[ n - 1 ][ 0 ], route[ n ][ 1 ] - route[ n - 1 ][ 1 ] )
-		heads.push( headTriangle( route[ n ], dir, headLen, headHalf ) )
+		,	dir = unit( route[ n - 1 ][ 0 ] - tipT[ 0 ], route[ n - 1 ][ 1 ] - tipT[ 1 ] )
+		,	lastSegLen = Math.hypot(
+			route[ n ][ 0 ] - route[ n - 1 ][ 0 ]
+		,	route[ n ][ 1 ] - route[ n - 1 ][ 1 ]
+		)
+		neckT = [ tipT[ 0 ] + dir[ 0 ] * headLen, tipT[ 1 ] + dir[ 1 ] * headLen ]
+		tDist = len - lastSegLen + distAlongSeg( route[ n - 1 ], route[ n ], neckT )
+		tDist = Math.min( len, Math.max( fDist, tDist ) )
+		heads.push( headTriangle( tipT, dir, headLen, headHalf ) )
+	}
+	const
+	shaft = subPath( route, fDist, tDist )
+	if	( shaft.length < 2 ) return null
+
+	const
+	endF = headF ? neckF : tipF
+	,	endT = headT ? neckT : tipT
+	if	( endT ) {
+		const
+		last = shaft[ shaft.length - 1 ]
+		if	( Math.hypot( endT[ 0 ] - last[ 0 ], endT[ 1 ] - last[ 1 ] ) > 0.5 )	shaft.push( endT )
+	}
+	if	( endF ) {
+		const
+		first = shaft[ 0 ]
+		if	( Math.hypot( endF[ 0 ] - first[ 0 ], endF[ 1 ] - first[ 1 ] ) > 0.5 )	shaft.unshift( endF )
 	}
 	return {
 		shaftHalf
@@ -252,17 +372,17 @@ export const
 LinkParts		= linkMetrics
 
 export const
-LinkPoints		= ( shapeF, ends, shapeT ) => {
+LinkPoints		= ( shapeF, ends, shapeT, paints ) => {
 	const
-	m = linkMetrics( shapeF, ends, shapeT )
+	m = linkMetrics( shapeF, ends, shapeT, paints )
 	if	( !m ) return []
 	return	outlinePath( m.shaft, m.shaftHalf )
 }
 
 export const
-LinkPath2D		= ( shapeF, ends, shapeT ) => {
+LinkPath2D		= ( shapeF, ends, shapeT, paints ) => {
 	const
-	m = linkMetrics( shapeF, ends, shapeT )
+	m = linkMetrics( shapeF, ends, shapeT, paints )
 	const	$ = new Path2D
 	if	( !m ) return $
 

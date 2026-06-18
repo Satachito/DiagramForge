@@ -5,9 +5,9 @@ const
 linkColor		= P => P.stroke || P.fill
 
 export const
-DrawLinkCanvas	= ( c2D, shapeF, ends, shapeT, P ) => {
+DrawLinkCanvas	= ( c2D, shapeF, ends, shapeT, P, paints ) => {
 	const
-	g = LinkParts( shapeF, ends, shapeT )
+	g = LinkParts( shapeF, ends, shapeT, paints )
 	const
 	color = linkColor( P )
 	if	( !g || !color ) return
@@ -16,7 +16,7 @@ DrawLinkCanvas	= ( c2D, shapeF, ends, shapeT, P ) => {
 	c2D.strokeStyle = color
 	c2D.lineWidth = 2 * g.shaftHalf
 	c2D.lineCap = P.lineCap || 'butt'
-	c2D.lineJoin = P.lineJoin || 'miter'
+	c2D.lineJoin = P.lineJoin || 'round'
 	c2D.setLineDash( P.lineDash?.length ? P.lineDash : [] )
 	P.lineDashOffset && ( c2D.lineDashOffset = P.lineDashOffset )
 	c2D.beginPath()
@@ -41,8 +41,8 @@ strokeAttrs		= P => {
 	a = [
 		`stroke="${ EscapeXML( linkColor( P ) ) }"`
 	,	`stroke-linecap="${ P.lineCap || 'butt' }"`
+	,	`stroke-linejoin="${ P.lineJoin || 'round' }"`
 	]
-	P.lineJoin && a.push( `stroke-linejoin="${ P.lineJoin }"` )
 	P.lineDash?.length && a.push( `stroke-dasharray="${ P.lineDash.join( ' ' ) }"` )
 	P.lineDashOffset && a.push( `stroke-dashoffset="${ P.lineDashOffset }"` )
 	return	a.join( ' ' )
@@ -54,9 +54,9 @@ pointsAttr		= ( X, Y, points ) => points.map(
 ).join( ' ' )
 
 export const
-DrawLinkSvg		= ( parts, X, Y, shapeF, ends, shapeT, P ) => {
+DrawLinkSvg		= ( parts, X, Y, shapeF, ends, shapeT, P, paints ) => {
 	const
-	g = LinkParts( shapeF, ends, shapeT )
+	g = LinkParts( shapeF, ends, shapeT, paints )
 	const
 	color = linkColor( P )
 	if	( !g || !color ) return

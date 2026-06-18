@@ -51,6 +51,9 @@ import { DrawForeignLabel	} from './ForeignLabel.js'
 import { DrawLinkCanvas	} from './DrawLink.js'
 
 const
+copyText		= text => navigator.clipboard.writeText( text ).catch( Report )
+
+const
 mouse			= [ null, null ]
 
 let
@@ -200,7 +203,9 @@ MainEditor extends HTMLElement {
 			( [ [ F, A, T ], P ] ) => {
 				const	nF = FindNode( F )
 				const	nT = FindNode( T )
-				nF && nT && DrawLinkCanvas( c2D, nF[ 1 ], A, nT[ 1 ], P )
+				nF && nT && DrawLinkCanvas(
+					c2D, nF[ 1 ], A, nT[ 1 ], P, { paintF: nF[ 2 ], paintT: nT[ 2 ] }
+				)
 			}
 		)
 	}
@@ -212,7 +217,9 @@ MainEditor extends HTMLElement {
 		for ( const [ [ F, A, T ], S ] of app.model.links ) {
 			const	rF = FindReform( F )
 			const	rT = FindReform( T )
-			rF && rT && DrawLinkCanvas( c2D, rF[ 1 ], A, rT[ 1 ], S )
+			rF && rT && DrawLinkCanvas(
+				c2D, rF[ 1 ], A, rT[ 1 ], S, { paintF: rF[ 2 ], paintT: rT[ 2 ] }
+			)
 		}
 
 		if	( app.reforms.length ) {
@@ -257,20 +264,46 @@ MainEditor extends HTMLElement {
 		this.reformer				= AE( this, 'canvas' )
 		this.drawer.style.position	= this.reformer.style.position	= 'absolute'
 		this.linkMenuKey			= null
+		this.nodeMenuTarget			= null
 
 		LINK_MENU_REMOVE.onclick	= ev => (
 			ev.stopPropagation()
 		,	this.linkMenuKey && RemoveLink( this.linkMenuKey[ 0 ], this.linkMenuKey[ 2 ] )
-		,	this.hideLinkMenu()
+		,	this.hideContextMenus()
 		,	this.reformer.focus()
 		)
 
+		NODE_MENU_DELETE.onclick	= async ev => (
+			ev.stopPropagation()
+		,	this.nodeMenuTarget && await Delete()
+		,	this.hideContextMenus()
+		,	this.reformer.focus()
+		)
+
+		NODE_MENU_COPY_ID.onclick	= ev => (
+			ev.stopPropagation()
+		,	this.nodeMenuTarget && copyText( this.nodeMenuTarget[ 0 ] )
+		,	this.hideContextMenus()
+		)
+
+		NODE_MENU_COPY_HTML.onclick	= ev => (
+			ev.stopPropagation()
+		,	this.nodeMenuTarget && copyText( this.nodeMenuTarget[ 1 ].html ?? '' )
+		,	this.hideContextMenus()
+		)
+
+		NODE_MENU_COPY_STYLE.onclick	= ev => (
+			ev.stopPropagation()
+		,	this.nodeMenuTarget && copyText( this.nodeMenuTarget[ 1 ].style ?? '' )
+		,	this.hideContextMenus()
+		)
+
 		//	window-level: catches clicks outside main-editor too
-		//	capture(true): runs before stopPropagation() in LINK_MENU_REMOVE.onclick
+		//	capture(true): runs before stopPropagation() in menu onclick handlers
 		addEventListener( 'pointerdown', ev => {
-			if	( LINK_MENU.style.display === 'none' ) return
-			if	( LINK_MENU.contains( ev.target ) ) return
-			this.hideLinkMenu()
+			if	( LINK_MENU.style.display === 'none' && NODE_MENU.style.display === 'none' ) return
+			if	( LINK_MENU.contains( ev.target ) || NODE_MENU.contains( ev.target ) ) return
+			this.hideContextMenus()
 		}, true )
 
 		this.reformer.oncontextmenu	= ev => this.onContextMenu( ev )
@@ -299,9 +332,19 @@ MainEditor extends HTMLElement {
 		)
 	}
 
-	hideLinkMenu() {
+	hideContextMenus() {
 		LINK_MENU.style.display	= 'none'
+		NODE_MENU.style.display	= 'none'
 		this.linkMenuKey		= null
+		this.nodeMenuTarget		= null
+	}
+
+	positionContextMenu( menu, ev ) {
+		const	pad	= 8
+		const	w	= menu.offsetWidth	|| 120
+		const	h	= menu.offsetHeight	|| 40
+		menu.style.left	= `${ Math.max( pad, Math.min( ev.clientX, innerWidth - w - pad ) ) }px`
+		menu.style.top	= `${ Math.max( pad, Math.min( ev.clientY, innerHeight - h - pad ) ) }px`
 	}
 
 	//	the two toggles, each temporarily forced on by a modifier key
@@ -333,7 +376,7 @@ MainEditor extends HTMLElement {
 		case 'Escape':
 			mouse[ 0 ] = mouse[ 1 ] = null
 			mouseDrag = null
-			this.hideLinkMenu()
+			this.hideContextMenus()
 			await this.DrawReforms()
 			break
 		case 'Delete':
@@ -390,8 +433,9 @@ MainEditor extends HTMLElement {
 
 	//	plain click: select just the one node, replacing any selection
 	async selectSingle( node ) {
-		SHAPE_EDITOR.$ = node[ 1 ]
-		PAINT_EDITOR.$ = node[ 2 ]
+		NODE_ID.value		= node[ 0 ]
+		SHAPE_EDITOR.$		= node[ 1 ]
+		PAINT_EDITOR.$		= node[ 2 ]
 		this.registReform( node )
 		this.rollSelectedToTop()
 		await this.DrawReforms()
@@ -399,8 +443,9 @@ MainEditor extends HTMLElement {
 
 	//	shift+click: extend the selection with the node and everything it contains
 	async addWithContained( node ) {
-		SHAPE_EDITOR.$ = node[ 1 ]
-		PAINT_EDITOR.$ = node[ 2 ]
+		NODE_ID.value		= node[ 0 ]
+		SHAPE_EDITOR.$		= node[ 1 ]
+		PAINT_EDITOR.$		= node[ 2 ]
 		const
 		tlbr = TLBR( node[ 1 ] )
 		this.registReform( node )
@@ -439,7 +484,10 @@ MainEditor extends HTMLElement {
 			( [ [ F, A, T ], P ] ) => {
 				const
 				[ nF, nT ]	= [ FindNode( F ), FindNode( T ) ]
-				nF && nT && this.reformer.getContext( '2d' ).isPointInPath( LinkPath2D( nF[ 1 ], A, nT[ 1 ] ), ...xy ) && (
+				nF && nT && this.reformer.getContext( '2d' ).isPointInPath(
+					LinkPath2D( nF[ 1 ], A, nT[ 1 ], { paintF: nF[ 2 ], paintT: nT[ 2 ] } )
+				,	...xy
+				) && (
 					$ = [ nF, nT, [ F, A, T ] ]
 				)
 			}
@@ -453,38 +501,47 @@ MainEditor extends HTMLElement {
 		LINK_EDITOR.$ = link[ 2 ]
 	}
 
-	onContextMenu( ev ) {
+	findLinkKeyAt( xy ) {
 		const
 		c2D = this.reformer.getContext( '2d' )
+		for	( let i = app.model.links.length; i--; ) {
+			const	[ [ F, A, T ], P ] = app.model.links[ i ]
+			const	nF		= FindNode( F )
+			const	nT		= FindNode( T )
+			if	( ! nF || ! nT ) continue
+			const	path	= LinkPath2D( nF[ 1 ], A, nT[ 1 ], { paintF: nF[ 2 ], paintT: nT[ 2 ] } )
+			c2D.lineWidth	= Math.max( Number( P.lineWidth || 4 ), 10 )
+			c2D.lineCap		= P.lineCap		|| 'butt'
+			c2D.lineJoin	= P.lineJoin	|| 'miter'
+			if	( P.stroke	&& c2D.isPointInStroke( path, ...xy ) )	return [ F, A, T ]
+			if	( P.fill	&& c2D.isPointInFill( path, ...xy ) )	return [ F, A, T ]
+		}
+		return null
+	}
+
+	async onContextMenu( ev ) {
 		const
-		XY = XY_EV( ev )
+		xy = XY_EV( ev )
 		const
-		findLinkKeyAt	= () => {
-			for	( let i = app.model.links.length; i--; ) {
-				const	[ [ F, A, T ], P ] = app.model.links[ i ]
-				const	nF		= FindNode( F )
-				const	nT		= FindNode( T )
-				if	( ! nF || ! nT ) continue
-				const	path	= LinkPath2D( nF[ 1 ], A, nT[ 1 ] )
-				c2D.lineWidth	= Math.max( Number( P.lineWidth || 4 ), 10 )
-				c2D.lineCap		= P.lineCap		|| 'butt'
-				c2D.lineJoin	= P.lineJoin	|| 'miter'
-				if	( P.stroke	&& c2D.isPointInStroke( path, ...XY ) )	return [ F, A, T ]
-				if	( P.fill	&& c2D.isPointInFill( path, ...XY ) )	return [ F, A, T ]
-			}
-			return null
+		key = this.findLinkKeyAt( xy )
+		if	( key ) {
+			ev.preventDefault()
+			this.hideContextMenus()
+			this.linkMenuKey	= key
+			LINK_MENU.style.display	= 'block'
+			this.positionContextMenu( LINK_MENU, ev )
+			return
 		}
 		const
-		key = findLinkKeyAt()
-		if	( ! key ) return
+		node = Node_XY( xy )
+		if	( ! node ) return
 		ev.preventDefault()
-		this.linkMenuKey		= key
-		LINK_MENU.style.display	= 'block'
-		const	pad	= 8
-		const	w	= LINK_MENU.offsetWidth		|| 120
-		const	h	= LINK_MENU.offsetHeight	|| 40
-		LINK_MENU.style.left	= `${ Math.max( pad, Math.min( ev.clientX, innerWidth - w - pad ) ) }px`
-		LINK_MENU.style.top		= `${ Math.max( pad, Math.min( ev.clientY, innerHeight - h - pad ) ) }px`
+		this.hideContextMenus()
+		app.reforms			= []
+		await this.selectSingle( node )
+		this.nodeMenuTarget		= node
+		NODE_MENU.style.display	= 'block'
+		this.positionContextMenu( NODE_MENU, ev )
 	}
 
 	async onMouseDown( ev ) {

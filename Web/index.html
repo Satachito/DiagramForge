@@ -118,7 +118,8 @@ summary {
 ;	outline-color			: var( --color-accent )
 }
 
-#LINK_MENU {
+#LINK_MENU
+,	#NODE_MENU {
 ;	display			: none
 ;	position		: fixed
 ;	z-index			: 2000
@@ -131,7 +132,8 @@ summary {
 ;	font-size		: 13px
 ;	box-shadow		: 0 4px 12px var( --color-shadow )
 }
-#LINK_MENU > button {
+#LINK_MENU > button
+,	#NODE_MENU > button {
 ;	display			: block
 ;	width			: 100%
 ;	text-align		: left
@@ -142,7 +144,8 @@ summary {
 ;	font			: inherit
 ;	cursor			: pointer
 }
-#LINK_MENU > button:hover {
+#LINK_MENU > button:hover
+,	#NODE_MENU > button:hover {
 ;	background		: var( --color-popup-hover )
 }
 #UNDER_HOVER {
@@ -262,6 +265,7 @@ aside .node-id-row input {
 	<button			id=SAMPLE_AZURE		>Sample( Azure )	</button>
 	<button			id=SAMPLE_MINDMAP	>Sample( MindMap )	</button>
 	<button			id=SAMPLE_SEQUENCE	>Sample( Sequence )	</button>
+	<button			id=SAMPLE_SEQ_ANCHOR	>Sample( SeqAnchor )	</button>
 	<hr>
 	<paint-editor	id=PAINT_EDITOR		></paint-editor>
 	<hr>
@@ -289,6 +293,12 @@ aside .node-id-row input {
 	<div			id=UNDER_HOVER		></div>
 	<div			id=LINK_MENU		>
 		<button		id=LINK_MENU_REMOVE	>Remove</button>
+	</div>
+	<div			id=NODE_MENU		>
+		<button		id=NODE_MENU_DELETE		>Delete</button>
+		<button		id=NODE_MENU_COPY_ID	>Copy ID</button>
+		<button		id=NODE_MENU_COPY_HTML	>Copy HTML</button>
+		<button		id=NODE_MENU_COPY_STYLE	>Copy Style</button>
 	</div>
 </footer>
 
@@ -358,7 +368,8 @@ SAMPLE_AWS		.onclick = () => LoadSample( 'Samples/AWS.cde'		).catch( Report )
 SAMPLE_GCP		.onclick = () => LoadSample( 'Samples/GCP.cde'		).catch( Report )
 SAMPLE_AZURE	.onclick = () => LoadSample( 'Samples/Azure.cde'	).catch( Report )
 SAMPLE_MINDMAP	.onclick = () => LoadSample( 'Samples/MindMap.cde'	).catch( Report )
-SAMPLE_SEQUENCE	.onclick = () => LoadSample( 'Samples/Sequence.cde'	).catch( Report )
+SAMPLE_SEQUENCE	.onclick = () => LoadSample( 'Samples/Sequence.cde'		).catch( Report )
+SAMPLE_SEQ_ANCHOR	.onclick = () => LoadSample( 'Samples/SequenceAnchors.cde'	).catch( Report )
 
 DUMP_CDE		.onclick = () => console.log( JSON.stringify( app, null, '\t' ) )
 DUMP_JOBS		.onclick = DumpJobs
