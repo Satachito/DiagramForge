@@ -27,8 +27,17 @@ import {
 ,	XYWH_TLBR
 ,	TLBR_XYXY
 ,	EdgeDist
+,	ContainsXY
 ,	ContainsTLBR
+,	AreaTLBR
+,	Outset
 ,	Union
+,	XYWH_XYXY
+,	XY_EV
+,	AddXY
+,	DivXY
+,	EqualXY
+,	DeltaXY
 }	from './geo2D.js'
 
 import {
@@ -38,15 +47,12 @@ import {
 ,	RhombusPath2D
 ,	LinkPath2D
 ,	GRAB
-,	UnselectedAt
-,	SelectedMemberAt
 ,	SelectionGrabCursor
 ,	Node_XY
-,	HitSelect
 }	from './geoDF.js'
 
 import { DrawForeignLabel	} from './ForeignLabel.js'
-import { DrawLinkCanvas	} from './DrawLink.js'
+import { DrawLinkCanvas		} from './DrawLink.js'
 
 const
 copyText		= text => navigator.clipboard.writeText( text ).catch( Report )
@@ -54,22 +60,6 @@ copyText		= text => navigator.clipboard.writeText( text ).catch( Report )
 const
 mouse			= [ null, null ]
 
-let
-mouseDrag		= null	//	'move' | 'resize'
-
-const
-XYWH_XYXY		= ( [ [ x, y ], [ X, Y ] ] ) => [ x, y, X - x, Y - y ]
-
-const
-XY_EV			= ev => [ ev.offsetX, ev.offsetY ]
-const
-AddXY			= ( [ X, Y ], [ x, y ] )	=> [ X + x, Y + y ]
-const
-DivXY			= ( [ X, Y ], _ )			=> [ X / _, Y / _ ]
-const
-EqualXY			= ( [ X, Y ], [ x, y ] )	=> X === x && Y === y
-const
-DeltaXY			= ( [ X, Y ], [ x, y ] )	=> [ x - X, y - Y ]
 
 const
 DrawPath		= ( c2D, path, P ) => {
@@ -119,7 +109,7 @@ MainEditor extends HTMLElement {
 
 	clearInteraction() {
 		mouse[ 0 ] = mouse[ 1 ] = null
-		mouseDrag = null
+		this.drag = null
 	}
 
 	ApplyCanvasSize() {
@@ -374,7 +364,7 @@ MainEditor extends HTMLElement {
 			break
 		case 'Escape':
 			mouse[ 0 ] = mouse[ 1 ] = null
-			mouseDrag = null
+			this.drag = null
 			this.hideContextMenus()
 			await this.DrawReforms()
 			break
@@ -388,19 +378,54 @@ MainEditor extends HTMLElement {
 		}
 	}
 
+	//	closest node whose GRAB-expanded box holds xy ( ties: smaller area wins ).
+	//	shared by onMouseDown and cursorAt so the cursor always matches the action.
+	nodeAt( xy ) {
+		let	$ = null
+		app.model.nodes.forEach(
+			_ => {
+				const _tlbr = TLBR( _[ 1 ] )
+				if	( ContainsXY( Outset( _tlbr, GRAB ), xy ) ) {
+					if	( $ ) {
+						const _minEdgeDist	= Math.min( ...EdgeDist( _tlbr, xy ) )
+						const tlbr			= TLBR( $[ 1 ] )
+						const minEdgeDist	= Math.min( ...EdgeDist( tlbr, xy ) )
+						_minEdgeDist < minEdgeDist
+						?	$ = _
+						:	_minEdgeDist === minEdgeDist && ( AreaTLBR( _tlbr ) < AreaTLBR( tlbr ) ) && ( $ = _ )
+					} else {
+						$ = _
+					}
+				}
+			}
+		)
+		return	$
+	}
+
 	cursorAt( ev ) {
 		const	xy = XY_EV( ev )
-		if	( this.linkEndpointsAt( xy ) )		return 'pointer'
-		switch ( HitSelect( xy ) ) {
-		case 'selectionGrab':
-			return	SelectionGrabCursor( BBox( app.reforms ), xy )
-		case 'selected':
-		case 'selectionInside':
-		case 'nodeInside':
-			return	'move'
-		default:
-			return	this.nodeMode( ev ) || this.linkMode( ev ) ? 'crosshair' : 'default'
+
+		//	selection: interior moves, the exterior GRAB band resizes
+		if	( app.reforms.length ) {
+			const	bbox = BBox( app.reforms )
+			if	( ContainsXY( bbox, xy ) )					return 'move'
+			if	( ContainsXY( Outset( bbox, GRAB ), xy ) )	return SelectionGrabCursor( bbox, xy )
 		}
+
+		//	create / link modes drive the cursor regardless of what's underneath
+		if	( this.nodeMode( ev ) || this.linkMode( ev ) )	return 'crosshair'
+
+		//	a link selects its endpoints
+		if	( this.linkEndpointsAt( xy ) )	return 'pointer'
+
+		//	a node: interior moves, the exterior GRAB band resizes
+		const	node = this.nodeAt( xy )
+		if	( node ) {
+			const	tlbr = TLBR( node[ 1 ] )
+			return	ContainsXY( tlbr, xy ) ? 'move' : SelectionGrabCursor( tlbr, xy )
+		}
+
+		return	'default'
 	}
 
 	//	add a node (clone) to the selection if not already present
@@ -477,7 +502,7 @@ MainEditor extends HTMLElement {
 				const
 				[ nF, nT ]	= [ FindNode( F ), FindNode( T ) ]
 				nF && nT && this.reformer.getContext( '2d' ).isPointInPath(
-					LinkPath2D( nF[ 1 ], A, nT[ 1 ], { paintF: nF[ 2 ], paintT: nT[ 2 ] } )
+					LinkPath2D( nF[ 1 ], A, nT[ 1 ], nF[ 2 ], nT[ 2 ] )
 				,	...xy
 				) && (
 					$ = [ nF, nT, [ F, A, T ] ]
@@ -485,12 +510,6 @@ MainEditor extends HTMLElement {
 			}
 		)
 		return	$
-	}
-
-	registLink( link ) {
-		this.registReform( link[ 0 ] )
-		this.registReform( link[ 1 ] )
-		LINK_EDITOR.$ = link[ 2 ]
 	}
 
 	findLinkKeyAt( xy ) {
@@ -501,7 +520,7 @@ MainEditor extends HTMLElement {
 			const	nF		= FindNode( F )
 			const	nT		= FindNode( T )
 			if	( ! nF || ! nT ) continue
-			const	path	= LinkPath2D( nF[ 1 ], A, nT[ 1 ], { paintF: nF[ 2 ], paintT: nT[ 2 ] } )
+			const	path	= LinkPath2D( nF[ 1 ], A, nT[ 1 ], nF[ 2 ], nT[ 2 ] )
 			c2D.lineWidth	= Math.max( Number( P.lineWidth || 4 ), 10 )
 			c2D.lineCap		= P.lineCap		|| 'butt'
 			c2D.lineJoin	= P.lineJoin	|| 'miter'
@@ -544,137 +563,99 @@ MainEditor extends HTMLElement {
 		const
 		xy	= mouse[ 0 ] = XY_EV( ev )
 
-		//	Shift+click extends the selection: add the node under the cursor plus
-		//	everything it contains (or a link's two endpoints), keeping the rest.
-		if	( ev.shiftKey ) {
-			mouseDrag = 'move'
-			const
-			node = UnselectedAt( xy ) || SelectedMemberAt( xy )
-			if	( node ) {
-				await this.addWithContained( node )
-			} else {
-				const	link = this.linkEndpointsAt( xy )
-				link && this.registLink( link )
-				await this.DrawReforms()
-			}
-			return
-		}
-
-		//	1. act on the current selection: resize the exterior grips, move the interior,
-		//	   or ( clicked outside ) drop it and carry on
+//	SELECTION
 		if	( app.reforms.length ) {
 			const
-			hit = HitSelect( xy )
-			switch ( hit ) {
-			case 'selectionGrab':
-				mouseDrag = 'resize'
+			bbox = BBox( app.reforms )
+//	SELECTION GRAB
+			if	( ContainsXY( bbox, xy ) ) {
+				this.drag = this.beginMove()
 				return
-			case 'selected':
-			case 'selectionInside':
-				mouseDrag = 'move'
-				await this.DrawReforms()
-				return
-			default:
-				if	( hit === 'none' ) {
-					app.reforms = []
-					await this.DrawReforms()
-				}
 			}
+//	SELECTION INSIDE
+			if	( ContainsXY( Outset( bbox, GRAB ), xy ) ) {
+				this.drag = this.beginResize()
+				return
+			}
+//	SELECTION OUTSIDE
+			app.reforms.length = 0
 		}
 
-		//	2. a click on a link selects its two endpoints
-		const
-		link = this.linkEndpointsAt( xy )
-		if	( link ) {
-			mouseDrag = 'move'
-			this.registLink( link )
+//	LINK
+		for	( const link of app.model.links ) {
+			const
+			[ FAT, P ] = link
+			const
+			[ F, A, T ] = FAT
+			const
+			[ nF, nT ]	= [ FindNode( F ), FindNode( T ) ]
+			nF && nT && this.reformer.getContext( '2d' ).isPointInPath(
+				//	TODO LinkPath2D( nF, A, nT )
+				LinkPath2D( nF[ 1 ], A, nT[ 1 ], nF[ 2 ], nT[ 2 ] )
+			,	...xy
+			) && (
+				this.registReform( nF )
+			,	this.registReform( nT )
+			,	LINK_EDITOR.$ = FAT
+			)
+		}
+		if	( app.reforms.length ) {
+			this.drag = this.beginMove()
 			await this.DrawReforms()
 			return
 		}
 
-		//	3. a node under the cursor: start a link from it ( link mode ),
-		//	   else select it and move / resize
-		const
-		node = UnselectedAt( xy )
-		if	( node ) {
-			if	( this.linkMode( ev ) ) { mouseDrag = 'link'; return }
-			await this.selectSingle( node )
-			mouseDrag = 'move'
-			return
-		}
+//	NODE — create / link modes take precedence over hitting existing nodes
+		if	( this.nodeMode( ev ) ) { this.drag = this.beginCreate(); return }
 
-		//	4. empty canvas: drag creates a node ( node mode ) or selects an area
-		mouseDrag = this.nodeMode( ev ) ? 'create' : 'area'
+		const
+		$ = this.nodeAt( xy )
+		if	( this.linkMode( ev ) ) { this.drag = $ ? this.beginLink() : this.beginArea(); return }
+
+		$
+		?	(	this.drag = ContainsXY( TLBR( $[ 1 ] ), xy ) ? this.beginMove() : this.beginResize()
+			,	ev.shiftKey
+				?	this.selectSingle( $ )
+				:	this.addWithContained( $ )
+			)
+		:	this.drag = this.beginArea()
 	}
 
-	async onMouseMove( ev ) {
-
-		UpdateHoverLabel( ev )
-
-		if	( mouse[ 0 ] === null ) {
-			this.reformer.style.cursor = this.cursorAt( ev )
-			return
+	//	each gesture is a { draw, commit } handler decided at mousedown:
+	//	draw renders the in-progress drag, commit applies it on mouseup
+	beginMove() {
+		return	{
+			draw	: ( c2D, d, u ) => {
+				const	[ dX, dY ] = DeltaXY( d, u )
+				app.reforms.forEach(
+					( [ ID, S ] ) => {
+						const	s = FindNode( ID )[ 1 ]
+						S.cX = s.cX + dX
+						S.cY = s.cY + dY
+					}
+				)
+				return	this.DrawReforms()
+			}
+		,	commit	: () => Reform()
 		}
-		//	mouseleave may be missed on fast movement — reset if button already released
-		if	( !ev.buttons ) {
-			mouse[ 0 ] = mouse[ 1 ] = null
-			mouseDrag = null
-			return
-		}
+	}
 
-		const
-		c2D = this.reformer.getContext( '2d' )
-		c2D.clearRect( 0, 0, this.reformer.width, this.reformer.height )
-
-		mouse[ 1 ] = [ ev.offsetX, ev.offsetY ]
-		if	( EqualXY( mouse[ 0 ], mouse[ 1 ] ) ) return
-
-		const
-		paint = PAINT_EDITOR.$
-
-		switch	( mouseDrag ) {
-		case 'link':
-			c2D.save()
-			c2D.strokeStyle = paint.stroke || 'dodgerblue'
-			c2D.lineWidth = Number( paint.lineWidth || 2 )
-			c2D.lineCap = paint.lineCap || 'butt'
-			c2D.beginPath()
-			c2D.moveTo( ...mouse[ 0 ] )
-			c2D.lineTo( ...mouse[ 1 ] )
-			c2D.stroke()
-			c2D.restore()
-			return
-		case 'create':
-			c2D.save()
-			c2D.strokeStyle = paint.stroke || 'dodgerblue'
-			c2D.lineWidth = Number( paint.lineWidth || 2 )
-			c2D.lineCap = paint.lineCap || 'butt'
-			c2D.strokeRect( ...XYWH_XYXY( mouse ) )
-			c2D.restore()
-			return
-		case 'area':
-			c2D.save()
-			c2D.strokeStyle = 'lightgray'
-			c2D.strokeRect( ...XYWH_XYXY( mouse ) )
-			c2D.restore()
-			return
-		case 'resize':
-			{	let		edgeMode = false
-
+	beginResize() {
+		return	{
+			draw	: ( c2D, d, u ) => {
+				let		edgeMode = false
 				const	tlbr = BBox( app.reforms.map( _ => FindNode( _[ 0 ] ) ) )
-				const	edgeDist = EdgeDist( tlbr, mouse[ 0 ] )
+				const	edgeDist = EdgeDist( tlbr, d )
 				const	[ t, l, b, r ] = tlbr
-				const	T = edgeDist[ 0 ] <= GRAB ? ( edgeMode = true, mouse[ 1 ][ 1 ] ) : t
-				const	L = edgeDist[ 1 ] <= GRAB ? ( edgeMode = true, mouse[ 1 ][ 0 ] ) : l
-				const	B = edgeDist[ 2 ] <= GRAB ? ( edgeMode = true, mouse[ 1 ][ 1 ] ) : b
-				const	R = edgeDist[ 3 ] <= GRAB ? ( edgeMode = true, mouse[ 1 ][ 0 ] ) : r
-
+				const	T = edgeDist[ 0 ] <= GRAB ? ( edgeMode = true, u[ 1 ] ) : t
+				const	L = edgeDist[ 1 ] <= GRAB ? ( edgeMode = true, u[ 0 ] ) : l
+				const	B = edgeDist[ 2 ] <= GRAB ? ( edgeMode = true, u[ 1 ] ) : b
+				const	R = edgeDist[ 3 ] <= GRAB ? ( edgeMode = true, u[ 0 ] ) : r
 				if	( edgeMode ) {
 					const	scaleX	= ( R - L ) / ( r - l || 1 )
 					const	scaleY	= ( B - T ) / ( b - t || 1 )
 					const	tX = L - l * scaleX
 					const	tY = T - t * scaleY
-
 					app.reforms.forEach(
 						( [ ID, S ] ) => {
 							const	[ t, l, b, r ] = TLBR( FindNode( ID )[ 1 ] )
@@ -689,31 +670,110 @@ MainEditor extends HTMLElement {
 						}
 					)
 				}
+				return	this.DrawReforms()
 			}
-			await this.DrawReforms()
-			return
-		case 'move':
-			{	const	[ dX, dY ] = DeltaXY( ...mouse )
-				app.reforms.forEach(
-					( [ ID, S ] ) => {
-						const	s = FindNode( ID )[ 1 ]
-						S.cX = s.cX + dX
-						S.cY = s.cY + dY
-					}
+		,	commit	: () => Reform()
+		}
+	}
+
+	beginLink() {
+		return	{
+			draw	: ( c2D, d, u ) => {
+				const	paint = PAINT_EDITOR.$
+				c2D.save()
+				c2D.strokeStyle = paint.stroke || 'dodgerblue'
+				c2D.lineWidth = Number( paint.lineWidth || 2 )
+				c2D.lineCap = paint.lineCap || 'butt'
+				c2D.beginPath()
+				c2D.moveTo( ...d )
+				c2D.lineTo( ...u )
+				c2D.stroke()
+				c2D.restore()
+			}
+		,	commit	: async ( d, u ) => {
+				const	F = Node_XY( d );	if	( F === null ) return
+				const	T = Node_XY( u );	if	( T === null ) return
+				const	[ _F, A, _T ] = LINK_EDITOR.$
+				const	$ = [ [ F[ 0 ], A, T[ 0 ] ], PAINT_EDITOR.$ ]
+				await Link( $ )
+			}
+		}
+	}
+
+	beginCreate() {
+		return	{
+			draw	: ( c2D, d, u ) => {
+				const	paint = PAINT_EDITOR.$
+				c2D.save()
+				c2D.strokeStyle = paint.stroke || 'dodgerblue'
+				c2D.lineWidth = Number( paint.lineWidth || 2 )
+				c2D.lineCap = paint.lineCap || 'butt'
+				c2D.strokeRect( ...XYWH_XYXY( [ d, u ] ) )
+				c2D.restore()
+			}
+		,	commit	: async ( d, u ) => {
+				const	S = SHAPE_EDITOR.$
+				const	r = DivXY( DeltaXY( d, u ), 2 )
+				const	c = AddXY( d, r )
+				S.cX = c[ 0 ]
+				S.cY = c[ 1 ]
+				S.rH = r[ 0 ]
+				S.rV = r[ 1 ]
+				await Node( [ NODE_ID.value, S, PAINT_EDITOR.$ ] )
+			}
+		}
+	}
+
+	beginArea() {
+		return	{
+			draw	: ( c2D, d, u ) => {
+				c2D.save()
+				c2D.strokeStyle = 'lightgray'
+				c2D.strokeRect( ...XYWH_XYXY( [ d, u ] ) )
+				c2D.restore()
+			}
+		,	commit	: ( d, u ) => {
+				const	tlbr = TLBR_XYXY( [ d, u ] )
+				app.model.nodes.forEach(
+					_ => ContainsTLBR( tlbr, TLBR( _[ 1 ] ) ) && this.registReform( _ )
 				)
+				return	this.DrawReforms()
 			}
-			await this.DrawReforms()
+		}
+	}
+
+	async onMouseMove( ev ) {
+
+		UpdateHoverLabel( ev )
+
+		if	( mouse[ 0 ] === null ) {
+			this.reformer.style.cursor = this.cursorAt( ev )
 			return
 		}
+		//	mouseleave may be missed on fast movement — reset if button already released
+		if	( !ev.buttons ) {
+			mouse[ 0 ] = mouse[ 1 ] = null
+			this.drag = null
+			return
+		}
+
+		const
+		c2D = this.reformer.getContext( '2d' )
+		c2D.clearRect( 0, 0, this.reformer.width, this.reformer.height )
+
+		mouse[ 1 ] = [ ev.offsetX, ev.offsetY ]
+		if	( EqualXY( mouse[ 0 ], mouse[ 1 ] ) ) return
+
+		await this.drag?.draw( c2D, mouse[ 0 ], mouse[ 1 ] )
 	}
 
 	async onMouseUp( ev ) {
 		void ev
 		const
 		[ mouseD, mouseU ] = mouse
-		,	drag = mouseDrag
+		,	drag = this.drag
 		mouse[ 0 ] = mouse[ 1 ] = null
-		mouseDrag = null
+		this.drag = null
 		if	( mouseD === null || mouseU === null ) return
 		if	( EqualXY( mouseD, mouseU ) ) return
 
@@ -721,40 +781,7 @@ MainEditor extends HTMLElement {
 		c2D = this.reformer.getContext( '2d' )
 		c2D.clearRect( 0, 0, this.reformer.width, this.reformer.height )
 
-		switch	( drag ) {
-		case 'link':
-			{	const	F = Node_XY( mouseD );	if	( F === null ) return
-				const	T = Node_XY( mouseU );	if	( T === null ) return
-				const	[ _F, A, _T ] = LINK_EDITOR.$
-				const	$ = [ [ F[ 0 ], A, T[ 0 ] ], PAINT_EDITOR.$ ]
-				await Link( $ )
-			}
-			return
-		case 'create':
-			{	const	S = SHAPE_EDITOR.$
-				const	r = DivXY( DeltaXY( mouseD, mouseU ), 2 )
-				const	c = AddXY( mouseD, r )
-				S.cX = c[ 0 ]
-				S.cY = c[ 1 ]
-				S.rH = r[ 0 ]
-				S.rV = r[ 1 ]
-				await Node( [ NODE_ID.value, S, PAINT_EDITOR.$ ] )
-			}
-			return
-		case 'resize':
-		case 'move':
-			await Reform()
-			return
-		case 'area':
-			{	const
-				tlbr = TLBR_XYXY( [ mouseD, mouseU ] )
-				app.model.nodes.forEach(
-					_ => ContainsTLBR( tlbr, TLBR( _[ 1 ] ) ) && this.registReform( _ )
-				)
-				await this.DrawReforms()
-			}
-			return
-		}
+		await drag?.commit( mouseD, mouseU )
 	}
 }
 

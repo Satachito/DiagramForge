@@ -274,7 +274,7 @@ outlinePath		= ( pts, half ) => {
 }
 
 const
-linkMetrics		= ( shapeF, { headF, headT, anchorF, anchorT }, shapeT, { paintF, paintT } = {} ) => {
+linkMetrics		= ( shapeF, { headF, headT, anchorF, anchorT }, shapeT, paintF, paintT ) => {
 	const
 	e = linkEnds( shapeF, anchorF, shapeT, anchorT, paintF, paintT )
 	,	{ tipF, tipT } = e
@@ -349,9 +349,9 @@ export const
 LinkParts		= linkMetrics
 
 export const
-LinkPath2D		= ( shapeF, ends, shapeT, paints ) => {
+LinkPath2D		= ( shapeF, ends, shapeT, paintF, paintT ) => {
 	const
-	m = linkMetrics( shapeF, ends, shapeT, paints )
+	m = linkMetrics( shapeF, ends, shapeT, paintF, paintT )
 	const	$ = new Path2D
 	if	( !m ) return $
 
@@ -466,12 +466,20 @@ HitSelect		= xy => {
 	return	'none'
 }
 
+//	resize cursor for the exterior GRAB band: an edge is grabbed when its
+//	signed distance is within GRAB ( negative = outside, so corners win first )
 export const
 SelectionGrabCursor	= ( sel, xy ) => {
 	const
 	[ dT, dL, dB, dR ] = EdgeDist( sel, xy )
-	if	( ( dT < 0 && dL < 0 ) || ( dB < 0 && dR < 0 ) )	return 'nwse-resize'
-	if	( ( dT < 0 && dR < 0 ) || ( dB < 0 && dL < 0 ) )	return 'nesw-resize'
+	,	T = dT <= GRAB
+	,	L = dL <= GRAB
+	,	B = dB <= GRAB
+	,	R = dR <= GRAB
+	if	( ( T && L ) || ( B && R ) )	return 'nwse-resize'
+	if	( ( T && R ) || ( B && L ) )	return 'nesw-resize'
+	if	( T || B )	return 'ns-resize'
+	if	( L || R )	return 'ew-resize'
 	return	'move'
 }
 
