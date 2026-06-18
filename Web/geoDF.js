@@ -420,26 +420,39 @@ export const
 NodeInterior	= ( tlbr, xy ) => MinEdge( tlbr, xy ) > GRAB
 
 const
-SelectionGrab	= ( tlbr, xy ) => {
+CornerGrab		= ( tlbr, xy ) => {
 	const
-	m = MinEdge( tlbr, xy )
-	return	m > -GRAB && m <= GRAB
+	[ dT, dL, dB, dR ] = EdgeDist( tlbr, xy )
+	,	m = MinEdge( tlbr, xy )
+	if	( m >= 0 || m <= -GRAB )	return false
+	return	( dT < 0 && dL < 0 )
+		||	( dT < 0 && dR < 0 )
+		||	( dB < 0 && dL < 0 )
+		||	( dB < 0 && dR < 0 )
 }
 
-//	the node with the smallest edge distance (innermost) matching pred
+const
+SelectionGrab		= CornerGrab
+
+//	the node with the smallest edge distance (innermost) matching pred;
+//	ties pick the smallest area
 const
 ClosestNodeWhere	= ( xy, pred ) => {
 	let
 	top = null
 	,	best = Infinity
+	,	bestArea = Infinity
 	for ( const node of app.model.nodes ) {
 		const
 		tlbr = TLBR( node[ 1 ] )
 		if	( !pred( node, tlbr, xy ) ) continue
 		const
 		d = MinEdge( tlbr, xy )
-		if	( d < best ) {
+		,	[ t, l, b, r ] = tlbr
+		,	area = ( b - t ) * ( r - l )
+		if	( d < best || ( d === best && area < bestArea ) ) {
 			best = d
+			bestArea = area
 			top = node
 		}
 	}
@@ -461,9 +474,7 @@ UnselectedAt		= xy => ClosestNodeWhere(
 export const
 SelectionInteriorAt	= xy => {
 	if	( !app.reforms.length ) return false
-	const
-	sel = BBox( app.reforms )
-	return	MinEdge( sel, xy ) > GRAB
+	return	PointContains( BBox( app.reforms ), xy )
 	&&	!UnselectedAt( xy )
 }
 
@@ -472,19 +483,18 @@ SelectionGrabAt		= xy => app.reforms.length && SelectionGrab( BBox( app.reforms 
 
 export const
 HitSelect		= xy => {
-	//	Resize handles on the current selection win over any node underneath, so a
-	//	selected box can be resized even when other nodes overlap its edge band
-	//	(an icon inside a container, a container's children, adjacent boxes…).
-	if	( SelectionGrabAt( xy ) )			return 'selectionGrab'
 	const
 	unsel = UnselectedAt( xy )
 	if	( unsel ) {
 		const
 		tlbr = TLBR( unsel[ 1 ] )
-		return NodeInterior( tlbr, xy ) ? 'nodeInside' : 'nodeGrab'
+		if	( CornerGrab( tlbr, xy ) )			return 'nodeGrab'
+		return	'nodeInside'
 	}
-	if	( SelectedMemberAt( xy ) )			return 'selected'
-	if	( SelectionInteriorAt( xy ) )		return 'selectionInside'
+	if	( SelectedMemberAt( xy ) )				return 'selected'
+	if	( SelectionInteriorAt( xy ) )			return 'selectionInside'
+	//	exterior corner grips last — still resizable when nodes overlap the edge band
+	if	( SelectionGrabAt( xy ) )				return 'selectionGrab'
 	return	'none'
 }
 
@@ -492,14 +502,8 @@ export const
 SelectionGrabCursor	= ( sel, xy ) => {
 	const
 	[ dT, dL, dB, dR ] = EdgeDist( sel, xy )
-	,	top = dT <= GRAB
-	,	bottom = dB <= GRAB
-	,	left = dL <= GRAB
-	,	right = dR <= GRAB
-	if	( ( top && left ) || ( bottom && right ) )	return 'nwse-resize'
-	if	( ( top && right ) || ( bottom && left ) )	return 'nesw-resize'
-	if	( top || bottom )	return 'ns-resize'
-	if	( left || right )	return 'ew-resize'
+	if	( ( dT < 0 && dL < 0 ) || ( dB < 0 && dR < 0 ) )	return 'nwse-resize'
+	if	( ( dT < 0 && dR < 0 ) || ( dB < 0 && dL < 0 ) )	return 'nesw-resize'
 	return	'move'
 }
 

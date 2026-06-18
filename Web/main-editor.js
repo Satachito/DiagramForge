@@ -40,11 +40,9 @@ import {
 ,	GRAB
 ,	UnselectedAt
 ,	SelectedMemberAt
-,	SelectionGrabAt
-,	SelectionInteriorAt
-,	NodeInterior
 ,	SelectionGrabCursor
 ,	Node_XY
+,	HitSelect
 }	from './geoDF.js'
 
 import { DrawForeignLabel	} from './ForeignLabel.js'
@@ -231,17 +229,18 @@ MainEditor extends HTMLElement {
 			c2D.lineWidth = 2
 			const	[ hT, hL, hB, hR ] = BBox( app.reforms )
 			c2D.strokeRect( ...XYWH_TLBR( [ hT, hL, hB, hR ] ) )
-			//	resize handles: 4 corners + 4 edge midpoints
-			const	hMX = ( hL + hR ) / 2, hMY = ( hT + hB ) / 2, HS = 8
+			//	resize handles: 4 corners fully outside the selection box
+			const	HS = 8, gap = 1
 			c2D.fillStyle = '#ffffff'
 			c2D.lineWidth = 1.5
-			for ( const [ hx, hy ] of [
-				[ hL, hT ], [ hMX, hT ], [ hR, hT ]
-			,	[ hL, hMY ],              [ hR, hMY ]
-			,	[ hL, hB ], [ hMX, hB ], [ hR, hB ]
+			for ( const [ x, y ] of [
+				[ hL - HS, hT - HS ]
+			,	[ hR + gap, hT - HS ]
+			,	[ hL - HS, hB + gap ]
+			,	[ hR + gap, hB + gap ]
 			] ) {
-				c2D.fillRect( hx - HS / 2, hy - HS / 2, HS, HS )
-				c2D.strokeRect( hx - HS / 2, hy - HS / 2, HS, HS )
+				c2D.fillRect( x, y, HS, HS )
+				c2D.strokeRect( x, y, HS, HS )
 			}
 			c2D.restore()
 		} else {
@@ -391,24 +390,17 @@ MainEditor extends HTMLElement {
 
 	cursorAt( ev ) {
 		const	xy = XY_EV( ev )
-		//	acting on the existing selection
-		if	( app.reforms.length ) {
-			if	( SelectionGrabAt( xy ) )		return SelectionGrabCursor( BBox( app.reforms ), xy )
-			if	( SelectionInteriorAt( xy ) )	return 'move'
-		}
-		//	over a link line → a click selects its endpoints
 		if	( this.linkEndpointsAt( xy ) )		return 'pointer'
-		//	over a node
-		const
-		node = UnselectedAt( xy )
-		if	( node ) {
-			if	( this.linkMode( ev ) )			return 'crosshair'	//	would start a link
-			return NodeInterior( TLBR( node[ 1 ] ), xy )
-			?	'move'											//	select + move
-			:	SelectionGrabCursor( TLBR( node[ 1 ] ), xy )	//	select + resize
+		switch ( HitSelect( xy ) ) {
+		case 'selectionGrab':
+			return	SelectionGrabCursor( BBox( app.reforms ), xy )
+		case 'selected':
+		case 'selectionInside':
+		case 'nodeInside':
+			return	'move'
+		default:
+			return	this.nodeMode( ev ) || this.linkMode( ev ) ? 'crosshair' : 'default'
 		}
-		//	empty canvas
-		return this.nodeMode( ev ) ? 'crosshair' : 'default'
 	}
 
 	//	add a node (clone) to the selection if not already present
@@ -568,13 +560,26 @@ MainEditor extends HTMLElement {
 			return
 		}
 
-		//	1. act on the current selection: resize the edge, move the interior,
+		//	1. act on the current selection: resize the exterior grips, move the interior,
 		//	   or ( clicked outside ) drop it and carry on
 		if	( app.reforms.length ) {
-			if	( SelectionGrabAt( xy ) )		{ mouseDrag = 'resize'; return }
-			if	( SelectionInteriorAt( xy ) )	{ mouseDrag = 'move'; await this.DrawReforms(); return }
-			app.reforms = []
-			await this.DrawReforms()
+			const
+			hit = HitSelect( xy )
+			switch ( hit ) {
+			case 'selectionGrab':
+				mouseDrag = 'resize'
+				return
+			case 'selected':
+			case 'selectionInside':
+				mouseDrag = 'move'
+				await this.DrawReforms()
+				return
+			default:
+				if	( hit === 'none' ) {
+					app.reforms = []
+					await this.DrawReforms()
+				}
+			}
 		}
 
 		//	2. a click on a link selects its two endpoints
@@ -594,7 +599,7 @@ MainEditor extends HTMLElement {
 		if	( node ) {
 			if	( this.linkMode( ev ) ) { mouseDrag = 'link'; return }
 			await this.selectSingle( node )
-			mouseDrag = NodeInterior( TLBR( node[ 1 ] ), xy ) ? 'move' : 'resize'
+			mouseDrag = 'move'
 			return
 		}
 
