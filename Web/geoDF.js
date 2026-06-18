@@ -45,55 +45,35 @@ RhombusPath2D	= ( { cX, cY, rH, rV } ) => {
 const
 LinkCoordinates	= ( sF, aF, sT, aT ) => {
 	const
+	xAlong	= ( S, s, a ) =>
+		a === 'TL' || a === 'BL' ? L( s ) :
+		a === 'TR' || a === 'BR' ? R( s ) : S.cX
+	,	yAlong	= ( S, s, a ) =>
+		a === 'TL' || a === 'TR' ? T( s ) :
+		a === 'BL' || a === 'BR' ? B( s ) : S.cY
+
+	const
 	$ = ( S, A, s, a ) => {
 		switch	( A ) {
-		case "TL"	: return [ L( S ), T( S ) ]
-		case "TR"	: return [ R( S ), T( S ) ]
-		case "BL"	: return [ L( S ), B( S ) ]
-		case "BR"	: return [ R( S ), B( S ) ]
-		case "T"	: switch	( a ) {
-			case "TL"	: return [ L( s )	, T( S )	]
-			case "TR"	: return [ R( s )	, T( S )	]
-			case "BL"	: return [ L( s )	, T( S )	]
-			case "BR"	: return [ R( s )	, T( S )	]
-			default		: return [ S.cX		, T( S )	]
-			}
-		case "L"	: switch	( a ) {
-			case "TL"	: return [ L( S )	, T( s )	]
-			case "TR"	: return [ L( S )	, T( s )	]
-			case "BL"	: return [ L( S )	, B( s )	]
-			case "BR"	: return [ L( S )	, B( s )	]
-			default		: return [ L( S )	, S.cY		]
-			}
-		case "B"	: switch	( a ) {
-			case "TL"	: return [ L( s )	, B( S )	]
-			case "TR"	: return [ R( s )	, B( S )	]
-			case "BL"	: return [ L( s )	, B( S )	]
-			case "BR"	: return [ R( s )	, B( S )	]
-			default		: return [ S.cX		, B( S )	]
-			}
-		case "R"	: switch	( a ) {
-			case "TL"	: return [ R( S )	, T( s )	]
-			case "TR"	: return [ R( S )	, T( s )	]
-			case "BL"	: return [ R( S )	, B( s )	]
-			case "BR"	: return [ R( S )	, B( s )	]
-			default		: return [ R( S )	, S.cY		]
-			}
-		default:
-			{	const	dX = s.cX - S.cX
-				const	dY = s.cY - S.cY
-				if	( !dX && !dY ) return [ S.cX, S.cY ]
-				const	sH = dX ? Math.abs( S.rH / dX ) : Infinity
-				const	sV = dY ? Math.abs( S.rV / dY ) : Infinity
-				const	scale = sH < sV ? sH : sV
-				return	[ S.cX + dX * scale, S.cY + dY * scale ]
+		case 'TL'	: return [ L( S ), T( S ) ]
+		case 'TR'	: return [ R( S ), T( S ) ]
+		case 'BL'	: return [ L( S ), B( S ) ]
+		case 'BR'	: return [ R( S ), B( S ) ]
+		case 'T'	: return [ xAlong( S, s, a ), T( S ) ]
+		case 'B'	: return [ xAlong( S, s, a ), B( S ) ]
+		case 'L'	: return [ L( S ), yAlong( S, s, a ) ]
+		case 'R'	: return [ R( S ), yAlong( S, s, a ) ]
+		default		: {
+			const	dX = s.cX - S.cX, dY = s.cY - S.cY
+			if	( !dX && !dY ) return [ S.cX, S.cY ]
+			const	sH = dX ? Math.abs( S.rH / dX ) : Infinity
+			const	sV = dY ? Math.abs( S.rV / dY ) : Infinity
+			const	scale = Math.min( sH, sV )
+			return	[ S.cX + dX * scale, S.cY + dY * scale ]
 			}
 		}
 	}
-	return [
-		$( sF, aF, sT, aT )
-	,	$( sT, aT, sF, aF )
-	]
+	return [ $( sF, aF, sT, aT ), $( sT, aT, sF, aF ) ]
 }
 
 const
@@ -230,36 +210,35 @@ offsetOutward	= ( p, outward, dist ) => [
 ,	p[ 1 ] + outward[ 1 ] * dist
 ]
 
+//	shaftHalf-independent attachment geometry; computed once per link
 const
-linkAttach		= ( S, anchor, paint, shaftHalf, p ) => {
+linkEnds		= ( shapeF, anchorF, shapeT, anchorT, paintF, paintT ) => {
 	const
-	outward	= boundaryOutward( S, anchor, p )
-	,	frame = frameHalf( paint )
+	[ pF, pT ] = LinkCoordinates( shapeF, anchorF, shapeT, anchorT )
+	,	outwardF = boundaryOutward( shapeF, anchorF, pF )
+	,	outwardT = boundaryOutward( shapeT, anchorT, pT )
+	,	frameF = frameHalf( paintF )
+	,	frameT = frameHalf( paintT )
 	return	{
-		route	: offsetOutward( p, outward, frame + shaftHalf )
-	,	tip	: offsetOutward( p, outward, frame )
-	,	outward
+		pF, pT, outwardF, outwardT, frameF, frameT
+	,	tipF	: offsetOutward( pF, outwardF, frameF )
+	,	tipT	: offsetOutward( pT, outwardT, frameT )
+	,	ortho	: !( anchorF || anchorT )
 	}
 }
 
 const
-routePoints		= ( shapeF, { anchorF, anchorT }, shapeT, shaftHalf = 0, { paintF, paintT } = {} ) => {
-	const	[ [ pFX, pFY ], [ pTX, pTY ] ] = LinkCoordinates( shapeF, anchorF, shapeT, anchorT )
+routeFrom		= ( e, shaftHalf ) => {
 	const
-	f = linkAttach( shapeF, anchorF, paintF, shaftHalf, [ pFX, pFY ] )
-	,	t = linkAttach( shapeT, anchorT, paintT, shaftHalf, [ pTX, pTY ] )
-	,	{ route: pF, tip: tipF } = f
-	,	{ route: pT, tip: tipT } = t
-	if	( anchorF || anchorT )	return { points: [ pF, pT ], tipF, tipT }
-
+	rF = offsetOutward( e.pF, e.outwardF, e.frameF + shaftHalf )
+	,	rT = offsetOutward( e.pT, e.outwardT, e.frameT + shaftHalf )
+	if	( !e.ortho )	return [ rF, rT ]
 	const
-	midX = ( pF[ 0 ] + pT[ 0 ] ) / 2
-	,	midY = ( pF[ 1 ] + pT[ 1 ] ) / 2
-	,	[ oFX, oFY ] = f.outward
-	if	( Math.abs( oFX ) >= Math.abs( oFY ) ) {
-		return { points: [ pF, [ midX, pF[ 1 ] ], [ midX, pT[ 1 ] ], pT ], tipF, tipT }
-	}
-	return { points: [ pF, [ pF[ 0 ], midY ], [ pT[ 0 ], midY ], pT ], tipF, tipT }
+	midX = ( rF[ 0 ] + rT[ 0 ] ) / 2
+	,	midY = ( rF[ 1 ] + rT[ 1 ] ) / 2
+	return	Math.abs( e.outwardF[ 0 ] ) >= Math.abs( e.outwardF[ 1 ] )
+		?	[ rF, [ midX, rF[ 1 ] ], [ midX, rT[ 1 ] ], rT ]
+		:	[ rF, [ rF[ 0 ], midY ], [ rT[ 0 ], midY ], rT ]
 }
 
 const
@@ -297,24 +276,22 @@ outlinePath		= ( pts, half ) => {
 const
 linkMetrics		= ( shapeF, { headF, headT, anchorF, anchorT }, shapeT, { paintF, paintT } = {} ) => {
 	const
-	{ points: route0 } = routePoints( shapeF, { anchorF, anchorT }, shapeT, 0, { paintF, paintT } )
-	,	len0 = pathLength( route0 )
+	e = linkEnds( shapeF, anchorF, shapeT, anchorT, paintF, paintT )
+	,	{ tipF, tipT } = e
+	,	len0 = pathLength( routeFrom( e, 0 ) )
 	if	( len0 < 1 ) return null
 
+	//	route is inset by a gap derived from the tip-to-tip length, then the head
+	//	and shaft are sized from the inset route's length (matches original tuning)
 	const
-	gapHalf = Math.max(
-		2
-	,	Math.max( 5, Math.min( 14, len0 * 0.35 ) * 0.5 ) * 0.45
-	)
-	,	{ points: route, tipF, tipT } = routePoints(
-		shapeF, { anchorF, anchorT }, shapeT, gapHalf, { paintF, paintT }
-	)
+	gapHalf = Math.max( 2, Math.max( 5, Math.min( 14, len0 * 0.35 ) * 0.5 ) * 0.45 )
+	,	route = routeFrom( e, gapHalf )
 	,	len = pathLength( route )
 	if	( len < 1 ) return null
 
 	const
-	headLen = Math.min( 14, len * 0.35 )
-	,	headHalf = Math.max( 5, headLen * 0.5 )
+	headLen   = Math.min( 14, len * 0.35 )
+	,	headHalf  = Math.max( 5, headLen * 0.5 )
 	,	shaftHalf = Math.max( 2, headHalf * 0.45 )
 
 	let
@@ -370,14 +347,6 @@ linkMetrics		= ( shapeF, { headF, headT, anchorF, anchorT }, shapeT, { paintF, p
 
 export const
 LinkParts		= linkMetrics
-
-export const
-LinkPoints		= ( shapeF, ends, shapeT, paints ) => {
-	const
-	m = linkMetrics( shapeF, ends, shapeT, paints )
-	if	( !m ) return []
-	return	outlinePath( m.shaft, m.shaftHalf )
-}
 
 export const
 LinkPath2D		= ( shapeF, ends, shapeT, paints ) => {
@@ -474,8 +443,7 @@ UnselectedAt		= xy => ClosestNodeWhere(
 export const
 SelectionInteriorAt	= xy => {
 	if	( !app.reforms.length ) return false
-	return	PointContains( BBox( app.reforms ), xy )
-	&&	!UnselectedAt( xy )
+	return	PointContains( BBox( app.reforms ), xy ) && !UnselectedAt( xy )
 }
 
 export const
