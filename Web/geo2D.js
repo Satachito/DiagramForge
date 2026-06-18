@@ -49,6 +49,11 @@ export const
 ContainsTLBR	= ( [ T, L, B, R ], [ t, l, b, r ] ) => T <= t && b <= B && L <= l && r <= R
 
 export const
+Inset			= ( [ T, L, B, R ], _ ) => [ T + _, L + _, B - _, R - _ ]
+export const
+Outset			= ( [ T, L, B, R ], _ ) => [ T - _, L - _, B + _, R + _ ]
+
+export const
 Union			= _ => _.slice( 1 ).reduce(
 	( [ T, L, B, R ], [ t, l, b, r ] ) => [
 		T < t ? T : t
