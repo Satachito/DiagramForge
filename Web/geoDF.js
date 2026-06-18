@@ -97,33 +97,153 @@ LinkCoordinates	= ( sF, aF, sT, aT ) => {
 }
 
 const
-linkMetrics		= ( shapeF, { headF, headT, anchorF, anchorT }, shapeT ) => {
+unit			= ( x, y ) => {
+	const
+	len = Math.hypot( x, y )
+	return	len < 1e-9 ? [ 0, 0 ] : [ x / len, y / len ]
+}
+
+const
+pathLength		= pts => {
+	let
+	sum = 0
+	for	( let i = 1; i < pts.length; i++ ) {
+		sum += Math.hypot( pts[ i ][ 0 ] - pts[ i - 1 ][ 0 ], pts[ i ][ 1 ] - pts[ i - 1 ][ 1 ] )
+	}
+	return	sum
+}
+
+const
+subPath			= ( pts, d0, d1 ) => {
+	const
+	out = []
+	let
+	dist = 0
+	for	( let i = 1; i < pts.length; i++ ) {
+		const
+		[ ax, ay ] = pts[ i - 1 ]
+		,	[ bx, by ] = pts[ i ]
+		const
+		segLen = Math.hypot( bx - ax, by - ay )
+		if	( segLen < 1e-9 ) continue
+		const
+		segStart = dist
+		,	segEnd = dist + segLen
+		if	( segEnd <= d0 ) {
+			dist = segEnd
+			continue
+		}
+		if	( segStart >= d1 ) break
+		const
+		t0 = Math.max( 0, ( d0 - segStart ) / segLen )
+		,	t1 = Math.min( 1, ( d1 - segStart ) / segLen )
+		,	add = t => [ ax + ( bx - ax ) * t, ay + ( by - ay ) * t ]
+		,	p0 = add( t0 )
+		,	p1 = add( t1 )
+		if	( !out.length )	out.push( p0 )
+		else {
+			const
+			last = out[ out.length - 1 ]
+			if	( last[ 0 ] !== p0[ 0 ] || last[ 1 ] !== p0[ 1 ] )	out.push( p0 )
+		}
+		if	( p1[ 0 ] !== out[ out.length - 1 ][ 0 ] || p1[ 1 ] !== out[ out.length - 1 ][ 1 ] )	out.push( p1 )
+		dist = segEnd
+	}
+	return	out
+}
+
+const
+headTriangle		= ( tip, dir, headLen, headHalf ) => {
+	const
+	[ dx, dy ] = dir
+	,	nx = -dy
+	,	ny = dx
+	,	neck = [ tip[ 0 ] + dx * headLen, tip[ 1 ] + dy * headLen ]
+	return	[
+		tip
+	,	[ neck[ 0 ] + nx * headHalf, neck[ 1 ] + ny * headHalf ]
+	,	[ neck[ 0 ] - nx * headHalf, neck[ 1 ] - ny * headHalf ]
+	]
+}
+
+const
+routePoints		= ( shapeF, { anchorF, anchorT }, shapeT ) => {
 	const	[ [ pFX, pFY ], [ pTX, pTY ] ] = LinkCoordinates( shapeF, anchorF, shapeT, anchorT )
+	if	( anchorF || anchorT )	return [ [ pFX, pFY ], [ pTX, pTY ] ]
+
 	const
-	dX = pTX - pFX
-,	dY = pTY - pFY
+	midX = ( pFX + pTX ) / 2
+	,	midY = ( pFY + pTY ) / 2
+	if	( Math.abs( pTX - pFX ) >= Math.abs( pTY - pFY ) ) {
+		return [ [ pFX, pFY ], [ midX, pFY ], [ midX, pTY ], [ pTX, pTY ] ]
+	}
+	return [ [ pFX, pFY ], [ pFX, midY ], [ pTX, midY ], [ pTX, pTY ] ]
+}
+
+const
+outlinePath		= ( pts, half ) => {
+	if	( pts.length < 2 ) return []
 	const
-	len = Math.hypot( dX, dY )
+	left = []
+	,	right = []
+	for	( let i = 0; i < pts.length; i++ ) {
+		let
+		dx
+		,	dy
+		if	( i === 0 ) {
+			dx = pts[ 1 ][ 0 ] - pts[ 0 ][ 0 ]
+			dy = pts[ 1 ][ 1 ] - pts[ 0 ][ 1 ]
+		} else if	( i === pts.length - 1 ) {
+			dx = pts[ i ][ 0 ] - pts[ i - 1 ][ 0 ]
+			dy = pts[ i ][ 1 ] - pts[ i - 1 ][ 1 ]
+		} else {
+			const
+			d0 = unit( pts[ i ][ 0 ] - pts[ i - 1 ][ 0 ], pts[ i ][ 1 ] - pts[ i - 1 ][ 1 ] )
+			,	d1 = unit( pts[ i + 1 ][ 0 ] - pts[ i ][ 0 ], pts[ i + 1 ][ 1 ] - pts[ i ][ 1 ] )
+			;[ dx, dy ] = unit( d0[ 0 ] + d1[ 0 ], d0[ 1 ] + d1[ 1 ] )
+		}
+		const
+		[ nx, ny ] = unit( -dy, dx )
+		,	ox = nx * half
+		,	oy = ny * half
+		left.push( [ pts[ i ][ 0 ] + ox, pts[ i ][ 1 ] + oy ] )
+		right.push( [ pts[ i ][ 0 ] - ox, pts[ i ][ 1 ] - oy ] )
+	}
+	return [ ...left, ...right.reverse() ]
+}
+
+const
+linkMetrics		= ( shapeF, { headF, headT, anchorF, anchorT }, shapeT ) => {
+	const
+	route = routePoints( shapeF, { anchorF, anchorT }, shapeT )
+	,	len = pathLength( route )
 	if	( len < 1 ) return null
 
 	const
 	headLen = Math.min( 14, len * 0.35 )
-,	headHalf = Math.max( 5, headLen * 0.5 )
-,	shaftHalf = Math.max( 2, headHalf * 0.45 )
-,	fNeckX = headF ? headLen : 0
-,	tNeckX = len - ( headT ? headLen : 0 )
-	const
-	toW = ( lx, ly ) => [
-		pFX + lx * ( dX / len ) - ly * ( dY / len )
-	,	pFY + lx * ( dY / len ) + ly * ( dX / len )
-	]
+	,	headHalf = Math.max( 5, headLen * 0.5 )
+	,	shaftHalf = Math.max( 2, headHalf * 0.45 )
+	,	fDist = headF ? headLen : 0
+	,	tDist = len - ( headT ? headLen : 0 )
+	,	shaft = subPath( route, fDist, tDist )
+	if	( shaft.length < 2 ) return null
+
 	const
 	heads = []
-	if	( headF )	heads.push( [ toW( 0, 0 ), toW( fNeckX, headHalf ), toW( fNeckX, -headHalf ) ] )
-	if	( headT )	heads.push( [ toW( len, 0 ), toW( tNeckX, headHalf ), toW( tNeckX, -headHalf ) ] )
+	if	( headF ) {
+		const
+		dir = unit( route[ 1 ][ 0 ] - route[ 0 ][ 0 ], route[ 1 ][ 1 ] - route[ 0 ][ 1 ] )
+		heads.push( headTriangle( route[ 0 ], dir, headLen, headHalf ) )
+	}
+	if	( headT ) {
+		const
+		n = route.length - 1
+		,	dir = unit( route[ n ][ 0 ] - route[ n - 1 ][ 0 ], route[ n ][ 1 ] - route[ n - 1 ][ 1 ] )
+		heads.push( headTriangle( route[ n ], dir, headLen, headHalf ) )
+	}
 	return {
 		shaftHalf
-	,	shaft	: [ toW( fNeckX, 0 ), toW( tNeckX, 0 ) ]
+	,	shaft
 	,	heads
 	}
 }
@@ -136,62 +256,29 @@ LinkPoints		= ( shapeF, ends, shapeT ) => {
 	const
 	m = linkMetrics( shapeF, ends, shapeT )
 	if	( !m ) return []
-	const
-	{ headF, headT } = ends
-	const	[ [ pFX, pFY ], [ pTX, pTY ] ] = LinkCoordinates( shapeF, ends.anchorF, shapeT, ends.anchorT )
-	const
-	dX = pTX - pFX
-,	dY = pTY - pFY
-	const
-	len = Math.hypot( dX, dY )
-	const
-	headLen = Math.min( 14, len * 0.35 )
-,	headHalf = Math.max( 5, headLen * 0.5 )
-,	shaftHalf = m.shaftHalf
-,	fNeckX = headF ? headLen : 0
-,	tNeckX = len - ( headT ? headLen : 0 )
-	const
-	toW = ( lx, ly ) => [
-		pFX + lx * ( dX / len ) - ly * ( dY / len )
-	,	pFY + lx * ( dY / len ) + ly * ( dX / len )
-	]
-	const
-	points = []
-	if	( headF ) {
-		points.push( [ 0, 0 ] )
-		points.push( [ fNeckX, headHalf ] )
-		points.push( [ fNeckX, shaftHalf ] )
-	} else {
-		points.push( [ 0, shaftHalf ] )
-	}
-	points.push( [ tNeckX, shaftHalf ] )
-	if	( headT ) {
-		points.push( [ tNeckX, headHalf ] )
-		points.push( [ len, 0 ] )
-		points.push( [ tNeckX, -headHalf ] )
-	} else {
-		points.push( [ len, shaftHalf ] )
-		points.push( [ len, -shaftHalf ] )
-	}
-	points.push( [ tNeckX, -shaftHalf ] )
-	points.push( [ fNeckX, -shaftHalf ] )
-	if	( headF ) {
-		points.push( [ fNeckX, -headHalf ] )
-	} else {
-		points.push( [ 0, -shaftHalf ] )
-	}
-	return	points.map( ( [ lx, ly ] ) => toW( lx, ly ) )
+	return	outlinePath( m.shaft, m.shaftHalf )
 }
 
 export const
 LinkPath2D		= ( shapeF, ends, shapeT ) => {
 	const
-	points = LinkPoints( shapeF, ends, shapeT )
+	m = linkMetrics( shapeF, ends, shapeT )
 	const	$ = new Path2D
-	if	( !points.length ) return $
-	$.moveTo( ...points[ 0 ] )
-	for	( let i = 1; i < points.length; i++ ) $.lineTo( ...points[ i ] )
-	$.closePath()
+	if	( !m ) return $
+
+	const
+	body = outlinePath( m.shaft, m.shaftHalf )
+	if	( body.length ) {
+		$.moveTo( ...body[ 0 ] )
+		for	( let i = 1; i < body.length; i++ )	$.lineTo( ...body[ i ] )
+		$.closePath()
+	}
+	for	( const tri of m.heads ) {
+		$.moveTo( ...tri[ 0 ] )
+		$.lineTo( ...tri[ 1 ] )
+		$.lineTo( ...tri[ 2 ] )
+		$.closePath()
+	}
 	return	$
 }
 

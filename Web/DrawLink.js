@@ -12,8 +12,6 @@ DrawLinkCanvas	= ( c2D, shapeF, ends, shapeT, P ) => {
 	color = linkColor( P )
 	if	( !g || !color ) return
 
-	const
-	[ [ x0, y0 ], [ x1, y1 ] ] = g.shaft
 	c2D.save()
 	c2D.strokeStyle = color
 	c2D.lineWidth = 2 * g.shaftHalf
@@ -22,8 +20,8 @@ DrawLinkCanvas	= ( c2D, shapeF, ends, shapeT, P ) => {
 	c2D.setLineDash( P.lineDash?.length ? P.lineDash : [] )
 	P.lineDashOffset && ( c2D.lineDashOffset = P.lineDashOffset )
 	c2D.beginPath()
-	c2D.moveTo( x0, y0 )
-	c2D.lineTo( x1, y1 )
+	c2D.moveTo( ...g.shaft[ 0 ] )
+	for	( let i = 1; i < g.shaft.length; i++ )	c2D.lineTo( ...g.shaft[ i ] )
 	c2D.stroke()
 	c2D.fillStyle = color
 	for ( const [ [ ax, ay ], [ bx, by ], [ cx, cy ] ] of g.heads ) {
@@ -63,10 +61,8 @@ DrawLinkSvg		= ( parts, X, Y, shapeF, ends, shapeT, P ) => {
 	color = linkColor( P )
 	if	( !g || !color ) return
 
-	const
-	[ [ x0, y0 ], [ x1, y1 ] ] = g.shaft
 	parts.push(
-		`<line x1="${ X( x0 ) }" y1="${ Y( y0 ) }" x2="${ X( x1 ) }" y2="${ Y( y1 ) }" fill="none" stroke-width="${ 2 * g.shaftHalf }" ${ strokeAttrs( P ) }/>`
+		`<polyline points="${ pointsAttr( X, Y, g.shaft ) }" fill="none" stroke-width="${ 2 * g.shaftHalf }" ${ strokeAttrs( P ) }"/>`
 	)
 	for ( const head of g.heads ) {
 		parts.push(
