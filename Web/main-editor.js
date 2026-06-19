@@ -312,14 +312,14 @@ MainEditor extends HTMLElement {
 		addEventListener( 'keyup', ev => this.refreshModeCursor( ev ) )
 		CREATE_NODE.onchange = CREATE_LINK.onchange = () => this.refreshModeCursor()
 
-		this.reformer.onmouseleave	= () => (
-			UNDER_HOVER.style.display = 'none'
-		,	mouse[ 0 ] = null
-		,	mouse[ 1 ] = null
-		)
-		this.reformer.onmousedown	= ev => this.onMouseDown( ev )
-		this.reformer.onmousemove	= ev => this.onMouseMove( ev )
-		this.reformer.onmouseup		= ev => this.onMouseUp( ev )
+		//	Pointer Capture: once a drag starts we capture the pointer so move/up
+		//	are delivered to the canvas even when the cursor leaves it — the release
+		//	(commit) is never lost over a panel or off-window.
+		this.reformer.onpointerleave	= () => ( UNDER_HOVER.style.display = 'none' )
+		this.reformer.onpointerdown		= ev => this.onMouseDown( ev )
+		this.reformer.onpointermove		= ev => this.onMouseMove( ev )
+		this.reformer.onpointerup		= ev => this.onMouseUp( ev )
+		this.reformer.onpointercancel	= () => this.clearInteraction()
 
 		matchMedia( '(prefers-color-scheme: dark)' ).addEventListener(
 			'change'
@@ -565,6 +565,9 @@ MainEditor extends HTMLElement {
 		this.reformer.tabIndex = 0
 
 		if	( ev.button ) return
+
+		//	capture the pointer for the whole gesture so pointerup always lands here
+		ev.pointerId != null && this.reformer.setPointerCapture( ev.pointerId )
 
 		const
 		xy	= mouse[ 0 ] = XY_EV( ev )
