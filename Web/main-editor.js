@@ -258,6 +258,9 @@ MainEditor extends HTMLElement {
 		this.drawer					= AE( this, 'canvas' )
 		this.reformer				= AE( this, 'canvas' )
 		this.drawer.style.position	= this.reformer.style.position	= 'absolute'
+		//	stop the browser from claiming the drag as a scroll / gesture ( which
+		//	would fire pointercancel and abort the move before pointerup commits )
+		this.reformer.style.touchAction	= 'none'
 		this.linkMenuKey			= null
 		this.nodeMenuTarget			= null
 
@@ -319,7 +322,9 @@ MainEditor extends HTMLElement {
 		this.reformer.onpointerdown		= ev => this.onMouseDown( ev )
 		this.reformer.onpointermove		= ev => this.onMouseMove( ev )
 		this.reformer.onpointerup		= ev => this.onMouseUp( ev )
-		this.reformer.onpointercancel	= () => this.clearInteraction()
+		//	if the browser cancels the pointer mid-drag, commit what we have rather
+		//	than silently dropping it ( onMouseUp no-ops when nothing was dragged )
+		this.reformer.onpointercancel	= ev => this.onMouseUp( ev )
 
 		matchMedia( '(prefers-color-scheme: dark)' ).addEventListener(
 			'change'
@@ -759,12 +764,9 @@ MainEditor extends HTMLElement {
 			this.reformer.style.cursor = this.cursorAt( ev )
 			return
 		}
-		//	mouseleave may be missed on fast movement — reset if button already released
-		if	( !ev.buttons ) {
-			mouse[ 0 ] = mouse[ 1 ] = null
-			this.drag = null
-			return
-		}
+		//	NOTE: no `!ev.buttons` reset here — pointer capture guarantees
+		//	pointerup / pointercancel, and a stray buttons:0 move that the browser
+		//	emits just before pointerup would otherwise drop the drag before commit.
 
 		const
 		c2D = this.reformer.getContext( '2d' )
