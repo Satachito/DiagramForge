@@ -55,10 +55,49 @@ body {
 ;	height					: 100vh
 ;	display					: grid
 ;	grid-template-rows		: auto 1fr auto
-;	grid-template-columns	: auto 1fr 256px
+;	grid-template-columns	: var( --nav-w, 256px ) 1fr var( --aside-w, 256px )
 ;	position				: relative
 ;	overflow				: hidden
 }
+body.nav-collapsed		{ --nav-w	: 0 }
+body.aside-collapsed	{ --aside-w	: 0 }
+body.nav-collapsed		> nav	{ display: none }
+body.aside-collapsed	> aside	{ display: none }
+
+.panel-toggle {
+;	position		: fixed
+;	top				: 50%
+;	transform		: translateY( -50% )
+;	z-index			: 1500
+;	width			: 16px
+;	height			: 60px
+;	display			: flex
+;	align-items		: center
+;	justify-content	: center
+;	padding			: 0
+;	border			: 1px solid var( --color-popup-border )
+;	background		: var( --color-popup-bg )
+;	color			: var( --color-popup-fg )
+;	box-shadow		: 0 2px 8px var( --color-shadow )
+;	cursor			: pointer
+;	font-size		: 13px
+;	opacity			: .5
+}
+.panel-toggle:hover		{ opacity: 1 }
+#NAV_TOGGLE				{ left	: 0; border-left	: none; border-radius: 0 6px 6px 0 }
+#ASIDE_TOGGLE			{ right	: 0; border-right	: none; border-radius: 6px 0 0 6px }
+
+/* full-width header bar: independent of the nav / aside columns so collapsing
+   a side panel never shifts the header */
+.topbar {
+;	grid-row		: 1
+;	grid-column		: 1 / 4
+;	display			: flex
+;	align-items		: flex-start
+;	border-bottom	: 1px solid gray
+}
+.topbar > header					{ border-bottom: none }
+.topbar > header:nth-child( 2 )		{ flex: 1 }
 main-editor {
 ;	overflow				: scroll
 ;	position				: relative
@@ -100,8 +139,11 @@ aside summary {
 }
 nav {
 ;	border-right			: 1px solid gray
-;	overflow				: scroll
+;	overflow				: auto
 ;	min-height				: 0
+}
+nav cloud-icons {
+;	display					: block
 }
 details {
 ;	padding-left			: 8px
@@ -206,6 +248,7 @@ aside .node-id-row input {
 
 </style>
 
+<div class=topbar>
 <header style="font-family: fantasy; margin-right: 16px; font-size: 24px; line-height: 1.15">
 	DiagramForge
 	<div style="font-family: courier; font-size: 10px; font-weight: normal; margin-top: 3px">
@@ -239,6 +282,7 @@ aside .node-id-row input {
 	<a href=https://github.com/Satachito/DiagramForge/blob/main/Web/SCHEMA.md target=_blank rel=noopener>.cde schema</a>
 	<div style="font-size: 10px; margin-top: 4px">Written by Satoru Ogura, and AIs.</div>
 </header>
+</div>
 
 <nav>
 	<cloud-icons name=AWS	url=Asset-Package_07312025.49d3aab7f9e6131e51ade8f7c6c8b961ee7d3bb1.zip	></cloud-icons>
@@ -290,6 +334,9 @@ aside .node-id-row input {
 		<button			id=FORCE_DRAW		>Force Draw			</button>
 	</details>
 </aside>
+
+<button id=NAV_TOGGLE	class=panel-toggle title="Toggle left panel">‹</button>
+<button id=ASIDE_TOGGLE	class=panel-toggle title="Toggle right panel">›</button>
 
 <footer>
 	<div			id=UNDER_HOVER		></div>
@@ -364,6 +411,17 @@ CANVAS_APPLY	.onclick = async () => {
 	SetCanvasSize( w, h )
 	MAIN_EDITOR.Draw()
 }
+
+const
+ApplyPanel = ( cls, btn, collapsed, glyphOpen, glyphClosed ) => {
+	document.body.classList.toggle( cls, collapsed )
+	btn.textContent = collapsed ? glyphClosed : glyphOpen
+	localStorage.setItem( cls, collapsed ? '1' : '' )
+}
+NAV_TOGGLE		.onclick = () => ApplyPanel( 'nav-collapsed',	NAV_TOGGLE,		!document.body.classList.contains( 'nav-collapsed'	), '‹', '›' )
+ASIDE_TOGGLE	.onclick = () => ApplyPanel( 'aside-collapsed',	ASIDE_TOGGLE,	!document.body.classList.contains( 'aside-collapsed'	), '›', '‹' )
+ApplyPanel( 'nav-collapsed',	NAV_TOGGLE,		localStorage.getItem( 'nav-collapsed'	) === '1', '‹', '›' )
+ApplyPanel( 'aside-collapsed',	ASIDE_TOGGLE,	localStorage.getItem( 'aside-collapsed'	) === '1', '›', '‹' )
 
 SAMPLE_JSONS	.onclick = () => LoadSample( 'Samples/JSONs.cde'	).catch( Report )
 SAMPLE_AWS		.onclick = () => LoadSample( 'Samples/AWS.cde'		).catch( Report )
