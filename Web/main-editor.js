@@ -202,11 +202,17 @@ MainEditor extends HTMLElement {
 		const	c2D = this.reformer.getContext( '2d' )
 		c2D.clearRect( 0, 0, this.reformer.width, this.reformer.height )
 
+		//	redraw every link touching the selection: a moving end follows its
+		//	reform clone, a fixed end stays on its model node ( so half-selected
+		//	links track the drag instead of being left behind )
 		for ( const [ [ F, A, T ], S ] of app.model.links ) {
 			const	rF = FindReform( F )
 			const	rT = FindReform( T )
-			rF && rT && DrawLinkCanvas(
-				c2D, rF[ 1 ], A, rT[ 1 ], S, { paintF: rF[ 2 ], paintT: rT[ 2 ] }
+			if	( !rF && !rT ) continue
+			const	nF = rF || FindNode( F )
+			const	nT = rT || FindNode( T )
+			nF && nT && DrawLinkCanvas(
+				c2D, nF[ 1 ], A, nT[ 1 ], S, { paintF: nF[ 2 ], paintT: nT[ 2 ] }
 			)
 		}
 
