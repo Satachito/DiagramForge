@@ -60,6 +60,29 @@ RhombusPath2D	= ( { cX, cY, rH, rV } ) => {
 	return	$
 }
 
+//	point on S's outline along the ray from its center in direction ( dX, dY ).
+//	ellipse / rhombus follow their real outline; rect / SVG / PNG use the bbox edge.
+const
+onOutline		= ( S, dX, dY ) => {
+	if	( !dX && !dY ) return [ S.cX, S.cY ]
+	const	rH = Math.abs( S.rH ), rV = Math.abs( S.rV )
+	let		scale
+	switch ( S.type ) {
+	case 'ellipse'	:
+		scale = 1 / Math.hypot( dX / rH, dY / rV )
+		break
+	case 'rhombus'	:
+		scale = 1 / ( Math.abs( dX ) / rH + Math.abs( dY ) / rV )
+		break
+	default			: {	//	rect, SVG, PNG: bounding-box edge
+		const	sH = dX ? rH / Math.abs( dX ) : Infinity
+		const	sV = dY ? rV / Math.abs( dY ) : Infinity
+		scale = Math.min( sH, sV )
+		}
+	}
+	return	[ S.cX + dX * scale, S.cY + dY * scale ]
+}
+
 const
 LinkCoordinates	= ( sF, aF, sT, aT ) => {
 	const
@@ -72,24 +95,22 @@ LinkCoordinates	= ( sF, aF, sT, aT ) => {
 
 	const
 	$ = ( S, A, s, a ) => {
+		let	P
 		switch	( A ) {
-		case 'TL'	: return [ L( S ), T( S ) ]
-		case 'TR'	: return [ R( S ), T( S ) ]
-		case 'BL'	: return [ L( S ), B( S ) ]
-		case 'BR'	: return [ R( S ), B( S ) ]
-		case 'T'	: return [ xAlong( S, s, a ), T( S ) ]
-		case 'B'	: return [ xAlong( S, s, a ), B( S ) ]
-		case 'L'	: return [ L( S ), yAlong( S, s, a ) ]
-		case 'R'	: return [ R( S ), yAlong( S, s, a ) ]
-		default		: {
-			const	dX = s.cX - S.cX, dY = s.cY - S.cY
-			if	( !dX && !dY ) return [ S.cX, S.cY ]
-			const	sH = dX ? Math.abs( S.rH / dX ) : Infinity
-			const	sV = dY ? Math.abs( S.rV / dY ) : Infinity
-			const	scale = Math.min( sH, sV )
-			return	[ S.cX + dX * scale, S.cY + dY * scale ]
-			}
+		case 'TL'	: P = [ L( S ), T( S ) ]; break
+		case 'TR'	: P = [ R( S ), T( S ) ]; break
+		case 'BL'	: P = [ L( S ), B( S ) ]; break
+		case 'BR'	: P = [ R( S ), B( S ) ]; break
+		case 'T'	: P = [ xAlong( S, s, a ), T( S ) ]; break
+		case 'B'	: P = [ xAlong( S, s, a ), B( S ) ]; break
+		case 'L'	: P = [ L( S ), yAlong( S, s, a ) ]; break
+		case 'R'	: P = [ R( S ), yAlong( S, s, a ) ]; break
+		default		: return onOutline( S, s.cX - S.cX, s.cY - S.cY )
 		}
+		//	anchored: rects keep the box point; ellipse / rhombus project onto the outline
+		return	S.type === 'ellipse' || S.type === 'rhombus'
+			?	onOutline( S, P[ 0 ] - S.cX, P[ 1 ] - S.cY )
+			:	P
 	}
 	return [ $( sF, aF, sT, aT ), $( sT, aT, sF, aF ) ]
 }
