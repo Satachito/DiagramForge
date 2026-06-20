@@ -1,6 +1,5 @@
 import { Report, Node	}	from './Application.js'
 import { unzip			}	from './unzip.js'
-import FetchProgression		from './fetch-progression.js'
 import {
 	E
 ,	AC
@@ -45,6 +44,14 @@ IMG		= url => {
 }
 
 const
+SPINNER = () => {
+	const
+	$ = E( 'div' )
+	$.className = 'icon-spinner'
+	return $
+}
+
+const
 Base64 = bytes => {
 	let
 	binary = ''
@@ -76,7 +83,6 @@ CloudIcons extends HTMLElement {
 				style="display: flex; font-size: 9px; align-items: flex-end; margin-top: 4px"
 			>	SVG:<input data-role=SVG type=checkbox checked>
 				PNG:<input data-role=PNG type=checkbox>
-				<fetch-progression style="margin: 4px 8px 0 8px"></fetch-progression>
 			</div>
 		`
 		const
@@ -88,16 +94,20 @@ CloudIcons extends HTMLElement {
 		RoleE( this, 'PNG' ).onclick = build
 	}
 
-	connectedCallback() {
-		this.querySelector( 'fetch-progression' ).value = this.getAttribute( 'url' ) ?? ''
-	}
-
 	async	fetchZip() {
+		const
+		url = this.getAttribute( 'url' )
+		if	( !url ) throw new Error( 'No url attribute' )
 		this._fetchPromise || (
-			this._fetchPromise = this.querySelector( 'fetch-progression' ).Fetch().then(
+			this._fetchPromise = fetch( url ).then(
+				r => {
+					if	( !r.ok ) throw new Error( `${ r.status } ${ r.statusText }` )
+					return r.arrayBuffer()
+				}
+			).then(
 				buf => {
-					this.FETCHED = buf
-					return buf
+					this.FETCHED = new Uint8Array( buf )
+					return this.FETCHED
 				}
 			,	er => {
 					this._fetchPromise = null
@@ -112,7 +122,7 @@ CloudIcons extends HTMLElement {
 		if	( this.UNZIPPED ) return this.UNZIPPED
 		this._unzipPromise || (
 			this._unzipPromise = unzip(
-				new Uint8Array( this.FETCHED )
+				this.FETCHED
 			,	iconFilter
 			).then(
 				icons => {
@@ -142,8 +152,7 @@ CloudIcons extends HTMLElement {
 		gen = ++this._buildGen
 		clearIcons( root )
 		const
-		status = AE( root, 'p' )
-		status.textContent = 'Loading…'
+		status = root.appendChild( SPINNER() )
 
 		try {
 			await this.fetchZip()
@@ -237,7 +246,8 @@ CloudIcons extends HTMLElement {
 			}
 		} catch ( er ) {
 			if	( gen === this._buildGen ) {
-				status.textContent = String( er )
+				status.remove()
+				AE( root, 'p' ).textContent = String( er )
 			}
 			throw er
 		}

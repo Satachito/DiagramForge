@@ -452,12 +452,12 @@
 		[
 			[
 				"dns-label",
-				{
-					"headF": true,
-					"headT": true
-				},
 				"cdn-label"
 			],
+			{
+				"headF": true,
+				"headT": true
+			},
 			{
 				"stroke": "dodgerblue"
 			}
@@ -465,12 +465,12 @@
 		[
 			[
 				"cdn-label",
-				{
-					"headF": true,
-					"headT": true
-				},
 				"armor-label"
 			],
+			{
+				"headF": true,
+				"headT": true
+			},
 			{
 				"stroke": "dodgerblue"
 			}
@@ -478,12 +478,12 @@
 		[
 			[
 				"armor-label",
-				{
-					"headF": true,
-					"headT": true
-				},
 				"lb-label"
 			],
+			{
+				"headF": true,
+				"headT": true
+			},
 			{
 				"stroke": "dodgerblue"
 			}
@@ -491,51 +491,38 @@
 		[
 			[
 				"lb-label",
-				{
-					"headF": true,
-					"headT": true
-				},
 				"app-label"
 			],
 			{
+				"headF": true,
+				"headT": true
+			},
+			{
 				"stroke": "dodgerblue"
 			}
 		],
 		[
 			[
 				"app-label",
-				{
-					"headF": true,
-					"headT": true
-				},
 				"sql-label"
 			],
 			{
+				"headF": true,
+				"headT": true
+			},
+			{
 				"stroke": "dodgerblue"
 			}
 		],
 		[
 			[
 				"app-label",
-				{
-					"headF": true,
-					"headT": true
-				},
 				"redis-label"
 			],
 			{
-				"stroke": "dodgerblue"
-			}
-		],
-		[
-			[
-				"app-label",
-				{
-					"headF": true,
-					"headT": true
-				},
-				"gcs-label"
-			],
+				"headF": true,
+				"headT": true
+			},
 			{
 				"stroke": "dodgerblue"
 			}
@@ -543,12 +530,25 @@
 		[
 			[
 				"app-label",
-				{
-					"headF": true,
-					"headT": true
-				},
+				"gcs-label"
+			],
+			{
+				"headF": true,
+				"headT": true
+			},
+			{
+				"stroke": "dodgerblue"
+			}
+		],
+		[
+			[
+				"app-label",
 				"pubsub-label"
 			],
+			{
+				"headF": true,
+				"headT": true
+			},
 			{
 				"stroke": "dodgerblue"
 			}
@@ -556,25 +556,12 @@
 		[
 			[
 				"pubsub-label",
-				{
-					"headF": true,
-					"headT": true
-				},
 				"functions-label"
 			],
 			{
-				"stroke": "dodgerblue"
-			}
-		],
-		[
-			[
-				"functions-label",
-				{
-					"headF": true,
-					"headT": true
-				},
-				"logging-label"
-			],
+				"headF": true,
+				"headT": true
+			},
 			{
 				"stroke": "dodgerblue"
 			}
@@ -582,12 +569,25 @@
 		[
 			[
 				"functions-label",
-				{
-					"headF": true,
-					"headT": true
-				},
+				"logging-label"
+			],
+			{
+				"headF": true,
+				"headT": true
+			},
+			{
+				"stroke": "dodgerblue"
+			}
+		],
+		[
+			[
+				"functions-label",
 				"monitoring-label"
 			],
+			{
+				"headF": true,
+				"headT": true
+			},
 			{
 				"stroke": "dodgerblue"
 			}
@@ -595,12 +595,12 @@
 		[
 			[
 				"app-label",
-				{
-					"headF": true,
-					"headT": true
-				},
 				"logging-label"
 			],
+			{
+				"headF": true,
+				"headT": true
+			},
 			{
 				"stroke": "dodgerblue"
 			}
@@ -608,12 +608,12 @@
 		[
 			[
 				"sql-label",
-				{
-					"headF": true,
-					"headT": true
-				},
 				"logging-label"
 			],
+			{
+				"headF": true,
+				"headT": true
+			},
 			{
 				"stroke": "dodgerblue"
 			}

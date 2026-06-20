@@ -43,7 +43,7 @@ LinkEditor extends HTMLElement {
 		RefreshSelect( this.T )
 	}
 
-	set $( [ F, { headF, headT, anchorF, anchorT }, T ] ) {
+	set $( [ [ F, T ], { headF, headT, anchorF, anchorT } ] ) {
 		this.Sync()
 		this.F.value		= F
 		this.HEAD_F.checked	= headF
@@ -62,9 +62,8 @@ LinkEditor extends HTMLElement {
 		this.ANCHOR_F.value && ( A[ "anchorF" ] = this.ANCHOR_F.value )
 		this.ANCHOR_T.value && ( A[ "anchorT" ] = this.ANCHOR_T.value )
 		return [
-			this.F.value
+			[ this.F.value, this.T.value ]
 		,	A
-		,	this.T.value
 		]
 	}
 }

@@ -43,6 +43,7 @@
 ;	--color-popup-fg		: light-dark( #111, #eee )
 ;	--color-popup-hover		: light-dark( #ddd, #444 )
 ;	--color-shadow			: light-dark( rgba( 0, 0, 0, .15 ), rgba( 0, 0, 0, .4 ) )
+;	--topbar-h				: 70px
 }
 html {
 ;	background				: var( --color-bg )
@@ -93,11 +94,64 @@ body.aside-collapsed	> aside	{ display: none }
 ;	grid-row		: 1
 ;	grid-column		: 1 / 4
 ;	display			: flex
-;	align-items		: flex-start
+;	align-items		: stretch
+;	height			: var( --topbar-h )
+;	min-height		: var( --topbar-h )
+;	max-height		: var( --topbar-h )
+;	box-sizing		: border-box
+;	overflow			: visible
 ;	border-bottom	: 1px solid gray
 }
+.topbar > header {
+;	box-sizing		: border-box
+;	min-height		: 0
+;	overflow		: hidden
+;	padding			: 5px 8px
+}
 .topbar > header					{ border-bottom: none }
-.topbar > header:nth-child( 2 )		{ flex: 1 }
+.topbar > header:first-child {
+;	flex-shrink		: 0
+;	display			: flex
+;	flex-direction	: column
+;	justify-content	: center
+}
+.topbar > header:nth-child( 2 )		{ flex: 1; min-width: 0; overflow-y: auto }
+.topbar > header.sample-panel		{ overflow: visible }
+.sample-panel {
+;	flex-shrink		: 0
+;	box-sizing		: border-box
+;	padding			: 4px 6px
+;	display			: flex
+;	align-items		: stretch
+}
+.sample-list {
+;	display			: grid
+;	grid-template-columns	: repeat( 4, auto )
+;	grid-template-rows		: repeat( 2, 1fr )
+;	gap				: 2px
+;	height			: 100%
+}
+.sample-list button {
+;	min-width		: 0
+;	min-height		: 0
+;	margin			: 0
+;	padding			: 1px 6px
+;	border			: 1px solid var( --color-popup-border )
+;	border-radius	: 4px
+;	background		: var( --color-popup-bg )
+;	color			: inherit
+;	font-family		: inherit
+;	font-size		: 10px
+;	line-height		: 1.2
+;	text-align		: center
+;	cursor			: pointer
+;	white-space		: nowrap
+;	overflow		: hidden
+;	text-overflow	: ellipsis
+}
+.sample-list button:hover {
+;	background		: var( --color-popup-hover )
+}
 main-editor {
 ;	overflow				: scroll
 ;	position				: relative
@@ -108,34 +162,75 @@ header {
 ;	border-bottom			: 1px solid gray
 ;	padding					: 8px
 }
-header a {
+header a
+,	footer a {
 ;	color					: inherit
 }
-header a:hover {
+header a:hover
+,	footer a:hover {
 ;	text-decoration			: underline
 }
 footer {
 ;	border-top				: 1px solid gray
-;	padding					: 8px
+;	padding					: 6px 8px
+;	grid-row				: 3
 ;	grid-column				: 1 / 4
+;	display					: flex
+;	align-items				: center
+;	justify-content			: flex-end
+;	gap						: 8px
+;	font-size				: 11px
+}
+.footer-meta {
+;	display					: flex
+;	align-items				: center
+;	flex-wrap				: wrap
+;	justify-content			: flex-end
+;	gap						: 6px
+;	font-family				: cursive
+}
+.footer-credit {
+;	font-size				: 10px
+;	opacity					: .85
 }
 aside {
 ;	border-left				: 1px solid gray
 ;	overflow				: scroll
-;	padding					: 8px
+;	padding					: 5px
 }
-aside > button {
+aside > button:not( .file-btn ) {
 ;	display					: block
-;	margin-top				: 4px
+;	margin-top				: 3px
 ;	width					: 100%
+;	padding					: 5px 8px
+;	border					: 1px solid var( --color-popup-border )
+;	border-radius			: 6px
+;	background				: var( --color-popup-bg )
+;	color					: var( --color-popup-fg )
+;	font-family				: inherit
+;	font-size				: 12px
+;	font-weight				: 600
+;	letter-spacing			: .02em
+;	line-height				: 1
+;	cursor					: pointer
+;	box-shadow				: 0 1px 3px var( --color-shadow )
+;	transition				: background .12s, border-color .12s, transform .08s
+}
+aside > button:not( .file-btn ):hover {
+;	background				: var( --color-popup-hover )
+;	transform				: translateY( -1px )
+}
+aside > button:not( .file-btn ):active {
+;	transform				: translateY( 0 )
+;	box-shadow				: none
 }
 aside details {
-;	margin-top				: 8px
+;	margin-top				: 5px
 }
 aside summary {
 ;	cursor					: pointer
-;	font-size				: 12px
-;	margin-bottom			: 4px
+;	font-size				: 13px
+;	margin-bottom			: 3px
 }
 nav {
 ;	border-right			: 1px solid gray
@@ -144,6 +239,18 @@ nav {
 }
 nav cloud-icons {
 ;	display					: block
+}
+.icon-spinner {
+;	width					: 20px
+;	height					: 20px
+;	margin					: 8px
+;	border					: 2px solid var( --color-popup-border )
+;	border-top-color		: currentColor
+;	border-radius			: 50%
+;	animation				: icon-spin .7s linear infinite
+}
+@keyframes icon-spin {
+;	to						{ transform: rotate( 360deg ) }
 }
 details {
 ;	padding-left			: 8px
@@ -215,43 +322,162 @@ paint-editor > div:not( :has( textarea ) )
 ;	display				: grid
 ;	grid-template-columns	: 1fr 120px
 ;	align-items			: center
-;	column-gap			: 8px
-;	margin-bottom		: 4px
+;	column-gap			: 6px
+;	margin-bottom		: 3px
 }
-paint-editor input
-,	paint-editor select
-,	link-editor input
-,	link-editor select
-,	shape-editor input
-,	shape-editor select {
-;	width				: 100%
-;	box-sizing			: border-box
-;	min-width			: 0
+paint-editor > div > span
+,	link-editor > div > span
+,	shape-editor > div:not( :has( textarea ) ) > span
+,	aside .node-id-row label {
+;	font-size			: 12px
+;	opacity				: .75
+;	letter-spacing		: .02em
 }
 shape-editor > div:has( textarea ) {
-;	margin-bottom		: 4px
+;	margin-bottom		: 3px
 }
-shape-editor textarea	{ width	: 100%; height : 6em; box-sizing: border-box }
+shape-editor > div:has( textarea ) > div:first-child {
+;	font-size			: 12px
+;	opacity				: .75
+;	letter-spacing		: .02em
+;	margin-bottom		: 2px
+}
+shape-editor textarea	{ height : 6em; resize : vertical }
+
+.file-name
+,	aside input:not( [type=checkbox] ):not( [type=file] ):not( [type=hidden] )
+,	aside select
+,	aside textarea {
+;	width				: 100%
+;	min-width			: 0
+;	box-sizing			: border-box
+;	padding				: 5px 6px
+;	border				: 1px solid var( --color-popup-border )
+;	border-radius		: 6px
+;	background-color	: light-dark( #fff, #141414 )
+;	color				: inherit
+;	font-family			: inherit
+;	font-size			: 12px
+;	line-height			: 1.2
+}
+aside select {
+;	cursor				: pointer
+;	appearance			: none
+;	background-image	: linear-gradient( 45deg, transparent 50%, currentColor 50% )
+,	linear-gradient( 135deg, currentColor 50%, transparent 50% )
+;	background-position	: calc( 100% - 12px ) calc( 50% - 2px ), calc( 100% - 8px ) calc( 50% - 2px )
+;	background-size		: 4px 4px, 4px 4px
+;	background-repeat	: no-repeat
+;	padding-right		: 22px
+}
+aside input[type=checkbox] {
+;	width				: auto
+;	accent-color		: light-dark( #2563eb, #60a5fa )
+;	cursor				: pointer
+}
+.file-name:focus
+,	aside input:not( [type=checkbox] ):not( [type=file] ):not( [type=hidden] ):focus
+,	aside select:focus
+,	aside textarea:focus {
+;	outline				: 2px solid light-dark( #60a5fa, #2563eb )
+;	outline-offset		: 0
+}
 
 aside .node-id-row {
 ;	display				: grid
 ;	grid-template-columns	: 1fr 120px
 ;	align-items			: center
-;	column-gap			: 8px
+;	column-gap			: 6px
+;	margin-bottom		: 3px
+}
+
+.file-bar {
+;	display				: grid
+;	grid-template-columns	: auto 1fr
+;	gap					: 4px
+;	align-items			: stretch
+}
+.file-bar .file-btn-upload {
+;	width				: auto
+;	flex-shrink			: 0
+;	justify-self		: start
+;	padding				: 5px
+}
+.export-bar {
+;	display				: grid
+;	grid-template-columns	: 1fr 1fr
+;	gap					: 4px
+;	align-items			: stretch
+;	margin-top			: 4px
+}
+.file-section {
 ;	margin-bottom		: 4px
 }
-aside .node-id-row input {
+.file-btn {
+;	display				: inline-flex
+;	align-items			: center
+;	justify-content		: center
+;	gap					: 5px
 ;	width				: 100%
-;	box-sizing			: border-box
-;	min-width			: 0
+;	margin-top			: 0
+;	padding				: 5px 8px
+;	border				: 1px solid var( --color-popup-border )
+;	border-radius		: 6px
+;	background			: var( --color-popup-bg )
+;	color				: var( --color-popup-fg )
+;	font-family			: inherit
+;	font-size			: 12px
+;	font-weight			: 600
+;	letter-spacing		: .02em
+;	line-height			: 1
+;	cursor				: pointer
+;	box-shadow			: 0 1px 3px var( --color-shadow )
+;	transition			: background .12s, border-color .12s, transform .08s
+}
+.file-btn:hover {
+;	background			: var( --color-popup-hover )
+;	transform			: translateY( -1px )
+}
+.file-btn:active {
+;	transform			: translateY( 0 )
+;	box-shadow			: none
+}
+.file-btn svg {
+;	width				: 15px
+;	height				: 15px
+;	flex-shrink			: 0
+}
+.file-btn-upload {
+;	border-color		: light-dark( #60a5fa, #1d4ed8 )
+;	background			: light-dark( rgba( 37, 99, 235, .1 ), rgba( 30, 64, 175, .38 ) )
+;	color				: light-dark( #1d4ed8, #bfdbfe )
+}
+.file-btn-upload:hover {
+;	background			: light-dark( rgba( 37, 99, 235, .18 ), rgba( 37, 99, 235, .48 ) )
+}
+.file-btn-download {
+;	border-color		: light-dark( #34d399, #047857 )
+;	background			: light-dark( rgba( 16, 185, 129, .1 ), rgba( 6, 95, 70, .38 ) )
+;	color				: light-dark( #047857, #a7f3d0 )
+}
+.file-btn-download:hover {
+;	background			: light-dark( rgba( 16, 185, 129, .18 ), rgba( 5, 150, 105, .48 ) )
+}
+.file-btn-export {
+;	border-color		: light-dark( #c4b5fd, #6d28d9 )
+;	background			: light-dark( rgba( 139, 92, 246, .1 ), rgba( 91, 33, 182, .38 ) )
+;	color				: light-dark( #6d28d9, #ddd6fe )
+}
+.file-btn-export:hover {
+;	background			: light-dark( rgba( 139, 92, 246, .18 ), rgba( 124, 58, 237, .48 ) )
 }
 
 </style>
 
 <div class=topbar>
-<header style="font-family: fantasy; margin-right: 16px; font-size: 24px; line-height: 1.15">
+<header style="font-family: fantasy; margin-right: 16px; font-size: 22px; line-height: 1.1">
 	DiagramForge
-	<div style="font-family: courier; font-size: 10px; font-weight: normal; margin-top: 3px">
+	<div style="font-family: courier; font-size: 10px; font-weight: normal; margin-top: 2px">
 		Cloud · Mind map · Sequence · JSON .cde
 	</div>
 </header>
@@ -271,16 +497,22 @@ aside .node-id-row input {
 		<input id=CANVAS_H type=number min=256 step=256 value=4096 style="width:64px">
 	</label>
 	<button id=CANVAS_APPLY style="margin-left:4px">Apply</button>
-	<div style="font-size:10px; opacity:.65; margin-top:4px; line-height:1.45">
+	<div style="font-size:10px; opacity:.65; margin-top:2px; line-height:1.35">
 		hold <b>⌘</b> = create node · <b>⌥</b> = create link (overrides the boxes)<br>
 		<b>click</b> select · <b>drag</b> move / resize · <b>⇧click</b> add + contained · <b>⌘E</b> expand · <b>⌘A</b> all · <b>⌫</b> delete
 	</div>
 </header>
-<header style="font-family: cursive; text-align: right; font-size: 11px">
-	<a href=https://github.com/Satachito/DiagramForge target=_blank rel=noopener>GitHub</a>
-	·
-	<a href=https://github.com/Satachito/DiagramForge/blob/main/Web/SCHEMA.md target=_blank rel=noopener>.cde schema</a>
-	<div style="font-size: 10px; margin-top: 4px">Written by Satoru Ogura, and AIs.</div>
+<header class=sample-panel>
+	<div class=sample-list>
+		<button id=SAMPLE_JSONS		>JSONs		</button>
+		<button id=SAMPLE_AWS		>AWS		</button>
+		<button id=SAMPLE_GCP		>GCP		</button>
+		<button id=SAMPLE_AZURE		>Azure		</button>
+		<button id=SAMPLE_MINDMAP	>MindMap	</button>
+		<button id=SAMPLE_SEQUENCE	>Sequence	</button>
+		<button id=SAMPLE_SEQ_ANCHOR	>SeqAnchor	</button>
+		<button id=SAMPLE_ANCHORS	>Anchors	</button>
+	</div>
 </header>
 </div>
 
@@ -294,24 +526,29 @@ aside .node-id-row input {
 <div id=EMPTY_HINT style="grid-row:2; grid-column:2; place-self:center; pointer-events:none; z-index:5; max-width:430px; text-align:center; font-size:13px; opacity:.6; line-height:1.8">
 	Check <b>Create node</b> (or hold <b>⌘</b>) and drag to create a shape.<br>
 	Check <b>Create link</b> (or hold <b>⌥</b>) and drag from one shape to another.<br>
-	Or load a <b>Sample</b> from the right panel →
+	Or load a <b>Sample</b> from the list at top right ↑
 </div>
 
 <aside>
-	<div style="display: grid; grid-template-columns: 32px 1fr 32px">
-		<button onclick=UPLOAD.click()>↑<input id=UPLOAD type=file hidden></button>
-		<input id=FILE_NAME style="width: 100%">
-		<button id=DOWNLOAD title="Download .cde">↓</button>
+	<div class=file-section>
+		<div class=file-bar>
+			<label class="file-btn file-btn-upload" title="Open .cde file" aria-label="Open .cde file">
+				<svg viewBox="0 0 16 16" aria-hidden=true fill=none stroke=currentColor stroke-width=1.5 stroke-linecap=round stroke-linejoin=round><path d="M8 12V4M5 7l3-3 3 3"/><path d="M3 13h10"/></svg>
+				<input id=UPLOAD type=file accept=.cde,application/json hidden>
+			</label>
+			<input id=FILE_NAME class=file-name placeholder=Untitled spellcheck=false>
+		</div>
+		<div class=export-bar>
+			<button id=DOWNLOAD class="file-btn file-btn-download" title="Download .cde">
+				<svg viewBox="0 0 16 16" aria-hidden=true fill=none stroke=currentColor stroke-width=1.5 stroke-linecap=round stroke-linejoin=round><path d="M8 4v8M5 9l3 3 3-3"/><path d="M3 13h10"/></svg>
+				<span>Save</span>
+			</button>
+			<button id=EXPORT_SVG class="file-btn file-btn-export" title="Export SVG">
+				<svg viewBox="0 0 16 16" aria-hidden=true fill=none stroke=currentColor stroke-width=1.5 stroke-linecap=round stroke-linejoin=round><path d="M4 2.5h5.5L13 6v7.5a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1Z"/><path d="M9 2.5V6H12.5"/><path d="M5.5 9.5h5M5.5 11.5h3"/></svg>
+				<span>Export SVG</span>
+			</button>
+		</div>
 	</div>
-	<button id=EXPORT_SVG>Export SVG</button>
-	<button			id=SAMPLE_JSONS		>Sample( JSONs )	</button>
-	<button			id=SAMPLE_AWS		>Sample( AWS )		</button>
-	<button			id=SAMPLE_GCP		>Sample( GCP )		</button>
-	<button			id=SAMPLE_AZURE		>Sample( Azure )	</button>
-	<button			id=SAMPLE_MINDMAP	>Sample( MindMap )	</button>
-	<button			id=SAMPLE_SEQUENCE	>Sample( Sequence )	</button>
-	<button			id=SAMPLE_SEQ_ANCHOR	>Sample( SeqAnchor )	</button>
-	<button			id=SAMPLE_ANCHORS	>Sample( Anchors )	</button>
 	<hr>
 	<paint-editor	id=PAINT_EDITOR		></paint-editor>
 	<hr>
@@ -339,6 +576,12 @@ aside .node-id-row input {
 <button id=ASIDE_TOGGLE	class=panel-toggle title="Toggle right panel">›</button>
 
 <footer>
+	<div class=footer-meta>
+		<a href=https://github.com/Satachito/DiagramForge target=_blank rel=noopener>GitHub</a>
+		<span aria-hidden=true>·</span>
+		<a href=https://github.com/Satachito/DiagramForge/blob/main/Web/SCHEMA.md target=_blank rel=noopener>.cde schema</a>
+		<span class=footer-credit>Written by Satoru Ogura, and AIs.</span>
+	</div>
 	<div			id=UNDER_HOVER		></div>
 	<div			id=LINK_MENU		>
 		<button		id=LINK_MENU_REMOVE	>Remove</button>
@@ -370,7 +613,7 @@ import './shape-editor.js'
 import './link-editor.js'
 import './cloud-icons.js'
 import './main-editor.js'
-import { saveSVG } from './export.js'
+import { saveSVG } from './Export.js'
 
 import	{ AE } from './DomUtils.js'
 
@@ -448,7 +691,7 @@ SHAPE_EDITOR.addEventListener( 'change', UpdateApplyNodeLabel )
 */
 
 NODE			.onclick = () => Node( [ NODE_ID.value, SHAPE_EDITOR.$, PAINT_EDITOR.$ ] )
-LINK			.onclick = () => Link( [ LINK_EDITOR.$, PAINT_EDITOR.$ ] )
+LINK			.onclick = () => Link( [ ...LINK_EDITOR.$, PAINT_EDITOR.$ ] )
 
 DOWNLOAD		.onclick = () => {
 	const

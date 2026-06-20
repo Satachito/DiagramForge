@@ -400,12 +400,12 @@
 		[
 			[
 				"Core Data",
-				{
-					"headF": false,
-					"headT": true
-				},
 				"Analysis"
 			],
+			{
+				"headF": false,
+				"headT": true
+			},
 			{
 				"stroke": "gray",
 				"lineWidth": 2
@@ -414,12 +414,12 @@
 		[
 			[
 				"Internet",
-				{
-					"headF": true,
-					"headT": true
-				},
 				"Private WAF"
 			],
+			{
+				"headF": true,
+				"headT": true
+			},
 			{
 				"stroke": "gray",
 				"lineWidth": 2
@@ -428,12 +428,12 @@
 		[
 			[
 				"Private WAF",
-				{
-					"headF": true,
-					"headT": true
-				},
 				"Private Application"
 			],
+			{
+				"headF": true,
+				"headT": true
+			},
 			{
 				"stroke": "gray",
 				"lineWidth": 2
@@ -442,12 +442,12 @@
 		[
 			[
 				"Internet",
-				{
-					"headF": true,
-					"headT": true
-				},
 				"Public WAF"
 			],
+			{
+				"headF": true,
+				"headT": true
+			},
 			{
 				"stroke": "gray",
 				"lineWidth": 2
@@ -456,12 +456,12 @@
 		[
 			[
 				"Public WAF",
-				{
-					"headF": true,
-					"headT": true
-				},
 				"Public Application"
 			],
+			{
+				"headF": true,
+				"headT": true
+			},
 			{
 				"stroke": "gray",
 				"lineWidth": 2
@@ -470,12 +470,12 @@
 		[
 			[
 				"Importer",
-				{
-					"headF": false,
-					"headT": true
-				},
 				"Core Data"
 			],
+			{
+				"headF": false,
+				"headT": true
+			},
 			{
 				"stroke": "gray",
 				"lineWidth": 2
@@ -484,12 +484,12 @@
 		[
 			[
 				"Private Application",
-				{
-					"headF": false,
-					"headT": true
-				},
 				"Writer API"
 			],
+			{
+				"headF": false,
+				"headT": true
+			},
 			{
 				"stroke": "gray",
 				"lineWidth": "2"
@@ -498,26 +498,12 @@
 		[
 			[
 				"Public Application",
-				{
-					"headF": false,
-					"headT": true
-				},
 				"Writer API"
 			],
 			{
-				"stroke": "gray",
-				"lineWidth": "2"
-			}
-		],
-		[
-			[
-				"Writer API",
-				{
-					"headF": false,
-					"headT": true
-				},
-				"Core Data"
-			],
+				"headF": false,
+				"headT": true
+			},
 			{
 				"stroke": "gray",
 				"lineWidth": "2"
@@ -526,12 +512,26 @@
 		[
 			[
 				"Writer API",
-				{
-					"headF": false,
-					"headT": true
-				},
+				"Core Data"
+			],
+			{
+				"headF": false,
+				"headT": true
+			},
+			{
+				"stroke": "gray",
+				"lineWidth": "2"
+			}
+		],
+		[
+			[
+				"Writer API",
 				"Audit Log"
 			],
+			{
+				"headF": false,
+				"headT": true
+			},
 			{
 				"stroke": "gray",
 				"lineWidth": "2"
@@ -540,12 +540,12 @@
 		[
 			[
 				"Sanitized Reader",
-				{
-					"headF": false,
-					"headT": true
-				},
 				"Public Application"
 			],
+			{
+				"headF": false,
+				"headT": true
+			},
 			{
 				"stroke": "gray",
 				"lineWidth": "2"
@@ -554,12 +554,12 @@
 		[
 			[
 				"Core Data",
-				{
-					"headF": false,
-					"headT": true
-				},
 				"Sanitized Reader"
 			],
+			{
+				"headF": false,
+				"headT": true
+			},
 			{
 				"stroke": "gray",
 				"lineWidth": "2"

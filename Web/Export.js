@@ -1,7 +1,7 @@
 import { FindNode				} from './Application.js'
 import { EscapeXML				} from './DomUtils.js'
-import { XYWH_TLBR				} from './geo2D.js'
-import { XYWH, BBox				} from './geoDF.js'
+import { XYWH_TLBR				} from './Geo2D.js'
+import { XYWH, BBox				} from './GeoDF.js'
 import { drawForeignLabelSvg	} from './ForeignLabel.js'
 import { DrawLinkSvg			} from './DrawLink.js'
 
@@ -22,18 +22,14 @@ downloadBlob = ( blob, filename ) => {
 const
 paintAttrs		= P => {
 	const
-	a = []
-	if	( P.fill )	a.push( `fill="${ EscapeXML( P.fill ) }"` )
-	else			a.push( 'fill="none"' )
-	if	( P.stroke ) {
-		a.push( `stroke="${ EscapeXML( P.stroke ) }"` )
-		a.push( `stroke-width="${ P.lineWidth || 1 }"` )
-		P.lineCap && a.push( `stroke-linecap="${ P.lineCap }"` )
-		P.lineJoin && a.push( `stroke-linejoin="${ P.lineJoin }"` )
-		P.lineDash?.length && a.push( `stroke-dasharray="${ P.lineDash.join( ' ' ) }"` )
-		P.lineDashOffset && a.push( `stroke-dashoffset="${ P.lineDashOffset }"` )
-	}
-	return	a.join( ' ' )
+	$ = `fill="${P.fill ? P.fill :	'none' }"`
+	P.stroke			&& ( $ += ` stroke="${ ( P.stroke ) }"`						)
+	P.lineWidth			&& ( $ += ` stroke-width="${ P.lineWidth }"`				)
+	P.lineCap			&& ( $ += ` stroke-linecap="${ P.lineCap }"`				)
+	P.lineJoin			&& ( $ += ` stroke-linejoin="${ P.lineJoin }"`				)
+	P.lineDash			&& ( $ += ` stroke-dasharray="${ P.lineDash.join( ' ' ) }"`	)
+	P.lineDashOffset	&& ( $ += ` stroke-dashoffset="${ P.lineDashOffset }"`		)
+	return	$
 }
 
 const
@@ -143,7 +139,7 @@ buildVectorSVG	= () => {
 		drawForeignLabelSvg( parts, X, Y, S )
 	}
 
-	for ( const [ [ F, A, T ], P ] of app.model.links ) {
+	for ( const [ [ F, T ], A, P ] of app.model.links ) {
 		const
 		nF = FindNode( F )
 		,	nT = FindNode( T )

@@ -12,8 +12,8 @@ PaintEditor extends HTMLElement {
 		this.LINE_CAP			= LabeledSelect	( this, 'cap'			, '', 'butt'	, 'round', 'square'	)
 		this.LINE_JOIN			= LabeledSelect	( this, 'join'			, '', 'bevel'	, 'round', 'miter'	)
 		this.MITER_LIMIT		= LabeledInput	( this, 'miterLimit'	)
-		this.LINE_DASH			= LabeledInput	( this, 'dash'			)
 		this.LINE_DASH_OFFSET	= LabeledInput	( this, 'dashOffset'	)
+		this.LINE_DASH			= LabeledInput	( this, 'dash'			)
 	}
 
 	set $( _ ) {
@@ -23,8 +23,9 @@ PaintEditor extends HTMLElement {
 		this.LINE_CAP			.value = _.lineCap			?? ''
 		this.LINE_JOIN			.value = _.lineJoin			?? ''
 		this.MITER_LIMIT		.value = _.miterLimit		?? ''
-		this.LINE_DASH			.value = _.lineDash			?? ''
 		this.LINE_DASH_OFFSET	.value = _.lineDashOffset	?? ''
+		this.LINE_DASH			.value = _.lineDash ? JSON.stringify( _.lineDash ) : ''
+
 	}
 
 	get $() {
@@ -36,8 +37,8 @@ PaintEditor extends HTMLElement {
 		this.LINE_CAP			.value && ( $[ 'lineCap'		] = this.LINE_CAP			.value )
 		this.LINE_JOIN			.value && ( $[ 'lineJoin'		] = this.LINE_JOIN			.value )
 		this.MITER_LIMIT		.value && ( $[ 'miterLimit'		] = this.MITER_LIMIT		.value )
-		this.LINE_DASH			.value && ( $[ 'lineDash'		] = this.LINE_DASH			.value )
 		this.LINE_DASH_OFFSET	.value && ( $[ 'lineDashOffset'	] = this.LINE_DASH_OFFSET	.value )
+		this.LINE_DASH			.value && ( $[ 'lineDash'		] = JSON.parse( this.LINE_DASH.value ) )
 		return $
 	}
 }

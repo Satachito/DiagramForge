@@ -62,8 +62,8 @@ SyncReformsFromModel	= () => {
 }
 
 import Do from './Jobs.js'
-import { Union } from './geo2D.js'
-import { TLBR } from './geoDF.js'
+import { Union } from './Geo2D.js'
+import { TLBR } from './GeoDF.js'
 
 const
 Persist		= () => localStorage.setItem( STORAGE_KEY, JSONString() )
@@ -147,19 +147,19 @@ Node	= ( [ ID, S, P ] ) => DoTypical(
 )
 
 export	const
-Link	= ( [ [ F, A, T ], P ] ) => DoTypical(
+Link	= ( [ [ F, T ], A, P ] ) => DoTypical(
 	'Link'
 ,	() => {
 		const
-		$ = app.model.links.filter( ( [ [ f, a, t ], p ] ) => f === F && t === T )
+		$ = app.model.links.filter( ( [ [ f, t ], a, p ] ) => f === F && t === T )
 		$.length
 		?	$.forEach(
 				_ => (
-					_[ 0 ][ 1 ] = A
-				,	_[ 1 ] = P
+					_[ 1 ] = A
+				,	_[ 2 ] = P
 				)
 			)
-		:	(	app.model.links.push( [ [ F, A, T ], P ] )
+		:	(	app.model.links.push( [ [ F, T ], A, P ] )
 			,	app.reforms = [
 					structuredClone( FindNode( F ) )
 				,	structuredClone( FindNode( T ) )
@@ -173,7 +173,7 @@ RemoveLink	= ( F, T ) => DoTypical(
 	'RemoveLink'
 ,	() => (
 		app.model.links = app.model.links.filter(
-			( [ [ f, a, t ], p ] ) => f !== F || t !== T
+			( [ [ f, t ], a, p ] ) => f !== F || t !== T
 		)
 	,	app.reforms = []
 	)
@@ -187,7 +187,7 @@ Delete		= () => DoTypical(
 			node => !FindReform( node[ 0 ] )
 		)
 	,	app.model.links = app.model.links.filter(
-			( [ [ F, A, T ], P ] ) => !FindReform( F ) && !FindReform( T )
+			( [ [ F, T ], A, P ] ) => !FindReform( F ) && !FindReform( T )
 		)
 	,	app.reforms = []
 	)

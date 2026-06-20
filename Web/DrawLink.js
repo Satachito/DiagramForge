@@ -1,4 +1,4 @@
-import { LinkParts } from './geoDF.js'
+import { LinkParts } from './GeoDF.js'
 import { EscapeXML } from './DomUtils.js'
 
 const
@@ -13,17 +13,19 @@ DrawLinkCanvas	= ( c2D, shapeF, ends, shapeT, P, paints ) => {
 	if	( !g || !color ) return
 
 	c2D.save()
-	c2D.strokeStyle = color
-	c2D.lineWidth = 2 * g.shaftHalf
-	c2D.lineCap = P.lineCap || 'butt'
-	c2D.lineJoin = P.lineJoin || 'round'
-	c2D.setLineDash( P.lineDash?.length ? P.lineDash : [] )
-	P.lineDashOffset && ( c2D.lineDashOffset = P.lineDashOffset )
+
+	c2D.strokeStyle		= color
+	c2D.lineWidth		= 2 * g.shaftHalf
+	P.lineCap			&& ( c2D.lineCap		= P.lineCap			)
+	P.lineJoin			&& ( c2D.lineJoin		= P.lineJoin		)
+	P.lineDashOffset	&& ( c2D.lineDashOffset = P.lineDashOffset	)
+	P.lineDash			&& c2D.setLineDash( P.lineDash )
+
 	c2D.beginPath()
 	c2D.moveTo( ...g.shaft[ 0 ] )
 	for	( let i = 1; i < g.shaft.length; i++ )	c2D.lineTo( ...g.shaft[ i ] )
 	c2D.stroke()
-	c2D.fillStyle = color
+	c2D.fillStyle	 	= color
 	for ( const [ [ ax, ay ], [ bx, by ], [ cx, cy ] ] of g.heads ) {
 		c2D.beginPath()
 		c2D.moveTo( ax, ay )
@@ -43,9 +45,9 @@ strokeAttrs		= P => {
 	,	`stroke-linecap="${ P.lineCap || 'butt' }"`
 	,	`stroke-linejoin="${ P.lineJoin || 'round' }"`
 	]
-	P.lineDash?.length && a.push( `stroke-dasharray="${ P.lineDash.join( ' ' ) }"` )
-	P.lineDashOffset && a.push( `stroke-dashoffset="${ P.lineDashOffset }"` )
-	return	a.join( ' ' )
+	P.lineDash			&& a.push( `stroke-dasharray="${ P.lineDash.join( ' ' ) }"` )
+	P.lineDashOffset	&& a.push( `stroke-dashoffset="${ P.lineDashOffset }"` )
+	return a.join( ' ' )
 }
 
 const

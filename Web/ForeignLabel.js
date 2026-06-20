@@ -1,7 +1,7 @@
 //	Render node labels via SVG foreignObject (HTML + CSS in S.html / S.style).
 
 import { EscapeXML } from './DomUtils.js'
-import { XYWH } from './geoDF.js'
+import { XYWH } from './GeoDF.js'
 
 const
 labelWrapperStyle	= S => {

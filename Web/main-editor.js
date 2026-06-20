@@ -1,4 +1,9 @@
 import {
+	E
+,	AE
+}	from './DomUtils.js'
+
+import {
 	Report
 ,	FindNode
 ,	FindReform
@@ -18,17 +23,12 @@ import {
 }	from './Jobs.js'
 
 import {
-	AE
-}	from './DomUtils.js'
-
-import {
 	XYWH_TLBR
 ,	TLBR_XYXY
 ,	EdgeDist
 ,	ContainsXY
 ,	ContainsTLBR
 ,	AreaTLBR
-,	Outset
 ,	Union
 ,	XYWH_XYXY
 ,	XY_EV
@@ -36,7 +36,8 @@ import {
 ,	DivXY
 ,	EqualXY
 ,	DeltaXY
-}	from './geo2D.js'
+,	Outset
+}	from './Geo2D.js'
 
 import {
 	XYWH
@@ -46,10 +47,140 @@ import {
 ,	EllipsePath2D
 ,	RhombusPath2D
 ,	LinkPath2D
-,	GRAB
-,	SelectionGrabCursor
-,	Node_XY
-}	from './geoDF.js'
+}	from './GeoDF.js'
+
+const
+GRAB			= 8
+
+const
+NodeMode = ev => CREATE_NODE.checked || ev.metaKey
+const
+LinkMode = ev => CREATE_LINK.checked || ev.altKey
+
+const
+Node_XY		= xy => {
+	let	$ = null
+	app.model.nodes.forEach(
+		_ => {
+			const _tlbr = TLBR( _[ 1 ] )
+			if	( ContainsXY( Outset( _tlbr, GRAB ), xy ) ) {
+				if	( $ ) {
+					const _minEdgeDist	= Math.min( ...EdgeDist( _tlbr, xy ) )
+					const tlbr			= TLBR( $[ 1 ] )
+					const minEdgeDist	= Math.min( ...EdgeDist( tlbr, xy ) )
+					_minEdgeDist < minEdgeDist
+					?	$ = _
+					:	_minEdgeDist === minEdgeDist && ( AreaTLBR( _tlbr ) < AreaTLBR( tlbr ) ) && ( $ = _ )
+				} else {
+					$ = _
+				}
+			}
+		}
+	)
+	return	$
+}
+const
+Node_EV		= ev => Node_XY( XY_EV( ev ) )
+
+const
+G_C2D		= E('canvas').getContext( '2d' )
+
+const
+PointInPath_XY		= ( path2D, xy ) => G_C2D.isPointInPath		( path2D, ...xy )
+const
+PointInStroke_XY	= ( path2D, xy ) => G_C2D.isPointInStroke	( path2D, ...xy )
+
+/*
+const
+Links_XY	= xy => app.model.links.reduce(
+	( $,_ ) => {
+		const
+		[ [ F, T ], A, P ] = _
+	,	nF		= FindNode( F )
+	,	nT		= FindNode( T )
+		nF && nT && PointInPath_XY(
+			LinkPath2D( nF[ 1 ], A, nT[ 1 ], nF[ 2 ], nT[ 2 ] )
+		,	xy
+		) && $.push( _ )
+	}
+,	[]
+)
+*/
+
+const
+FindLinkKey_XY	= xy => {
+	for	( const [ [ F, T ], A, P ] of app.model.links ) {
+		const	nF		= FindNode( F )
+		const	nT		= FindNode( T )
+		if	( ! nF || ! nT ) continue
+		if	(
+			PointInPath_XY(
+				LinkPath2D( nF[ 1 ], A, nT[ 1 ], nF[ 2 ], nT[ 2 ] )
+			,	xy
+			)
+		) return [ F, A, T ]
+	}
+	return null
+}
+
+const
+LinkEndpoints_XY	= xy => {
+	let	$ = null
+	app.model.links.forEach(
+		( [ [ F, T ], A, P ] ) => {
+			const
+			[ nF, nT ]	= [ FindNode( F ), FindNode( T ) ]
+			nF && nT && PointInPath_XY(
+				LinkPath2D( nF[ 1 ], A, nT[ 1 ], nF[ 2 ], nT[ 2 ] )
+			,	xy
+			) && (
+				$ = [ nF, nT, [ F, A, T ] ]
+			)
+		}
+	)
+	return	$
+}
+
+const
+SelectionGrabCursor	= ( sel, xy ) => {
+	const
+	[ dT, dL, dB, dR ] = EdgeDist( sel, xy )
+,	T = dT <= GRAB
+,	L = dL <= GRAB
+,	B = dB <= GRAB
+,	R = dR <= GRAB
+	if	( ( T && L ) || ( B && R ) )	return 'nwse-resize'
+	if	( ( T && R ) || ( B && L ) )	return 'nesw-resize'
+	if	( T || B )						return 'ns-resize'
+	if	( L || R )						return 'ew-resize'
+	return	'move'
+}
+const
+Cursor_EV	= ev => {
+	
+	const
+	xy = XY_EV( ev )
+
+	if	( app.reforms.length ) {
+		const
+		bbox = BBox( app.reforms )
+		if	( ContainsXY( bbox, xy ) )					return 'move'
+		if	( ContainsXY( Outset( bbox, GRAB ), xy ) )	return SelectionGrabCursor( bbox, xy )
+	}
+
+	if	( NodeMode( ev ) || LinkMode( ev ) )			return 'crosshair'
+
+	if	( LinkEndpoints_XY( xy ) )						return 'pointer'
+
+	const	node = Node_XY( xy )
+	if	( node ) {
+		const
+		tlbr = TLBR( node[ 1 ] )
+		return	ContainsXY( tlbr, xy ) ? 'move' : SelectionGrabCursor( tlbr, xy )
+	}
+
+	return	'default'
+}
 
 import { DrawForeignLabel	} from './ForeignLabel.js'
 import { DrawLinkCanvas		} from './DrawLink.js'
@@ -59,7 +190,6 @@ copyText		= text => navigator.clipboard.writeText( text ).catch( Report )
 
 const
 mouse			= [ null, null ]
-
 
 const
 DrawPath		= ( c2D, path, P ) => {
@@ -71,12 +201,12 @@ DrawPath		= ( c2D, path, P ) => {
 	}
 	const	stroke	= P[ 'stroke' ]
 	if	( stroke ) {
-		const	lineWidth		= P[ 'lineWidth'		]; lineWidth		&& ( c2D.lineWidth		= lineWidth			)
-		const	lineCap			= P[ 'lineCap'			]; lineCap			&& ( c2D.lineCap		= lineCap			)
-		const	lineJoin		= P[ 'lineJoin'			]; lineJoin			&& ( c2D.lineJoin		= lineJoin			)
-		const	lineDash		= P[ 'lineDash'			]; c2D.setLineDash( lineDash?.length ? lineDash : [] )
-		const	lineDashOffset	= P[ 'lineDashOffset'	]; lineDashOffset	&& ( c2D.lineDashOffset	= lineDashOffset	)
-		const	miterLimit		= P[ 'miterLimit'		]; miterLimit		&& ( c2D.miterLimit		= miterLimit		)
+		P.lineWidth			&& ( c2D.lineWidth		= P.lineWidth		)
+		P.lineCap			&& ( c2D.lineCap		= P.lineCap			)
+		P.lineJoin			&& ( c2D.lineJoin		= P.lineJoin		)
+		P.miterLimit		&& ( c2D.miterLimit		= P.miterLimit		)
+		P.lineDash			&& ( c2D.setLineDash	( P.lineDash )		)
+		P.lineDashOffset	&& ( c2D.lineDashOffset	= P.lineDashOffset	)
 		c2D.strokeStyle = stroke
 		c2D.stroke( path )
 	}
@@ -86,7 +216,7 @@ DrawPath		= ( c2D, path, P ) => {
 const
 UpdateHoverLabel = ev => {
 	const
-	node = Node_XY( XY_EV( ev ) )
+	node = Node_EV( ev )
 	if ( !node ) {
 		UNDER_HOVER.style.display = 'none'
 		return
@@ -188,7 +318,7 @@ MainEditor extends HTMLElement {
 
 		//	guard: FindNode may return undefined if a link references a deleted node
 		app.model.links.forEach(
-			( [ [ F, A, T ], P ] ) => {
+			( [ [ F, T ], A, P ] ) => {
 				const	nF = FindNode( F )
 				const	nT = FindNode( T )
 				nF && nT && DrawLinkCanvas(
@@ -205,7 +335,7 @@ MainEditor extends HTMLElement {
 		//	redraw every link touching the selection: a moving end follows its
 		//	reform clone, a fixed end stays on its model node ( so half-selected
 		//	links track the drag instead of being left behind )
-		for ( const [ [ F, A, T ], S ] of app.model.links ) {
+		for ( const [ [ F, T ], A, S ] of app.model.links ) {
 			const	rF = FindReform( F )
 			const	rT = FindReform( T )
 			if	( !rF && !rT ) continue
@@ -347,13 +477,9 @@ MainEditor extends HTMLElement {
 		menu.style.top	= `${ Math.max( pad, Math.min( ev.clientY, innerHeight - h - pad ) ) }px`
 	}
 
-	//	the two toggles, each temporarily forced on by a modifier key
-	nodeMode( ev ) { return CREATE_NODE.checked || !!( ev && ev.metaKey ) }	//	create node / select area
-	linkMode( ev ) { return CREATE_LINK.checked || !!( ev && ev.altKey ) }	//	create link / select node
-
 	//	coarse cursor for the current mode ( refined per-position by cursorAt on move )
 	refreshModeCursor( ev ) {
-		this.reformer.style.cursor = ( this.nodeMode( ev ) || this.linkMode( ev ) ) ? 'crosshair' : 'default'
+		this.reformer.style.cursor = ( NodeMode( ev ) || LinkMode( ev ) ) ? 'crosshair' : 'default'
 	}
 
 	async onKeyDown( ev ) {
@@ -389,56 +515,6 @@ MainEditor extends HTMLElement {
 		}
 	}
 
-	//	closest node whose GRAB-expanded box holds xy ( ties: smaller area wins ).
-	//	shared by onMouseDown and cursorAt so the cursor always matches the action.
-	nodeAt( xy ) {
-		let	$ = null
-		app.model.nodes.forEach(
-			_ => {
-				const _tlbr = TLBR( _[ 1 ] )
-				if	( ContainsXY( Outset( _tlbr, GRAB ), xy ) ) {
-					if	( $ ) {
-						const _minEdgeDist	= Math.min( ...EdgeDist( _tlbr, xy ) )
-						const tlbr			= TLBR( $[ 1 ] )
-						const minEdgeDist	= Math.min( ...EdgeDist( tlbr, xy ) )
-						_minEdgeDist < minEdgeDist
-						?	$ = _
-						:	_minEdgeDist === minEdgeDist && ( AreaTLBR( _tlbr ) < AreaTLBR( tlbr ) ) && ( $ = _ )
-					} else {
-						$ = _
-					}
-				}
-			}
-		)
-		return	$
-	}
-
-	cursorAt( ev ) {
-		const	xy = XY_EV( ev )
-
-		//	selection: interior moves, the exterior GRAB band resizes
-		if	( app.reforms.length ) {
-			const	bbox = BBox( app.reforms )
-			if	( ContainsXY( bbox, xy ) )					return 'move'
-			if	( ContainsXY( Outset( bbox, GRAB ), xy ) )	return SelectionGrabCursor( bbox, xy )
-		}
-
-		//	create / link modes drive the cursor regardless of what's underneath
-		if	( this.nodeMode( ev ) || this.linkMode( ev ) )	return 'crosshair'
-
-		//	a link selects its endpoints
-		if	( this.linkEndpointsAt( xy ) )	return 'pointer'
-
-		//	a node: interior moves, the exterior GRAB band resizes
-		const	node = this.nodeAt( xy )
-		if	( node ) {
-			const	tlbr = TLBR( node[ 1 ] )
-			return	ContainsXY( tlbr, xy ) ? 'move' : SelectionGrabCursor( tlbr, xy )
-		}
-
-		return	'default'
-	}
-
 	//	add a node (clone) to the selection if not already present
 	registReform( _ ) {
 		return FindReform( _[ 0 ] ) || app.reforms.push( structuredClone( _ ) )
@@ -459,15 +535,20 @@ MainEditor extends HTMLElement {
 		await this.DrawReforms()
 	}
 
-	//	plain click: select just the one node, replacing any selection
-	async selectSingle( node ) {
+	setEditor( node ) {
 		NODE_ID.value		= node[ 0 ]
 		SHAPE_EDITOR.$		= node[ 1 ]
 		PAINT_EDITOR.$		= node[ 2 ]
+	}
+/*
+	//	plain click: select just the one node, replacing any selection
+	async selectSingle( node ) {
+		setEditor( node )
 		this.registReform( node )
 		this.rollSelectedToTop()
 		await this.DrawReforms()
 	}
+*/
 
 	//	shift+click: extend the selection with the node and everything it contains
 	async addWithContained( node ) {
@@ -505,47 +586,11 @@ MainEditor extends HTMLElement {
 		await this.DrawReforms()
 	}
 
-	//	link hit-test → [ nodeF, nodeT, [ F, A, T ] ] or null
-	linkEndpointsAt( xy ) {
-		let	$ = null
-		app.model.links.forEach(
-			( [ [ F, A, T ], P ] ) => {
-				const
-				[ nF, nT ]	= [ FindNode( F ), FindNode( T ) ]
-				nF && nT && this.reformer.getContext( '2d' ).isPointInPath(
-					LinkPath2D( nF[ 1 ], A, nT[ 1 ], nF[ 2 ], nT[ 2 ] )
-				,	...xy
-				) && (
-					$ = [ nF, nT, [ F, A, T ] ]
-				)
-			}
-		)
-		return	$
-	}
-
-	findLinkKeyAt( xy ) {
-		const
-		c2D = this.reformer.getContext( '2d' )
-		for	( let i = app.model.links.length; i--; ) {
-			const	[ [ F, A, T ], P ] = app.model.links[ i ]
-			const	nF		= FindNode( F )
-			const	nT		= FindNode( T )
-			if	( ! nF || ! nT ) continue
-			const	path	= LinkPath2D( nF[ 1 ], A, nT[ 1 ], nF[ 2 ], nT[ 2 ] )
-			c2D.lineWidth	= Math.max( Number( P.lineWidth || 4 ), 10 )
-			c2D.lineCap		= P.lineCap		|| 'butt'
-			c2D.lineJoin	= P.lineJoin	|| 'miter'
-			if	( P.stroke	&& c2D.isPointInStroke( path, ...xy ) )	return [ F, A, T ]
-			if	( P.fill	&& c2D.isPointInFill( path, ...xy ) )	return [ F, A, T ]
-		}
-		return null
-	}
-
 	async onContextMenu( ev ) {
 		const
 		xy = XY_EV( ev )
 		const
-		key = this.findLinkKeyAt( xy )
+		key = FindLinkKey_XY( xy )
 		if	( key ) {
 			ev.preventDefault()
 			this.hideContextMenus()
@@ -555,12 +600,18 @@ MainEditor extends HTMLElement {
 			return
 		}
 		const
-		node = Node_XY( xy )
+		node = Node_EV( ev )
 		if	( ! node ) return
 		ev.preventDefault()
 		this.hideContextMenus()
+
 		app.reforms			= []
-		await this.selectSingle( node )
+		this.registReform( node )
+		await this.DrawReforms()
+
+		this.setEditor( node )
+		this.rollSelectedToTop()
+
 		this.nodeMenuTarget		= node
 		NODE_MENU.style.display	= 'block'
 		this.positionContextMenu( NODE_MENU, ev )
@@ -577,62 +628,80 @@ MainEditor extends HTMLElement {
 		const
 		xy	= mouse[ 0 ] = XY_EV( ev )
 
+		let
+		needsRedraw	= false
+
+		try {
 //	SELECTION
-		if	( app.reforms.length ) {
-			const
-			bbox = BBox( app.reforms )
+			if	( app.reforms.length ) {
+				const
+				bbox = BBox( app.reforms )
 //	SELECTION GRAB
-			if	( ContainsXY( bbox, xy ) ) {
+				if	( ContainsXY( bbox, xy ) ) {
+					this.drag = this.beginMove()
+					return
+				}
+//	SELECTION INSIDE
+				if	( ContainsXY( Outset( bbox, GRAB ), xy ) ) {
+					this.drag = this.beginResize()
+					return
+				}
+//	SELECTION OUTSIDE
+				app.reforms.length = 0
+				needsRedraw = true
+			}
+
+//	LINK
+			for	( const link of app.model.links ) {
+				const
+				[ FT, A, P ] = link
+				const
+				[ F, T ] = FT
+				const
+				[ nF, nT ]	= [ FindNode( F ), FindNode( T ) ]
+				nF && nT && this.reformer.getContext( '2d' ).isPointInPath(
+					//	TODO LinkPath2D( nF, A, nT )
+					LinkPath2D( nF[ 1 ], A, nT[ 1 ], nF[ 2 ], nT[ 2 ] )
+				,	...xy
+				) && (
+					this.registReform( nF )
+				,	this.registReform( nT )
+				,	LINK_EDITOR.$ = link
+				,	PAINT_EDITOR.$ = P
+				)
+			}
+			if	( app.reforms.length ) {
+				needsRedraw = true
 				this.drag = this.beginMove()
 				return
 			}
-//	SELECTION INSIDE
-			if	( ContainsXY( Outset( bbox, GRAB ), xy ) ) {
-				this.drag = this.beginResize()
-				return
-			}
-//	SELECTION OUTSIDE
-			app.reforms.length = 0
-		}
-
-//	LINK
-		for	( const link of app.model.links ) {
-			const
-			[ FAT, P ] = link
-			const
-			[ F, A, T ] = FAT
-			const
-			[ nF, nT ]	= [ FindNode( F ), FindNode( T ) ]
-			nF && nT && this.reformer.getContext( '2d' ).isPointInPath(
-				//	TODO LinkPath2D( nF, A, nT )
-				LinkPath2D( nF[ 1 ], A, nT[ 1 ], nF[ 2 ], nT[ 2 ] )
-			,	...xy
-			) && (
-				this.registReform( nF )
-			,	this.registReform( nT )
-			,	LINK_EDITOR.$ = FAT
-			)
-		}
-		if	( app.reforms.length ) {
-			this.drag = this.beginMove()
-			await this.DrawReforms()
-			return
-		}
 
 //	NODE — create / link modes take precedence over hitting existing nodes
-		if	( this.nodeMode( ev ) ) { this.drag = this.beginCreate(); return }
+			if	( NodeMode( ev ) ) {
+				this.drag = this.beginCreate()
+				return
+			}
 
-		const
-		$ = this.nodeAt( xy )
-		if	( this.linkMode( ev ) ) { this.drag = $ ? this.beginLink() : this.beginArea(); return }
+			const
+			$ = Node_EV( ev )
+			if	( LinkMode( ev ) ) {
+				this.drag = $ ? this.beginLink() : this.beginArea()
+				return
+			}
 
-		$
-		?	(	this.drag = ContainsXY( TLBR( $[ 1 ] ), xy ) ? this.beginMove() : this.beginResize()
-			,	ev.shiftKey
-				?	this.selectSingle( $ )
-				:	this.addWithContained( $ )
-			)
-		:	this.drag = this.beginArea()
+			$
+			?	(	this.drag = ContainsXY( TLBR( $[ 1 ] ), xy ) ? this.beginMove() : this.beginResize()
+				,	ev.shiftKey
+					?	(	this.selectEditor( $ )
+						,	this.registReform( node )
+						,	this.rollSelectedToTop()
+						)
+					:	this.addWithContained( $ )
+				)
+			:	this.drag = this.beginArea()
+		} finally {
+			needsRedraw && await this.DrawReforms()
+		}
 	}
 
 	//	each gesture is a { draw, commit } handler decided at mousedown:
@@ -707,8 +776,8 @@ MainEditor extends HTMLElement {
 		,	commit	: async ( d, u ) => {
 				const	F = Node_XY( d );	if	( F === null ) return
 				const	T = Node_XY( u );	if	( T === null ) return
-				const	[ _F, A, _T ] = LINK_EDITOR.$
-				const	$ = [ [ F[ 0 ], A, T[ 0 ] ], PAINT_EDITOR.$ ]
+				const	[ , A ] = LINK_EDITOR.$
+				const	$ = [ [ F[ 0 ], T[ 0 ] ], A, PAINT_EDITOR.$ ]
 				await Link( $ )
 			}
 		}
@@ -761,7 +830,7 @@ MainEditor extends HTMLElement {
 		UpdateHoverLabel( ev )
 
 		if	( mouse[ 0 ] === null ) {
-			this.reformer.style.cursor = this.cursorAt( ev )
+			this.reformer.style.cursor = Cursor_EV( ev )
 			return
 		}
 		//	NOTE: no `!ev.buttons` reset here — pointer capture guarantees

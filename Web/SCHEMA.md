@@ -44,7 +44,7 @@ Example:
 ## Link
 
 ```
-[ [ fromID, ends, toID ], paint ]
+[ [ fromID, toID ], ends, paint ]
 ```
 
 - **`fromID` / `toID`** — must reference existing node IDs.
@@ -58,7 +58,7 @@ Example:
 Example:
 
 ```json
-[ [ "Core Data", { "headF": false, "headT": true }, "Analysis" ],
+[ [ "Core Data", "Analysis" ], { "headF": false, "headT": true },
   { "stroke": "gray", "lineWidth": 2 } ]
 ```
 

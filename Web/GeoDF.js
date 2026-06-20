@@ -2,9 +2,11 @@ import {
 	XYWH_TLBR
 ,	TLBR_XYXY
 ,	EdgeDist
+,	Outset
+,	ContainsXY
 ,	ContainsTLBR
 ,	Union
-} from './geo2D.js'
+} from './Geo2D.js'
 
 export const
 XYWH			= ( { cX, cY, rH, rV } ) => [ cX - rH, cY - rV, rH + rH, rV + rV ]
@@ -415,9 +417,7 @@ LinkPath2D		= ( shapeF, ends, shapeT, paintF, paintT ) => {
 //	`app` (model + reforms); pure otherwise.
 
 //	px tolerance for grabbing a selection edge (resize handles) / click-selecting a node
-export const
-GRAB			= 8
-
+/*
 const
 MinEdge			= ( tlbr, xy ) => Math.min( ...EdgeDist( tlbr, xy ) )
 
@@ -504,27 +504,4 @@ HitSelect		= xy => {
 	if	( SelectionGrabAt( xy ) )				return 'selectionGrab'
 	return	'none'
 }
-
-//	resize cursor for the exterior GRAB band: an edge is grabbed when its
-//	signed distance is within GRAB ( negative = outside, so corners win first )
-export const
-SelectionGrabCursor	= ( sel, xy ) => {
-	const
-	[ dT, dL, dB, dR ] = EdgeDist( sel, xy )
-	,	T = dT <= GRAB
-	,	L = dL <= GRAB
-	,	B = dB <= GRAB
-	,	R = dR <= GRAB
-	if	( ( T && L ) || ( B && R ) )	return 'nwse-resize'
-	if	( ( T && R ) || ( B && L ) )	return 'nesw-resize'
-	if	( T || B )	return 'ns-resize'
-	if	( L || R )	return 'ew-resize'
-	return	'move'
-}
-
-//	topmost node whose body contains the point ( used for node/link creation )
-export const
-Node_XY		= xy => ClosestNodeWhere(
-	xy
-,	( _, tlbr, p ) => PointContains( tlbr, p )
-)
+*/
