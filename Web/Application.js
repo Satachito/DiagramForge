@@ -1,13 +1,13 @@
 export	const
-Report = alert
+Report = _ => ( console.error( _ ), alert( _ ) )
 
 export	const
 STORAGE_KEY	= 'tokyo.828.diagramforge'
 
 window.app		= {
 	model	: {
-		nodes	: []	//	[ ID, S, P ]	(S)hape		, (P)aint
-	,	links	: []	//	[ [ F, { headF, headT, anchorF, anchorT }, T ], P ]
+		nodes	: []	//	[ ID, S, P ]		(S)hape		, (P)aint
+	,	links	: []	//	[ [ F, T ]. A, P ]	A: { headF, headT, anchorF, anchorT }
 	}
 ,	reforms		: []	//	Equal to model.nodes
 }
@@ -30,7 +30,8 @@ loadCanvasSize	= () => {
 
 let
 canvasWidth		= CANVAS_DEFAULT
-,	canvasHeight	= CANVAS_DEFAULT
+let
+canvasHeight	= CANVAS_DEFAULT
 
 ;[ canvasWidth, canvasHeight ] = loadCanvasSize()
 
@@ -49,6 +50,19 @@ FindNode		= ID => app.model.nodes.find( _ => _[ 0 ] === ID )
 
 export	const
 FindReform		= ID => app.reforms.find( _ => _[ 0 ] === ID )
+
+export	const
+AvailableLinks	= () => app.model.links.reduce(
+	( $, _ ) => {
+		const
+		[ [ F, T ], A, P ] = _
+		const nF = FindNode( F )
+		const nT = FindNode( T )
+		if	( nF && nT ) $.push( [ [ nF, nT ], A, P ] )
+		return $
+	}
+,	[]
+)
 
 const
 SyncReformsFromModel	= () => {

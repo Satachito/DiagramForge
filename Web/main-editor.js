@@ -1,12 +1,12 @@
 import {
-	E
-,	AE
+	AE
 }	from './DomUtils.js'
 
 import {
 	Report
 ,	FindNode
 ,	FindReform
+,	AvailableLinks
 ,	Reform
 ,	Node
 ,	Link
@@ -46,11 +46,81 @@ import {
 ,	RectPath2D
 ,	EllipsePath2D
 ,	RhombusPath2D
-,	LinkPath2D
+,	GRAB
+,	C2D
+,	LinkMetrics
 }	from './GeoDF.js'
 
 const
-GRAB			= 8
+DrawLinkCanvas	= ( c2D, _ ) => {
+
+	const
+	[ [ nF, nT ], A, P ] = _
+
+	const
+	$ = LinkMetrics( _ )
+	if	( !$ ) return
+
+	c2D.save()
+
+	P.stroke			&& ( c2D.strokeStyle	= P.stroke			)
+	P.lineWidth			&& ( c2D.lineWidth		= P.lineWidth		)
+	P.lineCap			&& ( c2D.lineCap		= P.lineCap			)
+	P.lineJoin			&& ( c2D.lineJoin		= P.lineJoin		)
+	P.lineDashOffset	&& ( c2D.lineDashOffset = P.lineDashOffset	)
+	P.lineDash			&& c2D.setLineDash( P.lineDash )
+
+	c2D.beginPath()
+	c2D.moveTo( ...$.shaft[ 0 ] )
+	for	( let i = 1; i < $.shaft.length; i++ )	c2D.lineTo( ...$.shaft[ i ] )
+	c2D.stroke()
+
+	P.fill				&& ( c2D.fillStyle	 	= P.fill )
+	c2D.beginPath()
+	for ( const [ [ ax, ay ], [ bx, by ], [ cx, cy ] ] of $.heads ) {
+		c2D.moveTo( ax, ay )
+		c2D.lineTo( bx, by )
+		c2D.lineTo( cx, cy )
+		c2D.closePath()
+	}
+	c2D.fill()
+
+	c2D.restore()
+}
+
+const
+HitLink			= ( _, xy ) => {
+
+	const
+	[ [ nF, nT ], A, P ] = _
+
+	const
+	$ = LinkMetrics( _ )
+	if	( !$ ) return
+
+	C2D.save()
+
+	C2D.beginPath()
+	C2D.moveTo( ...$.shaft[ 0 ] )
+	for	( let i = 1; i < $.shaft.length; i++ )	C2D.lineTo( ...$.shaft[ i ] )
+	C2D.setLineWidth = Math.max( P.lineWidth ?? GRAB , GRAB )
+	if	( C2D.isPointInStroke( ...xy ) ) return true
+
+	C2D.beginPath()
+	for ( const [ [ ax, ay ], [ bx, by ], [ cx, cy ] ] of $.heads ) {
+		C2D.moveTo( ax, ay )
+		C2D.lineTo( bx, by )
+		C2D.lineTo( cx, cy )
+		C2D.closePath()
+	}
+	try {
+		return C2D.isPointInPath( ...xy )
+	} finally {
+		C2D.restore()
+	}
+}
+
+import { DrawForeignLabel	} from './ForeignLabel.js'
 
 const
 NodeMode = ev => CREATE_NODE.checked || ev.metaKey
@@ -83,63 +153,13 @@ const
 Node_EV		= ev => Node_XY( XY_EV( ev ) )
 
 const
-G_C2D		= E('canvas').getContext( '2d' )
-
-const
-PointInPath_XY		= ( path2D, xy ) => G_C2D.isPointInPath		( path2D, ...xy )
-const
-PointInStroke_XY	= ( path2D, xy ) => G_C2D.isPointInStroke	( path2D, ...xy )
-
-/*
-const
-Links_XY	= xy => app.model.links.reduce(
-	( $,_ ) => {
-		const
-		[ [ F, T ], A, P ] = _
-	,	nF		= FindNode( F )
-	,	nT		= FindNode( T )
-		nF && nT && PointInPath_XY(
-			LinkPath2D( nF[ 1 ], A, nT[ 1 ], nF[ 2 ], nT[ 2 ] )
-		,	xy
-		) && $.push( _ )
+Links_XY	= xy => AvailableLinks().reduce(
+	( $, _ ) => {
+		HitLink( _, xy ) && $.push( _ )
+		return $
 	}
 ,	[]
 )
-*/
-
-const
-FindLinkKey_XY	= xy => {
-	for	( const [ [ F, T ], A, P ] of app.model.links ) {
-		const	nF		= FindNode( F )
-		const	nT		= FindNode( T )
-		if	( ! nF || ! nT ) continue
-		if	(
-			PointInPath_XY(
-				LinkPath2D( nF[ 1 ], A, nT[ 1 ], nF[ 2 ], nT[ 2 ] )
-			,	xy
-			)
-		) return [ F, A, T ]
-	}
-	return null
-}
-
-const
-LinkEndpoints_XY	= xy => {
-	let	$ = null
-	app.model.links.forEach(
-		( [ [ F, T ], A, P ] ) => {
-			const
-			[ nF, nT ]	= [ FindNode( F ), FindNode( T ) ]
-			nF && nT && PointInPath_XY(
-				LinkPath2D( nF[ 1 ], A, nT[ 1 ], nF[ 2 ], nT[ 2 ] )
-			,	xy
-			) && (
-				$ = [ nF, nT, [ F, A, T ] ]
-			)
-		}
-	)
-	return	$
-}
 
 const
 SelectionGrabCursor	= ( sel, xy ) => {
@@ -170,7 +190,7 @@ Cursor_EV	= ev => {
 
 	if	( NodeMode( ev ) || LinkMode( ev ) )			return 'crosshair'
 
-	if	( LinkEndpoints_XY( xy ) )						return 'pointer'
+	if	( Links_XY( xy ).length )						return 'pointer'
 
 	const	node = Node_XY( xy )
 	if	( node ) {
@@ -182,8 +202,6 @@ Cursor_EV	= ev => {
 	return	'default'
 }
 
-import { DrawForeignLabel	} from './ForeignLabel.js'
-import { DrawLinkCanvas		} from './DrawLink.js'
 
 const
 copyText		= text => navigator.clipboard.writeText( text ).catch( Report )
@@ -234,7 +252,7 @@ MainEditor extends HTMLElement {
 	Draw() {
 		this.ApplyCanvasSize()
 		window.EMPTY_HINT && ( window.EMPTY_HINT.style.display = app.model.nodes.length ? 'none' : '' )
-		return Promise.all( [ this.DrawNodes(), this.DrawReforms() ] ).catch( Report )
+		return Promise.all( [ this.DrawModel(), this.DrawReforms() ] ).catch( Report )
 	}
 
 	clearInteraction() {
@@ -250,7 +268,8 @@ MainEditor extends HTMLElement {
 		this.drawer.height		= this.reformer.height		= h
 	}
 
-	async DrawNodes() {
+	async DrawModel() {
+
 		const	c2D = this.drawer.getContext( '2d' )
 
 		const
@@ -307,43 +326,34 @@ MainEditor extends HTMLElement {
 					)
 					break
 				default:
-					console.log( 'Unknown:', S.type )
+					console.error( 'Unknown:', S.type )
 					break
 				}
 				if	( S.html )	await DrawForeignLabel( drawSVG, S )
 			} catch ( er ) {
-				console.error( 'DrawNodes failed:', ID, er )
+				console.error( 'DrawModel failed:', ID, er )
 			}
 		}
 
-		//	guard: FindNode may return undefined if a link references a deleted node
-		app.model.links.forEach(
-			( [ [ F, T ], A, P ] ) => {
-				const	nF = FindNode( F )
-				const	nT = FindNode( T )
-				nF && nT && DrawLinkCanvas(
-					c2D, nF[ 1 ], A, nT[ 1 ], P, { paintF: nF[ 2 ], paintT: nT[ 2 ] }
-				)
-			}
-		)
+		AvailableLinks().forEach( _ => DrawLinkCanvas( c2D, _ ) )
 	}
 
 	async DrawReforms() {
 		const	c2D = this.reformer.getContext( '2d' )
 		c2D.clearRect( 0, 0, this.reformer.width, this.reformer.height )
 
+//	TODO: REFACTOR
 		//	redraw every link touching the selection: a moving end follows its
 		//	reform clone, a fixed end stays on its model node ( so half-selected
 		//	links track the drag instead of being left behind )
-		for ( const [ [ F, T ], A, S ] of app.model.links ) {
+		for ( const [ [ F, T ], A, P ] of app.model.links ) {
 			const	rF = FindReform( F )
 			const	rT = FindReform( T )
 			if	( !rF && !rT ) continue
 			const	nF = rF || FindNode( F )
 			const	nT = rT || FindNode( T )
-			nF && nT && DrawLinkCanvas(
-				c2D, nF[ 1 ], A, nT[ 1 ], S, { paintF: nF[ 2 ], paintT: nT[ 2 ] }
-			)
+			nF && nT && DrawLinkCanvas( c2D, [ [ nF, nT ], A, P ] )
+//			c2D, nF[ 1 ], A, nT[ 1 ], S, { paintF: nF[ 2 ], paintT: nT[ 2 ] }
 		}
 
 		if	( app.reforms.length ) {
@@ -396,7 +406,7 @@ MainEditor extends HTMLElement {
 
 		LINK_MENU_REMOVE.onclick	= ev => (
 			ev.stopPropagation()
-		,	this.linkMenuKey && RemoveLink( this.linkMenuKey[ 0 ], this.linkMenuKey[ 2 ] )
+		,	this.linkMenuKey && RemoveLink( this.linkMenuKey[ 0 ], this.linkMenuKey[ 1 ] )
 		,	this.hideContextMenus()
 		,	this.reformer.focus()
 		)
@@ -590,11 +600,11 @@ MainEditor extends HTMLElement {
 		const
 		xy = XY_EV( ev )
 		const
-		key = FindLinkKey_XY( xy )
-		if	( key ) {
+		links = Links_XY( xy )
+		if	( links.length ) {
 			ev.preventDefault()
 			this.hideContextMenus()
-			this.linkMenuKey	= key
+			this.linkMenuKey	= links[ 0 ][ 0 ]
 			LINK_MENU.style.display	= 'block'
 			this.positionContextMenu( LINK_MENU, ev )
 			return
@@ -652,18 +662,10 @@ MainEditor extends HTMLElement {
 			}
 
 //	LINK
-			for	( const link of app.model.links ) {
+			for	( const link of AvailableLinks() ) {
 				const
-				[ FT, A, P ] = link
-				const
-				[ F, T ] = FT
-				const
-				[ nF, nT ]	= [ FindNode( F ), FindNode( T ) ]
-				nF && nT && this.reformer.getContext( '2d' ).isPointInPath(
-					//	TODO LinkPath2D( nF, A, nT )
-					LinkPath2D( nF[ 1 ], A, nT[ 1 ], nF[ 2 ], nT[ 2 ] )
-				,	...xy
-				) && (
+				[ [ nF, nT ], A, P ] = link
+				HitLink( link, xy ) && (
 					this.registReform( nF )
 				,	this.registReform( nT )
 				,	LINK_EDITOR.$ = link

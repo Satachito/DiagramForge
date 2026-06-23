@@ -88,7 +88,8 @@
 			},
 			{
 				"stroke": "#2563eb",
-				"lineWidth": 1.5
+				"lineWidth": 8,
+				"fill": "red"
 			}
 		],
 		[
@@ -102,7 +103,8 @@
 			},
 			{
 				"stroke": "#2563eb",
-				"lineWidth": 1.5
+				"lineWidth": 8,
+				"fill": "red"
 			}
 		],
 		[
@@ -118,11 +120,12 @@
 			},
 			{
 				"stroke": "#94a3b8",
-				"lineWidth": 1.5,
+				"lineWidth": 8,
 				"lineDash": [
 					6,
 					4
-				]
+				],
+				"fill": "red"
 			}
 		],
 		[
@@ -136,11 +139,12 @@
 			},
 			{
 				"stroke": "#94a3b8",
-				"lineWidth": 1.5,
+				"lineWidth": 8,
 				"lineDash": [
 					6,
 					4
-				]
+				],
+				"fill": "red"
 			}
 		]
 	]

@@ -408,7 +408,8 @@
 			},
 			{
 				"stroke": "gray",
-				"lineWidth": 2
+				"lineWidth": 8,
+				"fill": "red"
 			}
 		],
 		[
@@ -422,7 +423,8 @@
 			},
 			{
 				"stroke": "gray",
-				"lineWidth": 2
+				"lineWidth": 8,
+				"fill": "red"
 			}
 		],
 		[
@@ -436,7 +438,8 @@
 			},
 			{
 				"stroke": "gray",
-				"lineWidth": 2
+				"lineWidth": 8,
+				"fill": "red"
 			}
 		],
 		[
@@ -450,7 +453,8 @@
 			},
 			{
 				"stroke": "gray",
-				"lineWidth": 2
+				"lineWidth": 8,
+				"fill": "red"
 			}
 		],
 		[
@@ -464,7 +468,8 @@
 			},
 			{
 				"stroke": "gray",
-				"lineWidth": 2
+				"lineWidth": 8,
+				"fill": "red"
 			}
 		],
 		[
@@ -478,7 +483,8 @@
 			},
 			{
 				"stroke": "gray",
-				"lineWidth": 2
+				"lineWidth": 8,
+				"fill": "red"
 			}
 		],
 		[
@@ -492,7 +498,8 @@
 			},
 			{
 				"stroke": "gray",
-				"lineWidth": "2"
+				"lineWidth": 8,
+				"fill": "red"
 			}
 		],
 		[
@@ -506,7 +513,8 @@
 			},
 			{
 				"stroke": "gray",
-				"lineWidth": "2"
+				"lineWidth": 8,
+				"fill": "red"
 			}
 		],
 		[
@@ -520,7 +528,8 @@
 			},
 			{
 				"stroke": "gray",
-				"lineWidth": "2"
+				"lineWidth": 8,
+				"fill": "red"
 			}
 		],
 		[
@@ -534,7 +543,8 @@
 			},
 			{
 				"stroke": "gray",
-				"lineWidth": "2"
+				"lineWidth": 8,
+				"fill": "red"
 			}
 		],
 		[
@@ -548,7 +558,8 @@
 			},
 			{
 				"stroke": "gray",
-				"lineWidth": "2"
+				"lineWidth": 8,
+				"fill": "red"
 			}
 		],
 		[
@@ -562,7 +573,8 @@
 			},
 			{
 				"stroke": "gray",
-				"lineWidth": "2"
+				"lineWidth": 8,
+				"fill": "red"
 			}
 		]
 	]

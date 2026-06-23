@@ -1,4 +1,8 @@
 import {
+	E
+}	from './DomUtils.js'
+
+import {
 	XYWH_TLBR
 ,	TLBR_XYXY
 ,	EdgeDist
@@ -7,6 +11,12 @@ import {
 ,	ContainsTLBR
 ,	Union
 } from './Geo2D.js'
+
+export const
+C2D				= E('canvas').getContext( '2d' )
+
+export const
+GRAB			= 8
 
 export const
 XYWH			= ( { cX, cY, rH, rV } ) => [ cX - rH, cY - rV, rH + rH, rV + rV ]
@@ -86,7 +96,8 @@ onOutline		= ( S, dX, dY ) => {
 }
 
 const
-LinkCoordinates	= ( sF, aF, sT, aT ) => {
+LinkCoordinates	= ( [ [ nF, nT ], A, P ] ) => {
+console.log( 'LinkCoordinates' ) 
 	const
 	xAlong	= ( S, s, a ) =>
 		a === 'TL' || a === 'BL' ? L( s ) :
@@ -114,7 +125,7 @@ LinkCoordinates	= ( sF, aF, sT, aT ) => {
 			?	onOutline( S, P[ 0 ] - S.cX, P[ 1 ] - S.cY )
 			:	P
 	}
-	return [ $( sF, aF, sT, aT ), $( sT, aT, sF, aF ) ]
+	return [ $( nF[ 1 ], A.anchorF, nT[ 1 ], A.anchorT ), $( nT[ 1 ], A.anchorT, nF[ 1 ], A.anchorF ) ]
 }
 
 const
@@ -253,18 +264,18 @@ offsetOutward	= ( p, outward, dist ) => [
 
 //	shaftHalf-independent attachment geometry; computed once per link
 const
-linkEnds		= ( shapeF, anchorF, shapeT, anchorT, paintF, paintT ) => {
+linkEnds		= ( [ [ nF, nT ], A, P ] ) => {
 	const
-	[ pF, pT ] = LinkCoordinates( shapeF, anchorF, shapeT, anchorT )
-	,	outwardF = boundaryOutward( shapeF, anchorF, pF )
-	,	outwardT = boundaryOutward( shapeT, anchorT, pT )
-	,	frameF = frameHalf( paintF )
-	,	frameT = frameHalf( paintT )
+	[ pF, pT ] = LinkCoordinates( [ [ nF, nT ], A, P ] )
+,	outwardF = boundaryOutward( nF[ 1 ], A.anchorF, pF )
+,	outwardT = boundaryOutward( nT[ 1 ], A.anchorT, pT )
+,	frameF = frameHalf( nF[ 2 ] )
+,	frameT = frameHalf( nT[ 2 ] )
 	return	{
 		pF, pT, outwardF, outwardT, frameF, frameT
 	,	tipF	: offsetOutward( pF, outwardF, frameF )
 	,	tipT	: offsetOutward( pT, outwardT, frameT )
-	,	ortho	: !( anchorF || anchorT )
+	,	ortho	: !( A.anchorF || A.anchorT )
 	}
 }
 
@@ -272,14 +283,14 @@ const
 routeFrom		= ( e, shaftHalf ) => {
 	const
 	rF = offsetOutward( e.pF, e.outwardF, e.frameF + shaftHalf )
-	,	rT = offsetOutward( e.pT, e.outwardT, e.frameT + shaftHalf )
+,	rT = offsetOutward( e.pT, e.outwardT, e.frameT + shaftHalf )
 	if	( !e.ortho )	return [ rF, rT ]
 	const
 	midX = ( rF[ 0 ] + rT[ 0 ] ) / 2
-	,	midY = ( rF[ 1 ] + rT[ 1 ] ) / 2
+,	midY = ( rF[ 1 ] + rT[ 1 ] ) / 2
 	return	Math.abs( e.outwardF[ 0 ] ) >= Math.abs( e.outwardF[ 1 ] )
-		?	[ rF, [ midX, rF[ 1 ] ], [ midX, rT[ 1 ] ], rT ]
-		:	[ rF, [ rF[ 0 ], midY ], [ rT[ 0 ], midY ], rT ]
+	?	[ rF, [ midX, rF[ 1 ] ], [ midX, rT[ 1 ] ], rT ]
+	:	[ rF, [ rF[ 0 ], midY ], [ rT[ 0 ], midY ], rT ]
 }
 
 const
@@ -287,7 +298,7 @@ outlinePath		= ( pts, half ) => {
 	if	( pts.length < 2 ) return []
 	const
 	left = []
-	,	right = []
+,	right = []
 	for	( let i = 0; i < pts.length; i++ ) {
 		let
 		dx
@@ -301,59 +312,60 @@ outlinePath		= ( pts, half ) => {
 		} else {
 			const
 			d0 = unit( pts[ i ][ 0 ] - pts[ i - 1 ][ 0 ], pts[ i ][ 1 ] - pts[ i - 1 ][ 1 ] )
-			,	d1 = unit( pts[ i + 1 ][ 0 ] - pts[ i ][ 0 ], pts[ i + 1 ][ 1 ] - pts[ i ][ 1 ] )
+		,	d1 = unit( pts[ i + 1 ][ 0 ] - pts[ i ][ 0 ], pts[ i + 1 ][ 1 ] - pts[ i ][ 1 ] )
 			;[ dx, dy ] = unit( d0[ 0 ] + d1[ 0 ], d0[ 1 ] + d1[ 1 ] )
 		}
 		const
 		[ nx, ny ] = unit( -dy, dx )
-		,	ox = nx * half
-		,	oy = ny * half
+	,	ox = nx * half
+	,	oy = ny * half
 		left.push( [ pts[ i ][ 0 ] + ox, pts[ i ][ 1 ] + oy ] )
 		right.push( [ pts[ i ][ 0 ] - ox, pts[ i ][ 1 ] - oy ] )
 	}
 	return [ ...left, ...right.reverse() ]
 }
 
-const
-linkMetrics		= ( shapeF, { headF, headT, anchorF, anchorT }, shapeT, paintF, paintT ) => {
+export	const
+LinkMetrics		= ( [ [ nF, nT ], A, P ] ) => {
+
 	const
-	e = linkEnds( shapeF, anchorF, shapeT, anchorT, paintF, paintT )
-	,	{ tipF, tipT } = e
-	,	len0 = pathLength( routeFrom( e, 0 ) )
+	e = linkEnds( [ [ nF, nT ], A, P ] )
+,	{ tipF, tipT } = e
+,	len0 = pathLength( routeFrom( e, 0 ) )
 	if	( len0 < 1 ) return null
 
 	//	route is inset by a gap derived from the tip-to-tip length, then the head
 	//	and shaft are sized from the inset route's length (matches original tuning)
 	const
 	gapHalf = Math.max( 2, Math.max( 5, Math.min( 14, len0 * 0.35 ) * 0.5 ) * 0.45 )
-	,	route = routeFrom( e, gapHalf )
-	,	len = pathLength( route )
+,	route = routeFrom( e, gapHalf )
+,	len = pathLength( route )
 	if	( len < 1 ) return null
 
 	const
 	headLen   = Math.min( 14, len * 0.35 )
-	,	headHalf  = Math.max( 5, headLen * 0.5 )
-	,	shaftHalf = Math.max( 2, headHalf * 0.45 )
+,	headHalf  = Math.max( 5, headLen * 0.5 )
+,	shaftHalf = Math.max( 2, headHalf * 0.45 )
 
 	let
 	fDist = 0
-	,	tDist = len
-	,	neckF = null
-	,	neckT = null
+,	tDist = len
+,	neckF = null
+,	neckT = null
 	const
 	heads = []
-	if	( headF ) {
+	if	( A.headF ) {
 		const
 		dir = unit( route[ 1 ][ 0 ] - route[ 0 ][ 0 ], route[ 1 ][ 1 ] - route[ 0 ][ 1 ] )
 		neckF = [ tipF[ 0 ] + dir[ 0 ] * headLen, tipF[ 1 ] + dir[ 1 ] * headLen ]
 		fDist = Math.max( 0, distAlongSeg( route[ 0 ], route[ 1 ], neckF ) )
 		heads.push( headTriangle( tipF, dir, headLen, headHalf ) )
 	}
-	if	( headT ) {
+	if	( A.headT ) {
 		const
 		n = route.length - 1
-		,	dir = unit( route[ n - 1 ][ 0 ] - tipT[ 0 ], route[ n - 1 ][ 1 ] - tipT[ 1 ] )
-		,	lastSegLen = Math.hypot(
+	,	dir = unit( route[ n - 1 ][ 0 ] - tipT[ 0 ], route[ n - 1 ][ 1 ] - tipT[ 1 ] )
+	,	lastSegLen = Math.hypot(
 			route[ n ][ 0 ] - route[ n - 1 ][ 0 ]
 		,	route[ n ][ 1 ] - route[ n - 1 ][ 1 ]
 		)
@@ -367,8 +379,8 @@ linkMetrics		= ( shapeF, { headF, headT, anchorF, anchorT }, shapeT, paintF, pai
 	if	( shaft.length < 2 ) return null
 
 	const
-	endF = headF ? neckF : tipF
-	,	endT = headT ? neckT : tipT
+	endF = A.headF ? neckF : tipF
+,	endT = A.headT ? neckT : tipT
 	if	( endT ) {
 		const
 		last = shaft[ shaft.length - 1 ]
@@ -380,128 +392,8 @@ linkMetrics		= ( shapeF, { headF, headT, anchorF, anchorT }, shapeT, paintF, pai
 		if	( Math.hypot( endF[ 0 ] - first[ 0 ], endF[ 1 ] - first[ 1 ] ) > 0.5 )	shaft.unshift( endF )
 	}
 	return {
-		shaftHalf
-	,	shaft
+		shaft
 	,	heads
 	}
 }
 
-export const
-LinkParts		= linkMetrics
-
-export const
-LinkPath2D		= ( shapeF, ends, shapeT, paintF, paintT ) => {
-	const
-	m = linkMetrics( shapeF, ends, shapeT, paintF, paintT )
-	const	$ = new Path2D
-	if	( !m ) return $
-
-	const
-	body = outlinePath( m.shaft, m.shaftHalf )
-	if	( body.length ) {
-		$.moveTo( ...body[ 0 ] )
-		for	( let i = 1; i < body.length; i++ )	$.lineTo( ...body[ i ] )
-		$.closePath()
-	}
-	for	( const tri of m.heads ) {
-		$.moveTo( ...tri[ 0 ] )
-		$.lineTo( ...tri[ 1 ] )
-		$.lineTo( ...tri[ 2 ] )
-		$.closePath()
-	}
-	return	$
-}
-
-//	Hit-testing for select mode: classify a point against the nodes and the
-//	current selection, and pick the node a click should act on. Reads the global
-//	`app` (model + reforms); pure otherwise.
-
-//	px tolerance for grabbing a selection edge (resize handles) / click-selecting a node
-/*
-const
-MinEdge			= ( tlbr, xy ) => Math.min( ...EdgeDist( tlbr, xy ) )
-
-const
-PointContains	= ( tlbr, xy ) => MinEdge( tlbr, xy ) >= 0
-
-export const
-NodeInterior	= ( tlbr, xy ) => MinEdge( tlbr, xy ) > GRAB
-
-const
-CornerGrab		= ( tlbr, xy ) => {
-	const
-	[ dT, dL, dB, dR ] = EdgeDist( tlbr, xy )
-	,	m = MinEdge( tlbr, xy )
-	if	( m >= 0 || m <= -GRAB )	return false
-	return	( dT < 0 && dL < 0 )
-		||	( dT < 0 && dR < 0 )
-		||	( dB < 0 && dL < 0 )
-		||	( dB < 0 && dR < 0 )
-}
-
-const
-SelectionGrab		= CornerGrab
-
-//	the node with the smallest edge distance (innermost) matching pred;
-//	ties pick the smallest area
-const
-ClosestNodeWhere	= ( xy, pred ) => {
-	let
-	top = null
-	,	best = Infinity
-	,	bestArea = Infinity
-	for ( const node of app.model.nodes ) {
-		const
-		tlbr = TLBR( node[ 1 ] )
-		if	( !pred( node, tlbr, xy ) ) continue
-		const
-		d = MinEdge( tlbr, xy )
-		,	[ t, l, b, r ] = tlbr
-		,	area = ( b - t ) * ( r - l )
-		if	( d < best || ( d === best && area < bestArea ) ) {
-			best = d
-			bestArea = area
-			top = node
-		}
-	}
-	return	top
-}
-
-export const
-SelectedMemberAt	= xy => ClosestNodeWhere(
-	xy
-,	( node, tlbr, p ) => FindReform( node[ 0 ] ) && PointContains( tlbr, p )
-)
-
-export const
-UnselectedAt		= xy => ClosestNodeWhere(
-	xy
-,	( node, tlbr, p ) => !FindReform( node[ 0 ] ) && PointContains( tlbr, p )
-)
-
-export const
-SelectionInteriorAt	= xy => {
-	if	( !app.reforms.length ) return false
-	return	PointContains( BBox( app.reforms ), xy ) && !UnselectedAt( xy )
-}
-
-export const
-SelectionGrabAt		= xy => app.reforms.length && SelectionGrab( BBox( app.reforms ), xy )
-
-export const
-HitSelect		= xy => {
-	const
-	unsel = UnselectedAt( xy )
-	if	( unsel ) {
-		const
-		tlbr = TLBR( unsel[ 1 ] )
-		if	( CornerGrab( tlbr, xy ) )			return 'nodeGrab'
-		return	'nodeInside'
-	}
-	if	( SelectedMemberAt( xy ) )				return 'selected'
-	if	( SelectionInteriorAt( xy ) )			return 'selectionInside'
-	//	exterior corner grips last — still resizable when nodes overlap the edge band
-	if	( SelectionGrabAt( xy ) )				return 'selectionGrab'
-	return	'none'
-}
-*/

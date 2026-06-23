@@ -14,11 +14,11 @@ canvas size is editor-only and is not stored in `.cde`.
 ## Node
 
 ```
-[ ID, area, paint ]
+[ ID, shape, paint ]
 ```
 
 - **`ID`** — unique string. Links reference nodes by this ID.
-- **`area`** — geometry + content:
+- **`shape`** — geometry + content:
   - `type` — `"rect"` | `"ellipse"` | `"rhombus"` | `"SVG"` | `"PNG"`
   - `cX`, `cY` — center (numbers)
   - `rH`, `rV` — half-width / half-height. The shape spans

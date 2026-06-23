@@ -167,7 +167,8 @@
 			},
 			{
 				"stroke": "violet",
-				"lineWidth": 2
+				"lineWidth": 8,
+				"fill": "red"
 			}
 		],
 		[
@@ -182,7 +183,8 @@
 			},
 			{
 				"stroke": "violet",
-				"lineWidth": 2
+				"lineWidth": 8,
+				"fill": "red"
 			}
 		],
 		[
@@ -197,7 +199,8 @@
 			},
 			{
 				"stroke": "violet",
-				"lineWidth": 2
+				"lineWidth": 8,
+				"fill": "red"
 			}
 		],
 		[
@@ -212,7 +215,8 @@
 			},
 			{
 				"stroke": "violet",
-				"lineWidth": 2
+				"lineWidth": 8,
+				"fill": "red"
 			}
 		],
 		[
@@ -227,7 +231,8 @@
 			},
 			{
 				"stroke": "violet",
-				"lineWidth": 2
+				"lineWidth": 8,
+				"fill": "red"
 			}
 		],
 		[
@@ -242,7 +247,8 @@
 			},
 			{
 				"stroke": "violet",
-				"lineWidth": 2
+				"lineWidth": 8,
+				"fill": "red"
 			}
 		],
 		[
@@ -257,7 +263,8 @@
 			},
 			{
 				"stroke": "violet",
-				"lineWidth": 2
+				"lineWidth": 8,
+				"fill": "red"
 			}
 		],
 		[
@@ -272,7 +279,8 @@
 			},
 			{
 				"stroke": "violet",
-				"lineWidth": 2
+				"lineWidth": 8,
+				"fill": "red"
 			}
 		],
 		[
@@ -288,7 +296,8 @@
 			},
 			{
 				"stroke": "violet",
-				"lineWidth": 2
+				"lineWidth": 8,
+				"fill": "red"
 			}
 		],
 		[
@@ -304,7 +313,8 @@
 			},
 			{
 				"stroke": "violet",
-				"lineWidth": 2
+				"lineWidth": 8,
+				"fill": "red"
 			}
 		],
 		[
@@ -320,7 +330,8 @@
 			},
 			{
 				"stroke": "violet",
-				"lineWidth": 2
+				"lineWidth": 8,
+				"fill": "red"
 			}
 		],
 		[
@@ -336,7 +347,8 @@
 			},
 			{
 				"stroke": "violet",
-				"lineWidth": 2
+				"lineWidth": 8,
+				"fill": "red"
 			}
 		],
 		[
@@ -352,7 +364,8 @@
 			},
 			{
 				"stroke": "violet",
-				"lineWidth": 2
+				"lineWidth": 8,
+				"fill": "red"
 			}
 		],
 		[
@@ -368,7 +381,8 @@
 			},
 			{
 				"stroke": "violet",
-				"lineWidth": 2
+				"lineWidth": 8,
+				"fill": "red"
 			}
 		],
 		[
@@ -384,7 +398,8 @@
 			},
 			{
 				"stroke": "violet",
-				"lineWidth": 2
+				"lineWidth": 8,
+				"fill": "red"
 			}
 		],
 		[
@@ -400,7 +415,8 @@
 			},
 			{
 				"stroke": "violet",
-				"lineWidth": 2
+				"lineWidth": 8,
+				"fill": "red"
 			}
 		]
 	]

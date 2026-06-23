@@ -3,7 +3,45 @@ import { EscapeXML				} from './DomUtils.js'
 import { XYWH_TLBR				} from './Geo2D.js'
 import { XYWH, BBox				} from './GeoDF.js'
 import { drawForeignLabelSvg	} from './ForeignLabel.js'
-import { DrawLinkSvg			} from './DrawLink.js'
+import { C2D, GRAB, LinkMetrics	} from './GeoDF.js'
+
+const
+DrawLinkSvg		= ( parts, X, Y, [ [ nF, nT ], A, P ] ) => {
+console.log( nF, nT )
+	const
+	$ = LinkMetrics( [ [ nF, nT ], A, P ] )
+	if	( !$ ) return
+
+	const
+	strokeAttrs		= P => {
+		const
+		a = [
+			`stroke="${ P.stroke }"`
+		,	`stroke-linecap="${ P.lineCap || 'butt' }"`
+		,	`stroke-linejoin="${ P.lineJoin || 'round' }"`
+		]
+		P.lineWidth			&& a.push( `stroke-with=${ P.lineWidth }` )
+		P.lineDash			&& a.push( `stroke-dasharray="${ P.lineDash.join( ' ' ) }"` )
+		P.lineDashOffset	&& a.push( `stroke-dashoffset="${ P.lineDashOffset }"` )
+		return a.join( ' ' )
+	}
+
+	const
+	pointsAttr		= ( X, Y, points ) => points.map(
+		( [ x, y ] ) => `${ X( x ) },${ Y( y ) }`
+	).join( ' ' )
+
+	parts.push(
+		`<polyline points="${ pointsAttr( X, Y, $.shaft ) }" fill="none" ${ strokeAttrs( P ) }"/>`
+	)
+	if	( P.fill ) {
+		for ( const head of $.heads ) {
+			parts.push(
+				`<polygon points="${ pointsAttr( X, Y, head ) }" fill="${ P.fill }" stroke="none"/>`
+			)
+		}
+	}
+}
 
 const
 baseName = filename => ( filename ?? 'Untitled' ).replace( /\.[^.]+$/, '' ) || 'Untitled'
@@ -21,7 +59,7 @@ downloadBlob = ( blob, filename ) => {
 
 const
 paintAttrs		= P => {
-	const
+	let
 	$ = `fill="${P.fill ? P.fill :	'none' }"`
 	P.stroke			&& ( $ += ` stroke="${ ( P.stroke ) }"`						)
 	P.lineWidth			&& ( $ += ` stroke-width="${ P.lineWidth }"`				)
@@ -105,8 +143,8 @@ drawPngNode		= ( parts, X, Y, S ) => {
 }
 
 const
-drawLink		= ( parts, X, Y, shapeF, A, shapeT, P, paints ) => DrawLinkSvg(
-	parts, X, Y, shapeF, A, shapeT, P, paints
+drawLink		= ( parts, X, Y, nF, nT, A, P ) => DrawLinkSvg(
+	parts, X, Y, nF, nT, A, P
 )
 
 const
@@ -115,14 +153,14 @@ buildVectorSVG	= () => {
 
 	const
 	[ x, y, w, h ] = XYWH_TLBR( BBox( app.model.nodes ) )
-	,	X = _ => _ - x
-	,	Y = _ => _ - y
-	,	bg = matchMedia( '(prefers-color-scheme: dark)' ).matches ? '#000000' : '#ffffff'
-	,	parts = [
-		'<?xml version="1.0" encoding="UTF-8"?>'
-	,	`<svg xmlns="http://www.w3.org/2000/svg" width="${ w }" height="${ h }" viewBox="0 0 ${ w } ${ h }">`
-	,	`<rect width="100%" height="100%" fill="${ bg }"/>`
-	]
+,	X = _ => _ - x
+,	Y = _ => _ - y
+,	bg = matchMedia( '(prefers-color-scheme: dark)' ).matches ? '#000000' : '#ffffff'
+,	parts = [
+	'<?xml version="1.0" encoding="UTF-8"?>'
+,	`<svg xmlns="http://www.w3.org/2000/svg" width="${ w }" height="${ h }" viewBox="0 0 ${ w } ${ h }">`
+,	`<rect width="100%" height="100%" fill="${ bg }"/>`
+]
 
 	for ( const [ , S, P ] of app.model.nodes ) {
 		if	( S.type === 'SVG' ) {
@@ -142,9 +180,9 @@ buildVectorSVG	= () => {
 	for ( const [ [ F, T ], A, P ] of app.model.links ) {
 		const
 		nF = FindNode( F )
-		,	nT = FindNode( T )
+	,	nT = FindNode( T )
 		nF && nT && drawLink(
-			parts, X, Y, nF[ 1 ], A, nT[ 1 ], P, { paintF: nF[ 2 ], paintT: nT[ 2 ] }
+			parts, X, Y, [ [ nF, nT ], A, P ]
 		)
 	}
 
