@@ -620,9 +620,7 @@ import './shape-editor.js'
 import './link-editor.js'
 import './cloud-icons.js'
 import './main-editor.js'
-import { saveSVG } from './Export.js'
-
-import	{ AE } from './DomUtils.js'
+import { saveSVG, baseName, downloadBlob } from './Export.js'
 
 /*
 const
@@ -700,22 +698,12 @@ SHAPE_EDITOR.addEventListener( 'change', UpdateApplyNodeLabel )
 NODE			.onclick = () => Node( [ NODE_ID.value, SHAPE_EDITOR.$, PAINT_EDITOR.$ ] )
 LINK			.onclick = () => Link( [ ...LINK_EDITOR.$, PAINT_EDITOR.$ ] )
 
-DOWNLOAD		.onclick = () => {
-	const
-	a = AE( document.body, 'a' )
-	a.href = URL.createObjectURL(
-		new Blob( [ JSONString() ], { type: 'application/json' } )
-	)
-	a.download = FILE_NAME.value ?? 'Untitled.cde'
-	a.click()
-	a.remove()
-	URL.revokeObjectURL( a.href )
-}
+DOWNLOAD		.onclick = () => downloadBlob(
+	new Blob( [ JSONString() ], { type: 'application/json' } )
+,	`${ baseName( FILE_NAME.value ) }.cde`
+)
 
-const
-exportName = () => FILE_NAME.value
-
-EXPORT_SVG		.onclick = () => saveSVG( MAIN_EDITOR, exportName() ).catch( Report )
+EXPORT_SVG		.onclick = () => saveSVG( MAIN_EDITOR, FILE_NAME.value ).catch( Report )
 
 UPLOAD			.onchange = async ev => {
 	const

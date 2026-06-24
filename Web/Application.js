@@ -310,23 +310,23 @@ MARGIN	= 256
 
 import { BBox } from './GeoDF.js'
 
+const
+fitCanvas	= px => Math.max( 256, Math.ceil( ( px + MARGIN ) / 256 ) * 256 )
+
 export	const
 Load		= _ => DoTypical(
 	'Load'
 ,	() => {
 		const
-		$ = JSON.parse( _ )
-		app.model.nodes	= $.model.nodes
-		app.model.links	= $.model.links
-		app.reforms		= []
-		if	( $.canvasWidth > 0 && $.canvasHeight > 0 ) {
-			SetCanvasSize( $.canvasWidth, $.canvasHeight )
-		} else if ( $.model.nodes.length ) {
+		{ model, canvasWidth, canvasHeight } = JSON.parse( _ )
+		app.model	= model
+		app.reforms	= []
+		if	( canvasWidth > 0 && canvasHeight > 0 ) {
+			SetCanvasSize( canvasWidth, canvasHeight )
+		} else if ( model.nodes.length ) {
 			const
-			[ t, l, b, r ] = BBox( $.model.nodes )
-			const	cw = Math.ceil( ( r + MARGIN ) / 256 ) * 256
-			const	ch = Math.ceil( ( b + MARGIN ) / 256 ) * 256
-			SetCanvasSize( Math.max( 256, cw ), Math.max( 256, ch ) )
+			[ , , b, r ] = BBox( model.nodes )
+			SetCanvasSize( fitCanvas( r ), fitCanvas( b ) )
 		}
 	}
 )

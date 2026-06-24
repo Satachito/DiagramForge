@@ -53,10 +53,10 @@ DrawLinkSvg		= ( parts, X, Y, link ) => {
 	for ( const h of $.heads )	DrawHeadSvg( parts, X, Y, h, headFill, P.stroke, headWidth )
 }
 
-const
+export const
 baseName = filename => ( filename ?? 'Untitled' ).replace( /\.[^.]+$/, '' ) || 'Untitled'
 
-const
+export const
 downloadBlob = ( blob, filename ) => {
 	const
 	a = document.createElement( 'a' )
