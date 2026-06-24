@@ -103,7 +103,7 @@ HitLink			= ( _, xy ) => {
 	C2D.beginPath()
 	C2D.moveTo( ...$.shaft[ 0 ] )
 	for	( let i = 1; i < $.shaft.length; i++ )	C2D.lineTo( ...$.shaft[ i ] )
-	C2D.setLineWidth = Math.max( P.lineWidth ?? GRAB , GRAB )
+	C2D.lineWidth = Math.max( P.lineWidth ?? GRAB, GRAB )
 	if	( C2D.isPointInStroke( ...xy ) ) return true
 
 	C2D.beginPath()
@@ -162,18 +162,17 @@ Links_XY	= xy => AvailableLinks().reduce(
 )
 
 const
-SelectionGrabCursor	= ( sel, xy ) => {
+BBoxGrabCursor	= ( bbox, xy ) => {
 	const
-	[ dT, dL, dB, dR ] = EdgeDist( sel, xy )
-,	T = dT <= GRAB
-,	L = dL <= GRAB
-,	B = dB <= GRAB
-,	R = dR <= GRAB
-	if	( ( T && L ) || ( B && R ) )	return 'nwse-resize'
-	if	( ( T && R ) || ( B && L ) )	return 'nesw-resize'
-	if	( T || B )						return 'ns-resize'
-	if	( L || R )						return 'ew-resize'
-	return	'move'
+	[ T, L, B, R ] = EdgeDist( bbox, xy ).map( _ => _ <= 0 )
+
+	if	( ( T && L ) || ( B && R ) ) return 'nwse-resize'
+	if	( ( T && R ) || ( B && L ) ) return 'nesw-resize'
+
+	if	( T || B ) return 'ns-resize'
+	if	( L || R ) return 'ew-resize'
+
+	return 'move'
 }
 const
 Cursor_EV	= ev => {
@@ -185,7 +184,7 @@ Cursor_EV	= ev => {
 		const
 		bbox = BBox( app.reforms )
 		if	( ContainsXY( bbox, xy ) )					return 'move'
-		if	( ContainsXY( Outset( bbox, GRAB ), xy ) )	return SelectionGrabCursor( bbox, xy )
+		if	( ContainsXY( Outset( bbox, GRAB ), xy ) )	return BBoxGrabCursor( bbox, xy )
 	}
 
 	if	( NodeMode( ev ) || LinkMode( ev ) )			return 'crosshair'
@@ -193,11 +192,7 @@ Cursor_EV	= ev => {
 	if	( Links_XY( xy ).length )						return 'pointer'
 
 	const	node = Node_XY( xy )
-	if	( node ) {
-		const
-		tlbr = TLBR( node[ 1 ] )
-		return	ContainsXY( tlbr, xy ) ? 'move' : SelectionGrabCursor( tlbr, xy )
-	}
+	if	( node ) return BBoxGrabCursor( TLBR( node[ 1 ] ), xy )
 
 	return	'default'
 }
@@ -406,7 +401,7 @@ MainEditor extends HTMLElement {
 
 		LINK_MENU_REMOVE.onclick	= ev => (
 			ev.stopPropagation()
-		,	this.linkMenuKey && RemoveLink( this.linkMenuKey[ 0 ], this.linkMenuKey[ 1 ] )
+		,	this.linkMenuKey && RemoveLink( [ this.linkMenuKey[ 0 ], this.linkMenuKey[ 1 ] ] )
 		,	this.hideContextMenus()
 		,	this.reformer.focus()
 		)

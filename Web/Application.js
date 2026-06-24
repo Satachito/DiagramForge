@@ -1,9 +1,6 @@
 export	const
 Report = _ => ( console.error( _ ), alert( _ ) )
 
-export	const
-STORAGE_KEY	= 'tokyo.828.diagramforge'
-
 window.app		= {
 	model	: {
 		nodes	: []	//	[ ID, S, P ]		(S)hape		, (P)aint
@@ -11,6 +8,12 @@ window.app		= {
 	}
 ,	reforms		: []	//	Equal to model.nodes
 }
+
+export	const
+STORAGE_KEY	= 'tokyo.828.diagramforge'
+
+export	const
+JSONString	= () => JSON.stringify( { ...app.model, canvasWidth, canvasHeight }, null, '\t' )
 
 export	const
 CANVAS_DEFAULT	= 4096
@@ -45,6 +48,7 @@ SetCanvasSize	= ( width, height ) => {
 	localStorage.setItem( CANVAS_STORAGE_KEY, JSON.stringify( [ width, height ] ) )
 }
 
+
 export	const
 FindNode		= ID => app.model.nodes.find( _ => _[ 0 ] === ID )
 
@@ -64,23 +68,9 @@ AvailableLinks	= () => app.model.links.reduce(
 ,	[]
 )
 
-const
-SyncReformsFromModel	= () => {
-	app.reforms = app.reforms.flatMap(
-		( [ ID ] ) => {
-			const
-			node = FindNode( ID )
-			return node ? [ [ ID, structuredClone( node[ 1 ] ), structuredClone( node[ 2 ] ) ] ] : []
-		}
-	)
-}
 
 import Do from './Jobs.js'
-import { Union } from './Geo2D.js'
-import { TLBR } from './GeoDF.js'
 
-const
-Persist		= () => localStorage.setItem( STORAGE_KEY, JSONString() )
 
 //	Snapshot-based history: capture the state before and after the mutation,
 //	then undo/redo simply restore a *clone* of the relevant snapshot. Restoring a
@@ -89,11 +79,19 @@ Persist		= () => localStorage.setItem( STORAGE_KEY, JSONString() )
 const
 restoreSnapshot	= snapshot => async () => (
 	app = structuredClone( snapshot )
-,	SyncReformsFromModel()
+/*
+,	app.reforms = app.reforms.flatMap(
+		( [ ID ] ) => {
+			const
+			node = FindNode( ID )
+			return node ? [ [ ID, structuredClone( node[ 1 ] ), structuredClone( node[ 2 ] ) ] ] : []
+		}
+	)
+*/
 ,	MAIN_EDITOR.clearInteraction()
 ,	await MAIN_EDITOR.Draw()
 ,	LINK_EDITOR.Sync()
-,	Persist()
+,	localStorage.setItem( STORAGE_KEY, JSONString() )
 )
 
 const
@@ -169,8 +167,8 @@ Link	= ( [ [ F, T ], A, P ] ) => DoTypical(
 		$.length
 		?	$.forEach(
 				_ => (
-					_[ 1 ] = A
-				,	_[ 2 ] = P
+					_[ 1 ] = structuredClone( A )
+				,	_[ 2 ] = structuredClone( P )
 				)
 			)
 		:	(	app.model.links.push( [ [ F, T ], A, P ] )
@@ -183,7 +181,7 @@ Link	= ( [ [ F, T ], A, P ] ) => DoTypical(
 )
 
 export	const
-RemoveLink	= ( F, T ) => DoTypical(
+RemoveLink	= ( [ F, T ] ) => DoTypical(
 	'RemoveLink'
 ,	() => (
 		app.model.links = app.model.links.filter(
@@ -306,13 +304,13 @@ Paste		= async _ => {	//	ClipboardData
 	)
 }
 
-export	const
-JSONString	= () => JSON.stringify( { ...app.model, canvasWidth, canvasHeight }, null, '\t' )
 
 const
 MARGIN	= 256
 
-export	const		//	THROWS EXCEPTION
+import { BBox } from './GeoDF.js'
+
+export	const
 Load		= _ => DoTypical(
 	'Load'
 ,	() => {
@@ -324,7 +322,8 @@ Load		= _ => DoTypical(
 		if	( $.canvasWidth > 0 && $.canvasHeight > 0 ) {
 			SetCanvasSize( $.canvasWidth, $.canvasHeight )
 		} else if ( $.nodes.length ) {
-			const	[ t, l, b, r ] = Union( $.nodes.map( n => TLBR( n[ 1 ] ) ) )
+			const
+			[ t, l, b, r ] = BBox( $.nodes )
 			const	cw = Math.ceil( ( r + MARGIN ) / 256 ) * 256
 			const	ch = Math.ceil( ( b + MARGIN ) / 256 ) * 256
 			SetCanvasSize( Math.max( 256, cw ), Math.max( 256, ch ) )

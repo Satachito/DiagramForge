@@ -96,8 +96,7 @@ onOutline		= ( S, dX, dY ) => {
 }
 
 const
-LinkCoordinates	= ( [ [ nF, nT ], A, P ] ) => {
-console.log( 'LinkCoordinates' ) 
+linkCoordinates	= ( [ [ nF, nT ], A, P ] ) => {
 	const
 	xAlong	= ( S, s, a ) =>
 		a === 'TL' || a === 'BL' ? L( s ) :
@@ -266,7 +265,7 @@ offsetOutward	= ( p, outward, dist ) => [
 const
 linkEnds		= ( [ [ nF, nT ], A, P ] ) => {
 	const
-	[ pF, pT ] = LinkCoordinates( [ [ nF, nT ], A, P ] )
+	[ pF, pT ] = linkCoordinates( [ [ nF, nT ], A, P ] )
 ,	outwardF = boundaryOutward( nF[ 1 ], A.anchorF, pF )
 ,	outwardT = boundaryOutward( nT[ 1 ], A.anchorT, pT )
 ,	frameF = frameHalf( nF[ 2 ] )
