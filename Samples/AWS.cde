@@ -457,11 +457,12 @@
 				],
 				{
 					"headF": "triangle",
-					"headT": "triangle"
+					"headT": "triangle",
+					"corner": "arc"
 				},
 				{
 					"stroke": "dodgerblue",
-					"lineWidth": 8
+					"lineWidth": 5
 				}
 			],
 			[
@@ -471,11 +472,12 @@
 				],
 				{
 					"headF": "triangle",
-					"headT": "triangle"
+					"headT": "triangle",
+					"corner": "arc"
 				},
 				{
 					"stroke": "dodgerblue",
-					"lineWidth": 8
+					"lineWidth": 5
 				}
 			],
 			[
@@ -485,11 +487,12 @@
 				],
 				{
 					"headF": "triangle",
-					"headT": "triangle"
+					"headT": "triangle",
+					"corner": "arc"
 				},
 				{
 					"stroke": "dodgerblue",
-					"lineWidth": 8
+					"lineWidth": 5
 				}
 			],
 			[
@@ -499,11 +502,12 @@
 				],
 				{
 					"headF": "triangle",
-					"headT": "triangle"
+					"headT": "triangle",
+					"corner": "arc"
 				},
 				{
 					"stroke": "dodgerblue",
-					"lineWidth": 8
+					"lineWidth": 5
 				}
 			],
 			[
@@ -513,11 +517,12 @@
 				],
 				{
 					"headF": "triangle",
-					"headT": "triangle"
+					"headT": "triangle",
+					"corner": "arc"
 				},
 				{
 					"stroke": "dodgerblue",
-					"lineWidth": 8
+					"lineWidth": 5
 				}
 			],
 			[
@@ -527,11 +532,12 @@
 				],
 				{
 					"headF": "triangle",
-					"headT": "triangle"
+					"headT": "triangle",
+					"corner": "arc"
 				},
 				{
 					"stroke": "dodgerblue",
-					"lineWidth": 8
+					"lineWidth": 5
 				}
 			],
 			[
@@ -541,11 +547,12 @@
 				],
 				{
 					"headF": "triangle",
-					"headT": "triangle"
+					"headT": "triangle",
+					"corner": "arc"
 				},
 				{
 					"stroke": "dodgerblue",
-					"lineWidth": 8
+					"lineWidth": 5
 				}
 			],
 			[
@@ -555,11 +562,12 @@
 				],
 				{
 					"headF": "triangle",
-					"headT": "triangle"
+					"headT": "triangle",
+					"corner": "arc"
 				},
 				{
 					"stroke": "dodgerblue",
-					"lineWidth": 8
+					"lineWidth": 5
 				}
 			],
 			[
@@ -569,11 +577,12 @@
 				],
 				{
 					"headF": "triangle",
-					"headT": "triangle"
+					"headT": "triangle",
+					"corner": "arc"
 				},
 				{
 					"stroke": "dodgerblue",
-					"lineWidth": 8
+					"lineWidth": 5
 				}
 			],
 			[
@@ -583,11 +592,12 @@
 				],
 				{
 					"headF": "triangle",
-					"headT": "triangle"
+					"headT": "triangle",
+					"corner": "arc"
 				},
 				{
 					"stroke": "dodgerblue",
-					"lineWidth": 8
+					"lineWidth": 5
 				}
 			],
 			[
@@ -597,11 +607,12 @@
 				],
 				{
 					"headF": "triangle",
-					"headT": "triangle"
+					"headT": "triangle",
+					"corner": "arc"
 				},
 				{
 					"stroke": "dodgerblue",
-					"lineWidth": 8
+					"lineWidth": 5
 				}
 			],
 			[
@@ -611,11 +622,12 @@
 				],
 				{
 					"headF": "triangle",
-					"headT": "triangle"
+					"headT": "triangle",
+					"corner": "arc"
 				},
 				{
 					"stroke": "dodgerblue",
-					"lineWidth": 8
+					"lineWidth": 5
 				}
 			],
 			[
@@ -625,11 +637,12 @@
 				],
 				{
 					"headF": "triangle",
-					"headT": "triangle"
+					"headT": "triangle",
+					"corner": "arc"
 				},
 				{
 					"stroke": "dodgerblue",
-					"lineWidth": 8
+					"lineWidth": 5
 				}
 			]
 		]

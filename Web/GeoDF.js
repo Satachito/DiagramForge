@@ -409,3 +409,73 @@ LinkMetrics		= ( [ [ nF, nT ], A, P ] ) => {
 	}
 }
 
+const
+ARC_RADIUS		= 48	//	max fillet radius for the 'arc' corner style
+
+//	how to stroke the shaft, chosen by the link's `corner` style. a 2-point shaft
+//	is always a straight line; a multi-point ( orthogonal ) shaft can be:
+//	  'sharp'   the legacy polyline with right-angle corners
+//	  'bezier'  a Bézier whose bend points are the controls, so the curve leaves
+//	            each node perpendicular ( horizontal / vertical ) and rounds the
+//	            corners smoothly ( default )
+//	  'arc'     straight runs joined by quarter-circle fillets at each corner
+//	tangents at the trimmed ends stay axis-aligned, so the arrowheads still meet
+//	the shaft cleanly in every style.
+export	const
+shaftSpec		= ( pts, corner ) => {
+	const
+	style = corner || 'bezier'
+	if	( pts.length <= 2 || style === 'sharp' )	return { type: 'line', pts }
+	if	( style === 'arc' ) {
+		const
+		corners = []
+		for	( let i = 1; i < pts.length - 1; i++ ) {
+			const
+			prev = pts[ i - 1 ], c = pts[ i ], next = pts[ i + 1 ]
+			,	[ inX, inY ] = unit( c[ 0 ] - prev[ 0 ], c[ 1 ] - prev[ 1 ] )
+			,	[ outX, outY ] = unit( next[ 0 ] - c[ 0 ], next[ 1 ] - c[ 1 ] )
+			,	r = Math.min(
+					ARC_RADIUS
+				,	Math.hypot( c[ 0 ] - prev[ 0 ], c[ 1 ] - prev[ 1 ] ) / 2
+				,	Math.hypot( next[ 0 ] - c[ 0 ], next[ 1 ] - c[ 1 ] ) / 2
+				)
+			if	( r < 0.5 )	continue
+			corners.push( {
+				a		: [ c[ 0 ] - inX * r, c[ 1 ] - inY * r ]
+			,	c		: c
+			,	b		: [ c[ 0 ] + outX * r, c[ 1 ] + outY * r ]
+			,	r
+			,	sweep	: inX * outY - inY * outX > 0 ? 1 : 0
+			} )
+		}
+		if	( !corners.length )	return { type: 'line', pts }
+		return	{ type: 'arc', start: pts[ 0 ], end: pts[ pts.length - 1 ], corners }
+	}
+	return	pts.length === 3
+	?	{ type: 'quad', p0: pts[ 0 ], c: pts[ 1 ], p1: pts[ 2 ] }
+	:	{ type: 'cubic', p0: pts[ 0 ], c1: pts[ 1 ], c2: pts[ pts.length - 2 ], p1: pts[ pts.length - 1 ] }
+}
+
+//	trace a shaftSpec onto a Canvas 2D context ( caller does beginPath / stroke )
+export	const
+shaftToPath		= ( ctx, s ) => {
+	switch	( s.type ) {
+	case 'quad'	:
+		ctx.moveTo( ...s.p0 )
+		ctx.quadraticCurveTo( s.c[ 0 ], s.c[ 1 ], s.p1[ 0 ], s.p1[ 1 ] )
+		break
+	case 'cubic'	:
+		ctx.moveTo( ...s.p0 )
+		ctx.bezierCurveTo( s.c1[ 0 ], s.c1[ 1 ], s.c2[ 0 ], s.c2[ 1 ], s.p1[ 0 ], s.p1[ 1 ] )
+		break
+	case 'arc'	:
+		ctx.moveTo( ...s.start )
+		for	( const k of s.corners )	ctx.arcTo( k.c[ 0 ], k.c[ 1 ], k.b[ 0 ], k.b[ 1 ], k.r )
+		ctx.lineTo( ...s.end )
+		break
+	default		:	//	'line'
+		ctx.moveTo( ...s.pts[ 0 ] )
+		for	( let i = 1; i < s.pts.length; i++ )	ctx.lineTo( ...s.pts[ i ] )
+	}
+}
+

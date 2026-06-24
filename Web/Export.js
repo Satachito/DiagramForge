@@ -1,5 +1,5 @@
 import { FindNode, CanvasSize	} from './Application.js'
-import { XYWH, LinkMetrics		} from './GeoDF.js'
+import { XYWH, LinkMetrics, shaftSpec	} from './GeoDF.js'
 import { drawForeignLabelSvg	} from './ForeignLabel.js'
 
 const
@@ -45,7 +45,7 @@ DrawLinkSvg		= ( parts, X, Y, link ) => {
 	P.lineDashOffset	&& a.push( `stroke-dashoffset="${ P.lineDashOffset }"` )
 
 	parts.push(
-		`<polyline points="${ pointsAttr( X, Y, $.shaft ) }" fill="none" ${ a.join( ' ' ) }/>`
+		`<path d="${ shaftPathD( X, Y, shaftSpec( $.shaft, link[ 1 ].corner ) ) }" fill="none" ${ a.join( ' ' ) }/>`
 	)
 	const
 	headFill = P.fill ?? P.stroke
@@ -84,6 +84,23 @@ const
 pointsAttr		= ( X, Y, points ) => points.map(
 	( [ x, y ] ) => `${ X( x ) },${ Y( y ) }`
 ).join( ' ' )
+
+const
+shaftPathD		= ( X, Y, s ) => {
+	const	P = ( [ x, y ] ) => `${ X( x ) } ${ Y( y ) }`
+	switch	( s.type ) {
+	case 'quad'	:
+		return	`M ${ P( s.p0 ) } Q ${ P( s.c ) } ${ P( s.p1 ) }`
+	case 'cubic'	:
+		return	`M ${ P( s.p0 ) } C ${ P( s.c1 ) } ${ P( s.c2 ) } ${ P( s.p1 ) }`
+	case 'arc'	:
+		return	`M ${ P( s.start ) }`
+			+ s.corners.map( k => ` L ${ P( k.a ) } A ${ k.r } ${ k.r } 0 0 ${ k.sweep } ${ P( k.b ) }` ).join( '' )
+			+ ` L ${ P( s.end ) }`
+	default		:	//	'line'
+		return	`M ${ s.pts.map( P ).join( ' L ' ) }`
+	}
+}
 
 const
 drawShape		= ( parts, X, Y, S, P ) => {

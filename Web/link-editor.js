@@ -7,6 +7,9 @@ const
 HEAD_STYLES		= [ '', 'triangle', 'open', 'hollow', 'diamond', 'diamondHollow', 'circle', 'circleHollow' ]
 
 const
+CORNER_STYLES	= [ '', 'sharp', 'bezier', 'arc' ]
+
+const
 RefreshSelect	= _ => {
 	const
 	$ = _.value
@@ -36,6 +39,8 @@ LinkEditor extends HTMLElement {
 		this.T.onclick	= ev => RefreshSelect( ev.target )
 		this.HEAD_T		= LabeledSelect		( this, '-head'		, ...HEAD_STYLES )
 		this.ANCHOR_T	= LabeledSelect		( this, '-anchor'	, ...$ )
+
+		this.CORNER		= LabeledSelect		( this, 'corner'	, ...CORNER_STYLES )
 	}
 
 	Sync() {
@@ -43,7 +48,7 @@ LinkEditor extends HTMLElement {
 		RefreshSelect( this.T )
 	}
 
-	set $( [ [ F, T ], { headF, headT, anchorF, anchorT } ] ) {
+	set $( [ [ F, T ], { headF, headT, anchorF, anchorT, corner } ] ) {
 		this.Sync()
 		this.F.value		= F
 		this.T.value		= T
@@ -51,6 +56,7 @@ LinkEditor extends HTMLElement {
 		this.HEAD_T.value	= headT === true ? 'triangle' : ( headT || '' )
 		this.ANCHOR_F.value	= anchorF ?? ''
 		this.ANCHOR_T.value	= anchorT ?? ''
+		this.CORNER.value	= corner ?? ''
 	}
 
 	get $() {
@@ -60,6 +66,7 @@ LinkEditor extends HTMLElement {
 		this.HEAD_T.value && ( A[ 'headT'		] = this.HEAD_T.value )
 		this.ANCHOR_F.value && ( A[ "anchorF"	] = this.ANCHOR_F.value )
 		this.ANCHOR_T.value && ( A[ "anchorT"	] = this.ANCHOR_T.value )
+		this.CORNER.value && ( A[ "corner"		] = this.CORNER.value )
 		return [ [ this.F.value, this.T.value ], A ]
 	}
 }

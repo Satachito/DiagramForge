@@ -48,6 +48,8 @@ import {
 ,	GRAB
 ,	C2D
 ,	LinkMetrics
+,	shaftSpec
+,	shaftToPath
 }	from './GeoDF.js'
 
 const
@@ -100,8 +102,7 @@ DrawLinkCanvas	= ( c2D, _ ) => {
 	P.lineDash			&& c2D.setLineDash( P.lineDash )
 
 	c2D.beginPath()
-	c2D.moveTo( ...$.shaft[ 0 ] )
-	for	( let i = 1; i < $.shaft.length; i++ )	c2D.lineTo( ...$.shaft[ i ] )
+	shaftToPath( c2D, shaftSpec( $.shaft, _[ 1 ].corner ) )
 	c2D.stroke()
 
 	//	heads are always solid and rounded, regardless of the shaft's dash / caps
@@ -130,8 +131,7 @@ HitLink			= ( _, xy ) => {
 		C2D.lineWidth = Math.max( P.lineWidth ?? GRAB, GRAB )
 
 		C2D.beginPath()
-		C2D.moveTo( ...$.shaft[ 0 ] )
-		for	( let i = 1; i < $.shaft.length; i++ )	C2D.lineTo( ...$.shaft[ i ] )
+		shaftToPath( C2D, shaftSpec( $.shaft, _[ 1 ].corner ) )
 		if	( C2D.isPointInStroke( ...xy ) ) return true
 
 		for ( const h of $.heads ) {
