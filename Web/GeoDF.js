@@ -371,8 +371,8 @@ LinkMetrics		= ( [ [ nF, nT ], A, P ] ) => {
 	//	head ), with a sensible floor and a cap relative to the link length
 	const
 	lw = Number( P.lineWidth ) || 1
-,	headLen  = Math.min( len * 0.4, Math.max( 12, lw * 3 ) )
-,	headHalf = Math.max( 4, headLen * 0.5 )
+,	headLen  = Math.min( len * 0.35, Math.max( 10, lw * 2.4 ) )
+,	headHalf = Math.max( 4, headLen * 0.45 )
 
 	//	each arrowhead lies along its own end segment of the centerline and is
 	//	never longer than that segment, so its neck stays on the centerline; the

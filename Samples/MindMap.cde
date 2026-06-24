@@ -317,8 +317,8 @@
 				"headT": false
 			},
 			{
-				"fill": "#e57373",
-				"lineWidth": 8
+				"lineWidth": 8,
+				"stroke": "#e57373"
 			}
 		],
 		[
@@ -331,8 +331,8 @@
 				"headT": false
 			},
 			{
-				"fill": "#e57373",
-				"lineWidth": 8
+				"lineWidth": 8,
+				"stroke": "#e57373"
 			}
 		],
 		[
@@ -345,8 +345,8 @@
 				"headT": false
 			},
 			{
-				"fill": "#e57373",
-				"lineWidth": 8
+				"lineWidth": 8,
+				"stroke": "#e57373"
 			}
 		],
 		[
@@ -359,8 +359,8 @@
 				"headT": false
 			},
 			{
-				"fill": "#e57373",
-				"lineWidth": 8
+				"lineWidth": 8,
+				"stroke": "#e57373"
 			}
 		],
 		[
@@ -373,8 +373,8 @@
 				"headT": false
 			},
 			{
-				"fill": "#42a5f5",
-				"lineWidth": 8
+				"lineWidth": 8,
+				"stroke": "#42a5f5"
 			}
 		],
 		[
@@ -387,8 +387,8 @@
 				"headT": false
 			},
 			{
-				"fill": "#42a5f5",
-				"lineWidth": 8
+				"lineWidth": 8,
+				"stroke": "#42a5f5"
 			}
 		],
 		[
@@ -401,8 +401,8 @@
 				"headT": false
 			},
 			{
-				"fill": "#42a5f5",
-				"lineWidth": 8
+				"lineWidth": 8,
+				"stroke": "#42a5f5"
 			}
 		],
 		[
@@ -415,8 +415,8 @@
 				"headT": false
 			},
 			{
-				"fill": "#42a5f5",
-				"lineWidth": 8
+				"lineWidth": 8,
+				"stroke": "#42a5f5"
 			}
 		],
 		[
@@ -429,8 +429,8 @@
 				"headT": false
 			},
 			{
-				"fill": "#66bb6a",
-				"lineWidth": 8
+				"lineWidth": 8,
+				"stroke": "#66bb6a"
 			}
 		],
 		[
@@ -443,8 +443,8 @@
 				"headT": false
 			},
 			{
-				"fill": "#66bb6a",
-				"lineWidth": 8
+				"lineWidth": 8,
+				"stroke": "#66bb6a"
 			}
 		],
 		[
@@ -457,8 +457,8 @@
 				"headT": false
 			},
 			{
-				"fill": "#66bb6a",
-				"lineWidth": 8
+				"lineWidth": 8,
+				"stroke": "#66bb6a"
 			}
 		],
 		[
@@ -471,8 +471,8 @@
 				"headT": false
 			},
 			{
-				"fill": "#66bb6a",
-				"lineWidth": 8
+				"lineWidth": 8,
+				"stroke": "#66bb6a"
 			}
 		],
 		[
@@ -485,8 +485,8 @@
 				"headT": false
 			},
 			{
-				"fill": "#ffa726",
-				"lineWidth": 8
+				"lineWidth": 8,
+				"stroke": "#ffa726"
 			}
 		],
 		[
@@ -499,8 +499,8 @@
 				"headT": false
 			},
 			{
-				"fill": "#ffa726",
-				"lineWidth": 8
+				"lineWidth": 8,
+				"stroke": "#ffa726"
 			}
 		],
 		[
@@ -513,8 +513,8 @@
 				"headT": false
 			},
 			{
-				"fill": "#ffa726",
-				"lineWidth": 8
+				"lineWidth": 8,
+				"stroke": "#ffa726"
 			}
 		],
 		[
@@ -527,8 +527,8 @@
 				"headT": false
 			},
 			{
-				"fill": "#ffa726",
-				"lineWidth": 8
+				"lineWidth": 8,
+				"stroke": "#ffa726"
 			}
 		]
 	]
