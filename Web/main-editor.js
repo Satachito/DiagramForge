@@ -663,7 +663,7 @@ MainEditor extends HTMLElement {
 				HitLink( link, xy ) && (
 					this.registReform( nF )
 				,	this.registReform( nT )
-				,	LINK_EDITOR.$ = link
+				,	LINK_EDITOR.$ = [ [ nF[ 0 ], nT[ 0 ] ], A ]
 				,	PAINT_EDITOR.$ = P
 				)
 			}
