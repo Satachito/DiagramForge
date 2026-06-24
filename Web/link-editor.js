@@ -46,25 +46,21 @@ LinkEditor extends HTMLElement {
 	set $( [ [ F, T ], { headF, headT, anchorF, anchorT } ] ) {
 		this.Sync()
 		this.F.value		= F
+		this.T.value		= T
 		this.HEAD_F.checked	= headF
 		this.HEAD_T.checked	= headT
 		this.ANCHOR_F.value	= anchorF ?? ''
 		this.ANCHOR_T.value	= anchorT ?? ''
-		this.T.value		= T
 	}
 
 	get $() {
 		const
-		A = {
-			headF	: this.HEAD_F.checked
-		,	headT	: this.HEAD_T.checked
-		}
+		A = {}
+		this.HEAD_F.checked && ( A[ 'headF' ] = true )
+		this.HEAD_T.checked && ( A[ 'headT' ] = true )
 		this.ANCHOR_F.value && ( A[ "anchorF" ] = this.ANCHOR_F.value )
 		this.ANCHOR_T.value && ( A[ "anchorT" ] = this.ANCHOR_T.value )
-		return [
-			[ this.F.value, this.T.value ]
-		,	A
-		]
+		return [ [ this.F.value, this.T.value ], A ]
 	}
 }
 
