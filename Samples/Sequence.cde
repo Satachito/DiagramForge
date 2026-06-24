@@ -1205,12 +1205,11 @@
 			],
 			{
 				"headF": false,
-				"headT": true
+				"headT": "triangle"
 			},
 			{
 				"stroke": "#2563eb",
-				"lineWidth": 8,
-				"fill": "red"
+				"lineWidth": 8
 			}
 		],
 		[
@@ -1220,12 +1219,11 @@
 			],
 			{
 				"headF": false,
-				"headT": true
+				"headT": "triangle"
 			},
 			{
 				"stroke": "#2563eb",
-				"lineWidth": 8,
-				"fill": "red"
+				"lineWidth": 8
 			}
 		],
 		[
@@ -1235,12 +1233,11 @@
 			],
 			{
 				"headF": false,
-				"headT": true
+				"headT": "triangle"
 			},
 			{
 				"stroke": "#2563eb",
-				"lineWidth": 8,
-				"fill": "red"
+				"lineWidth": 8
 			}
 		],
 		[
@@ -1250,12 +1247,11 @@
 			],
 			{
 				"headF": false,
-				"headT": true
+				"headT": "triangle"
 			},
 			{
 				"stroke": "#2563eb",
-				"lineWidth": 8,
-				"fill": "red"
+				"lineWidth": 8
 			}
 		],
 		[
@@ -1265,7 +1261,7 @@
 			],
 			{
 				"headF": false,
-				"headT": false
+				"headT": "open"
 			},
 			{
 				"stroke": "#94a3b8",
@@ -1273,8 +1269,7 @@
 				"lineDash": [
 					6,
 					4
-				],
-				"fill": "red"
+				]
 			}
 		],
 		[
@@ -1284,7 +1279,7 @@
 			],
 			{
 				"headF": false,
-				"headT": false
+				"headT": "open"
 			},
 			{
 				"stroke": "#94a3b8",
@@ -1292,8 +1287,7 @@
 				"lineDash": [
 					6,
 					4
-				],
-				"fill": "red"
+				]
 			}
 		],
 		[
@@ -1303,7 +1297,7 @@
 			],
 			{
 				"headF": false,
-				"headT": false
+				"headT": "open"
 			},
 			{
 				"stroke": "#94a3b8",
@@ -1311,8 +1305,7 @@
 				"lineDash": [
 					6,
 					4
-				],
-				"fill": "red"
+				]
 			}
 		],
 		[
@@ -1322,12 +1315,11 @@
 			],
 			{
 				"headF": false,
-				"headT": true
+				"headT": "triangle"
 			},
 			{
 				"stroke": "#2563eb",
-				"lineWidth": 8,
-				"fill": "red"
+				"lineWidth": 8
 			}
 		],
 		[
@@ -1337,12 +1329,11 @@
 			],
 			{
 				"headF": false,
-				"headT": true
+				"headT": "triangle"
 			},
 			{
 				"stroke": "#2563eb",
-				"lineWidth": 8,
-				"fill": "red"
+				"lineWidth": 8
 			}
 		],
 		[
@@ -1352,12 +1343,11 @@
 			],
 			{
 				"headF": false,
-				"headT": true
+				"headT": "triangle"
 			},
 			{
 				"stroke": "#2563eb",
-				"lineWidth": 8,
-				"fill": "red"
+				"lineWidth": 8
 			}
 		],
 		[
@@ -1367,12 +1357,11 @@
 			],
 			{
 				"headF": false,
-				"headT": true
+				"headT": "triangle"
 			},
 			{
 				"stroke": "#2563eb",
-				"lineWidth": 8,
-				"fill": "red"
+				"lineWidth": 8
 			}
 		],
 		[
@@ -1382,12 +1371,11 @@
 			],
 			{
 				"headF": false,
-				"headT": true
+				"headT": "triangle"
 			},
 			{
 				"stroke": "#2563eb",
-				"lineWidth": 8,
-				"fill": "red"
+				"lineWidth": 8
 			}
 		],
 		[
@@ -1397,7 +1385,7 @@
 			],
 			{
 				"headF": false,
-				"headT": false
+				"headT": "open"
 			},
 			{
 				"stroke": "#94a3b8",
@@ -1405,8 +1393,7 @@
 				"lineDash": [
 					6,
 					4
-				],
-				"fill": "red"
+				]
 			}
 		],
 		[
@@ -1416,12 +1403,11 @@
 			],
 			{
 				"headF": false,
-				"headT": true
+				"headT": "triangle"
 			},
 			{
 				"stroke": "#2563eb",
-				"lineWidth": 8,
-				"fill": "red"
+				"lineWidth": 8
 			}
 		],
 		[
@@ -1431,7 +1417,7 @@
 			],
 			{
 				"headF": false,
-				"headT": false
+				"headT": "open"
 			},
 			{
 				"stroke": "#94a3b8",
@@ -1439,8 +1425,7 @@
 				"lineDash": [
 					6,
 					4
-				],
-				"fill": "red"
+				]
 			}
 		],
 		[
@@ -1450,12 +1435,11 @@
 			],
 			{
 				"headF": false,
-				"headT": true
+				"headT": "triangle"
 			},
 			{
 				"stroke": "#2563eb",
-				"lineWidth": 8,
-				"fill": "red"
+				"lineWidth": 8
 			}
 		],
 		[
@@ -1465,12 +1449,11 @@
 			],
 			{
 				"headF": false,
-				"headT": true
+				"headT": "triangle"
 			},
 			{
 				"stroke": "#2563eb",
-				"lineWidth": 8,
-				"fill": "red"
+				"lineWidth": 8
 			}
 		],
 		[
@@ -1480,7 +1463,7 @@
 			],
 			{
 				"headF": false,
-				"headT": false
+				"headT": "open"
 			},
 			{
 				"stroke": "#94a3b8",
@@ -1488,8 +1471,7 @@
 				"lineDash": [
 					6,
 					4
-				],
-				"fill": "red"
+				]
 			}
 		],
 		[
@@ -1499,12 +1481,11 @@
 			],
 			{
 				"headF": false,
-				"headT": true
+				"headT": "triangle"
 			},
 			{
 				"stroke": "#2563eb",
-				"lineWidth": 8,
-				"fill": "red"
+				"lineWidth": 8
 			}
 		],
 		[
@@ -1514,12 +1495,11 @@
 			],
 			{
 				"headF": false,
-				"headT": true
+				"headT": "triangle"
 			},
 			{
 				"stroke": "#2563eb",
-				"lineWidth": 8,
-				"fill": "red"
+				"lineWidth": 8
 			}
 		]
 	]

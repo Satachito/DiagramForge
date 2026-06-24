@@ -1,8 +1,10 @@
 import {
 	AE
 ,	LabeledSelect
-,	LabeledCheckbox
 }	from './DomUtils.js'
+
+const
+HEAD_STYLES		= [ '', 'triangle', 'open', 'hollow', 'diamond', 'diamondHollow', 'circle', 'circleHollow' ]
 
 const
 RefreshSelect	= _ => {
@@ -27,12 +29,12 @@ LinkEditor extends HTMLElement {
 
 		this.F			= LabeledSelect		( this, 'from' )
 		this.F.onclick	= ev => RefreshSelect( ev.target )
-		this.HEAD_F		= LabeledCheckbox	( this, '-head'		, true )
+		this.HEAD_F		= LabeledSelect		( this, '-head'		, ...HEAD_STYLES )
 		this.ANCHOR_F	= LabeledSelect		( this, '-anchor'	, ...$ )
 
 		this.T			= LabeledSelect		( this, 'to' )
 		this.T.onclick	= ev => RefreshSelect( ev.target )
-		this.HEAD_T		= LabeledCheckbox	( this, '-head'		, true )
+		this.HEAD_T		= LabeledSelect		( this, '-head'		, ...HEAD_STYLES )
 		this.ANCHOR_T	= LabeledSelect		( this, '-anchor'	, ...$ )
 	}
 
@@ -45,8 +47,8 @@ LinkEditor extends HTMLElement {
 		this.Sync()
 		this.F.value		= F
 		this.T.value		= T
-		this.HEAD_F.checked	= headF
-		this.HEAD_T.checked	= headT
+		this.HEAD_F.value	= headF === true ? 'triangle' : ( headF || '' )
+		this.HEAD_T.value	= headT === true ? 'triangle' : ( headT || '' )
 		this.ANCHOR_F.value	= anchorF ?? ''
 		this.ANCHOR_T.value	= anchorT ?? ''
 	}
@@ -54,8 +56,8 @@ LinkEditor extends HTMLElement {
 	get $() {
 		const
 		A = {}
-		this.HEAD_F.checked && ( A[ 'headF'		] = true )
-		this.HEAD_T.checked && ( A[ 'headT'		] = true )
+		this.HEAD_F.value && ( A[ 'headF'		] = this.HEAD_F.value )
+		this.HEAD_T.value && ( A[ 'headT'		] = this.HEAD_T.value )
 		this.ANCHOR_F.value && ( A[ "anchorF"	] = this.ANCHOR_F.value )
 		this.ANCHOR_T.value && ( A[ "anchorT"	] = this.ANCHOR_T.value )
 		return [ [ this.F.value, this.T.value ], A ]

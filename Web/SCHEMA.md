@@ -49,7 +49,17 @@ Example:
 
 - **`fromID` / `toID`** — must reference existing node IDs.
 - **`ends`**:
-  - `headF`, `headT` — booleans; draw an arrowhead at the from / to end
+  - `headF`, `headT` — arrowhead at the from / to end. Use `false` (or omit)
+    for none, or one of the styles:
+    - `"triangle"` — filled triangle (default)
+    - `"open"` — open V (line only); pairs well with a dashed shaft
+    - `"hollow"` — outlined triangle
+    - `"diamond"` / `"diamondHollow"` — filled / outlined diamond
+    - `"circle"` / `"circleHollow"` — filled / outlined disc
+
+    Filled heads use `paint.fill ?? paint.stroke`; outlined / open heads use
+    `paint.stroke`. The head tip sits on the node boundary and its size scales
+    with the link length.
   - `anchorF`, `anchorT` — where the link attaches on each node:
     one of `"T"`, `"L"`, `"B"`, `"R"`, `"TL"`, `"TR"`, `"BL"`, `"BR"`,
     or omit (auto: points at the other node's center)
@@ -58,7 +68,7 @@ Example:
 Example:
 
 ```json
-[ [ "Core Data", "Analysis" ], { "headF": false, "headT": true },
+[ [ "Core Data", "Analysis" ], { "headF": false, "headT": "triangle" },
   { "stroke": "gray", "lineWidth": 2 } ]
 ```
 

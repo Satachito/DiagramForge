@@ -51,14 +51,44 @@ import {
 }	from './GeoDF.js'
 
 const
-DrawLinkCanvas	= ( c2D, _ ) => {
+strokeHeadPath	= ( c2D, pts, close ) => {
+	c2D.beginPath()
+	c2D.moveTo( ...pts[ 0 ] )
+	for	( let i = 1; i < pts.length; i++ )	c2D.lineTo( ...pts[ i ] )
+	close && c2D.closePath()
+}
 
-	const
-	[ [ nF, nT ], A, P ] = _
+const
+DrawHeadCanvas	= ( c2D, h, headFill, stroke ) => {
+	if	( h.kind === 'circle' ) {
+		c2D.beginPath()
+		c2D.arc( h.center[ 0 ], h.center[ 1 ], h.r, 0, 2 * Math.PI )
+		h.fill
+		?	( c2D.fillStyle = headFill, c2D.fill() )
+		:	( c2D.strokeStyle = stroke, c2D.stroke() )
+		return
+	}
+	if	( h.kind === 'line' ) {
+		strokeHeadPath( c2D, h.pts, false )
+		c2D.strokeStyle = stroke
+		c2D.stroke()
+		return
+	}
+	strokeHeadPath( c2D, h.pts, true )
+	h.fill
+	?	( c2D.fillStyle = headFill, c2D.fill() )
+	:	( c2D.strokeStyle = stroke, c2D.stroke() )
+}
+
+const
+DrawLinkCanvas	= ( c2D, _ ) => {
 
 	const
 	$ = LinkMetrics( _ )
 	if	( !$ ) return
+
+	const
+	P = _[ 2 ]
 
 	c2D.save()
 
@@ -74,15 +104,13 @@ DrawLinkCanvas	= ( c2D, _ ) => {
 	for	( let i = 1; i < $.shaft.length; i++ )	c2D.lineTo( ...$.shaft[ i ] )
 	c2D.stroke()
 
-	c2D.fillStyle = P.fill ?? P.stroke
-	c2D.beginPath()
-	for ( const [ [ ax, ay ], [ bx, by ], [ cx, cy ] ] of $.heads ) {
-		c2D.moveTo( ax, ay )
-		c2D.lineTo( bx, by )
-		c2D.lineTo( cx, cy )
-		c2D.closePath()
-	}
-	c2D.fill()
+	//	heads are always solid and rounded, regardless of the shaft's dash / caps
+	c2D.setLineDash( [] )
+	c2D.lineJoin	= 'round'
+	c2D.lineCap		= 'round'
+	const
+	headFill = P.fill ?? P.stroke
+	for ( const h of $.heads )	DrawHeadCanvas( c2D, h, headFill, P.stroke )
 
 	c2D.restore()
 }
@@ -91,29 +119,39 @@ const
 HitLink			= ( _, xy ) => {
 
 	const
-	[ [ nF, nT ], A, P ] = _
-
-	const
 	$ = LinkMetrics( _ )
 	if	( !$ ) return
 
+	const
+	P = _[ 2 ]
+
 	C2D.save()
-
-	C2D.beginPath()
-	C2D.moveTo( ...$.shaft[ 0 ] )
-	for	( let i = 1; i < $.shaft.length; i++ )	C2D.lineTo( ...$.shaft[ i ] )
-	C2D.lineWidth = Math.max( P.lineWidth ?? GRAB, GRAB )
-	if	( C2D.isPointInStroke( ...xy ) ) return true
-
-	C2D.beginPath()
-	for ( const [ [ ax, ay ], [ bx, by ], [ cx, cy ] ] of $.heads ) {
-		C2D.moveTo( ax, ay )
-		C2D.lineTo( bx, by )
-		C2D.lineTo( cx, cy )
-		C2D.closePath()
-	}
 	try {
-		return C2D.isPointInPath( ...xy )
+		C2D.lineWidth = Math.max( P.lineWidth ?? GRAB, GRAB )
+
+		C2D.beginPath()
+		C2D.moveTo( ...$.shaft[ 0 ] )
+		for	( let i = 1; i < $.shaft.length; i++ )	C2D.lineTo( ...$.shaft[ i ] )
+		if	( C2D.isPointInStroke( ...xy ) ) return true
+
+		for ( const h of $.heads ) {
+			if	( h.kind === 'circle' ) {
+				C2D.beginPath()
+				C2D.arc( h.center[ 0 ], h.center[ 1 ], h.r, 0, 2 * Math.PI )
+				if	( C2D.isPointInPath( ...xy ) ) return true
+				continue
+			}
+			C2D.beginPath()
+			C2D.moveTo( ...h.pts[ 0 ] )
+			for	( let i = 1; i < h.pts.length; i++ )	C2D.lineTo( ...h.pts[ i ] )
+			if	( h.kind === 'line' ) {
+				if	( C2D.isPointInStroke( ...xy ) ) return true
+			} else {
+				C2D.closePath()
+				if	( C2D.isPointInPath( ...xy ) ) return true
+			}
+		}
+		return false
 	} finally {
 		C2D.restore()
 	}

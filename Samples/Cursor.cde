@@ -567,8 +567,8 @@
 				"cf-portal"
 			],
 			{
-				"headF": true,
-				"headT": true
+				"headF": "triangle",
+				"headT": "triangle"
 			},
 			{
 				"stroke": "dodgerblue",
@@ -582,8 +582,8 @@
 				"cf-flow"
 			],
 			{
-				"headF": true,
-				"headT": true
+				"headF": "triangle",
+				"headT": "triangle"
 			},
 			{
 				"stroke": "dodgerblue",
@@ -597,8 +597,8 @@
 				"waf"
 			],
 			{
-				"headF": true,
-				"headT": true
+				"headF": "triangle",
+				"headT": "triangle"
 			},
 			{
 				"stroke": "dodgerblue",
@@ -612,8 +612,8 @@
 				"waf"
 			],
 			{
-				"headF": true,
-				"headT": true
+				"headF": "triangle",
+				"headT": "triangle"
 			},
 			{
 				"stroke": "dodgerblue",
@@ -627,8 +627,8 @@
 				"alb"
 			],
 			{
-				"headF": true,
-				"headT": true
+				"headF": "triangle",
+				"headT": "triangle"
 			},
 			{
 				"stroke": "dodgerblue",
@@ -642,8 +642,8 @@
 				"ecs-portal"
 			],
 			{
-				"headF": true,
-				"headT": true
+				"headF": "triangle",
+				"headT": "triangle"
 			},
 			{
 				"stroke": "dodgerblue",
@@ -657,8 +657,8 @@
 				"ecs-flow"
 			],
 			{
-				"headF": true,
-				"headT": true
+				"headF": "triangle",
+				"headT": "triangle"
 			},
 			{
 				"stroke": "dodgerblue",
@@ -672,8 +672,8 @@
 				"rds"
 			],
 			{
-				"headF": true,
-				"headT": true
+				"headF": "triangle",
+				"headT": "triangle"
 			},
 			{
 				"stroke": "dodgerblue",
@@ -687,8 +687,8 @@
 				"ddb"
 			],
 			{
-				"headF": true,
-				"headT": true
+				"headF": "triangle",
+				"headT": "triangle"
 			},
 			{
 				"stroke": "dodgerblue",
@@ -702,8 +702,8 @@
 				"ddb"
 			],
 			{
-				"headF": true,
-				"headT": true
+				"headF": "triangle",
+				"headT": "triangle"
 			},
 			{
 				"stroke": "dodgerblue",
@@ -717,8 +717,8 @@
 				"s3"
 			],
 			{
-				"headF": true,
-				"headT": true
+				"headF": "triangle",
+				"headT": "triangle"
 			},
 			{
 				"stroke": "dodgerblue",
@@ -732,8 +732,8 @@
 				"s3"
 			],
 			{
-				"headF": true,
-				"headT": true
+				"headF": "triangle",
+				"headT": "triangle"
 			},
 			{
 				"stroke": "dodgerblue",
@@ -747,8 +747,8 @@
 				"elasticache"
 			],
 			{
-				"headF": true,
-				"headT": true
+				"headF": "triangle",
+				"headT": "triangle"
 			},
 			{
 				"stroke": "dodgerblue",
@@ -762,8 +762,8 @@
 				"serverless-valkey"
 			],
 			{
-				"headF": true,
-				"headT": true
+				"headF": "triangle",
+				"headT": "triangle"
 			},
 			{
 				"stroke": "dodgerblue",
@@ -777,8 +777,8 @@
 				"serverless-valkey"
 			],
 			{
-				"headF": true,
-				"headT": true
+				"headF": "triangle",
+				"headT": "triangle"
 			},
 			{
 				"stroke": "dodgerblue",
@@ -792,8 +792,8 @@
 				"secrets-kms"
 			],
 			{
-				"headF": true,
-				"headT": true
+				"headF": "triangle",
+				"headT": "triangle"
 			},
 			{
 				"stroke": "dodgerblue",
@@ -807,8 +807,8 @@
 				"secrets-kms"
 			],
 			{
-				"headF": true,
-				"headT": true
+				"headF": "triangle",
+				"headT": "triangle"
 			},
 			{
 				"stroke": "dodgerblue",
@@ -822,8 +822,8 @@
 				"lambda"
 			],
 			{
-				"headF": true,
-				"headT": true
+				"headF": "triangle",
+				"headT": "triangle"
 			},
 			{
 				"stroke": "dodgerblue",
@@ -837,8 +837,8 @@
 				"lambda"
 			],
 			{
-				"headF": true,
-				"headT": true
+				"headF": "triangle",
+				"headT": "triangle"
 			},
 			{
 				"stroke": "dodgerblue",
@@ -852,8 +852,8 @@
 				"ddb"
 			],
 			{
-				"headF": true,
-				"headT": true
+				"headF": "triangle",
+				"headT": "triangle"
 			},
 			{
 				"stroke": "dodgerblue",
@@ -867,8 +867,8 @@
 				"s3"
 			],
 			{
-				"headF": true,
-				"headT": true
+				"headF": "triangle",
+				"headT": "triangle"
 			},
 			{
 				"stroke": "dodgerblue",
@@ -882,8 +882,8 @@
 				"cloudwatch"
 			],
 			{
-				"headF": true,
-				"headT": true
+				"headF": "triangle",
+				"headT": "triangle"
 			},
 			{
 				"stroke": "dodgerblue",
@@ -897,8 +897,8 @@
 				"cloudwatch"
 			],
 			{
-				"headF": true,
-				"headT": true
+				"headF": "triangle",
+				"headT": "triangle"
 			},
 			{
 				"stroke": "dodgerblue",
@@ -912,8 +912,8 @@
 				"cloudwatch"
 			],
 			{
-				"headF": true,
-				"headT": true
+				"headF": "triangle",
+				"headT": "triangle"
 			},
 			{
 				"stroke": "dodgerblue",
@@ -927,8 +927,8 @@
 				"cloudwatch"
 			],
 			{
-				"headF": true,
-				"headT": true
+				"headF": "triangle",
+				"headT": "triangle"
 			},
 			{
 				"stroke": "dodgerblue",

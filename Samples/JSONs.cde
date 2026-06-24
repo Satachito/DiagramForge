@@ -404,7 +404,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true
+				"headT": "triangle"
 			},
 			{
 				"stroke": "gray",
@@ -418,8 +418,8 @@
 				"Private WAF"
 			],
 			{
-				"headF": true,
-				"headT": true
+				"headF": "triangle",
+				"headT": "triangle"
 			},
 			{
 				"stroke": "gray",
@@ -433,8 +433,8 @@
 				"Private Application"
 			],
 			{
-				"headF": true,
-				"headT": true
+				"headF": "triangle",
+				"headT": "triangle"
 			},
 			{
 				"stroke": "gray",
@@ -448,8 +448,8 @@
 				"Public WAF"
 			],
 			{
-				"headF": true,
-				"headT": true
+				"headF": "triangle",
+				"headT": "triangle"
 			},
 			{
 				"stroke": "gray",
@@ -463,8 +463,8 @@
 				"Public Application"
 			],
 			{
-				"headF": true,
-				"headT": true
+				"headF": "triangle",
+				"headT": "triangle"
 			},
 			{
 				"stroke": "gray",
@@ -479,7 +479,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true
+				"headT": "triangle"
 			},
 			{
 				"stroke": "gray",
@@ -494,7 +494,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true
+				"headT": "triangle"
 			},
 			{
 				"stroke": "gray",
@@ -509,7 +509,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true
+				"headT": "triangle"
 			},
 			{
 				"stroke": "gray",
@@ -524,7 +524,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true
+				"headT": "triangle"
 			},
 			{
 				"stroke": "gray",
@@ -539,7 +539,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true
+				"headT": "triangle"
 			},
 			{
 				"stroke": "gray",
@@ -554,7 +554,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true
+				"headT": "triangle"
 			},
 			{
 				"stroke": "gray",
@@ -569,7 +569,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true
+				"headT": "triangle"
 			},
 			{
 				"stroke": "gray",

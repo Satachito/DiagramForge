@@ -226,18 +226,47 @@ subPath			= ( pts, d0, d1 ) => {
 	return	out
 }
 
+//	per-style arrowhead geometry. dir points inward ( tip -> shaft ). returns a
+//	drawable descriptor plus `consume`: how much of the shaft to trim at this end
+//	so the shaft meets the head cleanly.
+//	  kind 'poly'   + fill   -> filled polygon ( triangle / diamond )
+//	  kind 'poly'   + !fill  -> stroked closed polygon ( hollow triangle / diamond )
+//	  kind 'line'            -> stroked open polyline ( open V )
+//	  kind 'circle' + fill   -> filled / stroked disc
 const
-headTriangle		= ( tip, dir, headLen, headHalf ) => {
+headGeometry		= ( style, tip, dir, headLen, headHalf ) => {
 	const
 	[ dx, dy ] = dir
 	,	nx = -dy
 	,	ny = dx
 	,	neck = [ tip[ 0 ] + dx * headLen, tip[ 1 ] + dy * headLen ]
-	return	[
-		tip
-	,	[ neck[ 0 ] + nx * headHalf, neck[ 1 ] + ny * headHalf ]
-	,	[ neck[ 0 ] - nx * headHalf, neck[ 1 ] - ny * headHalf ]
-	]
+	,	bL = [ neck[ 0 ] + nx * headHalf, neck[ 1 ] + ny * headHalf ]
+	,	bR = [ neck[ 0 ] - nx * headHalf, neck[ 1 ] - ny * headHalf ]
+	switch	( style ) {
+	case 'open'		:
+		return	{ kind: 'line', pts: [ bL, tip, bR ], consume: 0 }
+	case 'hollow'	:
+		return	{ kind: 'poly', fill: false, pts: [ tip, bL, bR ], consume: headLen }
+	case 'diamond'	:
+	case 'diamondHollow'	: {
+		const
+		mid = [ tip[ 0 ] + dx * headLen * 0.5, tip[ 1 ] + dy * headLen * 0.5 ]
+		,	dL = [ mid[ 0 ] + nx * headHalf, mid[ 1 ] + ny * headHalf ]
+		,	dR = [ mid[ 0 ] - nx * headHalf, mid[ 1 ] - ny * headHalf ]
+		return	{ kind: 'poly', fill: style === 'diamond', pts: [ tip, dL, neck, dR ], consume: headLen }
+	}
+	case 'circle'	:
+	case 'circleHollow'	:
+		return	{
+			kind	: 'circle'
+		,	fill	: style === 'circle'
+		,	center	: [ tip[ 0 ] + dx * headLen * 0.5, tip[ 1 ] + dy * headLen * 0.5 ]
+		,	r		: headLen * 0.5
+		,	consume	: headLen
+		}
+	default			:	//	'triangle' ( also the fallback for legacy `true` )
+		return	{ kind: 'poly', fill: true, pts: [ tip, bL, bR ], consume: headLen }
+	}
 }
 
 const
@@ -338,9 +367,12 @@ LinkMetrics		= ( [ [ nF, nT ], A, P ] ) => {
 ,	len = pathLength( route )
 	if	( len < 1 ) return null
 
+	//	head size scales with the shaft width ( so a thick line gets a proportional
+	//	head ), with a sensible floor and a cap relative to the link length
 	const
-	headLen  = Math.min( 14, len * 0.35 )
-,	headHalf = Math.max( 5, headLen * 0.5 )
+	lw = Number( P.lineWidth ) || 1
+,	headLen  = Math.min( len * 0.4, Math.max( 12, lw * 3 ) )
+,	headHalf = Math.max( 4, headLen * 0.5 )
 
 	//	each arrowhead lies along its own end segment of the centerline and is
 	//	never longer than that segment, so its neck stays on the centerline; the
@@ -355,15 +387,17 @@ LinkMetrics		= ( [ [ nF, nT ], A, P ] ) => {
 		const
 		[ ux, uy, segLen ] = endDir( route, true )
 	,	hl = Math.min( headLen, segLen )
-		heads.push( headTriangle( route[ 0 ], [ ux, uy ], hl, headHalf ) )
-		fDist = hl
+	,	h = headGeometry( A.headF, route[ 0 ], [ ux, uy ], hl, headHalf )
+		heads.push( h )
+		fDist = h.consume
 	}
 	if	( A.headT ) {
 		const
 		[ ux, uy, segLen ] = endDir( route, false )
 	,	hl = Math.min( headLen, segLen )
-		heads.push( headTriangle( route[ route.length - 1 ], [ ux, uy ], hl, headHalf ) )
-		tDist = len - hl
+	,	h = headGeometry( A.headT, route[ route.length - 1 ], [ ux, uy ], hl, headHalf )
+		heads.push( h )
+		tDist = len - h.consume
 	}
 	if	( tDist < fDist )	tDist = fDist
 

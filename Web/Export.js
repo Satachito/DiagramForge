@@ -4,6 +4,31 @@ import { XYWH, BBox, LinkMetrics	} from './GeoDF.js'
 import { drawForeignLabelSvg	} from './ForeignLabel.js'
 
 const
+DrawHeadSvg		= ( parts, X, Y, h, headFill, stroke, headWidth ) => {
+	if	( h.kind === 'circle' ) {
+		const
+		fill = h.fill ? `fill="${ headFill }"` : `fill="none" stroke="${ stroke }" stroke-width="${ headWidth }"`
+		parts.push(
+			`<circle cx="${ X( h.center[ 0 ] ) }" cy="${ Y( h.center[ 1 ] ) }" r="${ h.r }" ${ fill }/>`
+		)
+		return
+	}
+	const
+	pts = pointsAttr( X, Y, h.pts )
+	if	( h.kind === 'line' ) {
+		parts.push(
+			`<polyline points="${ pts }" fill="none" stroke="${ stroke }" stroke-width="${ headWidth }" stroke-linecap="round" stroke-linejoin="round"/>`
+		)
+		return
+	}
+	const
+	fill = h.fill ? `fill="${ headFill }" stroke="none"` : `fill="none" stroke="${ stroke }" stroke-width="${ headWidth }" stroke-linejoin="round"`
+	parts.push(
+		`<polygon points="${ pts }" ${ fill }/>`
+	)
+}
+
+const
 DrawLinkSvg		= ( parts, X, Y, link ) => {
 	const
 	$ = LinkMetrics( link )
@@ -25,11 +50,8 @@ DrawLinkSvg		= ( parts, X, Y, link ) => {
 	)
 	const
 	headFill = P.fill ?? P.stroke
-	for ( const head of $.heads ) {
-		parts.push(
-			`<polygon points="${ pointsAttr( X, Y, head ) }" fill="${ headFill }" stroke="none"/>`
-		)
-	}
+	,	headWidth = P.lineWidth || 1
+	for ( const h of $.heads )	DrawHeadSvg( parts, X, Y, h, headFill, P.stroke, headWidth )
 }
 
 const

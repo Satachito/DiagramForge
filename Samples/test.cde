@@ -162,7 +162,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true,
+				"headT": "triangle",
 				"anchorT": "BR"
 			},
 			{
@@ -178,7 +178,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true,
+				"headT": "triangle",
 				"anchorT": "BL"
 			},
 			{
@@ -194,7 +194,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true,
+				"headT": "triangle",
 				"anchorT": "TR"
 			},
 			{
@@ -210,7 +210,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true,
+				"headT": "triangle",
 				"anchorT": "TL"
 			},
 			{
@@ -226,7 +226,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true,
+				"headT": "triangle",
 				"anchorT": "R"
 			},
 			{
@@ -242,7 +242,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true,
+				"headT": "triangle",
 				"anchorT": "B"
 			},
 			{
@@ -258,7 +258,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true,
+				"headT": "triangle",
 				"anchorT": "L"
 			},
 			{
@@ -274,7 +274,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true,
+				"headT": "triangle",
 				"anchorT": "T"
 			},
 			{
@@ -290,7 +290,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true,
+				"headT": "triangle",
 				"anchorF": "TL",
 				"anchorT": "BL"
 			},
@@ -307,7 +307,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true,
+				"headT": "triangle",
 				"anchorF": "TR",
 				"anchorT": "TL"
 			},
@@ -324,7 +324,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true,
+				"headT": "triangle",
 				"anchorF": "BL",
 				"anchorT": "TL"
 			},
@@ -341,7 +341,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true,
+				"headT": "triangle",
 				"anchorF": "BR",
 				"anchorT": "TR"
 			},
@@ -358,7 +358,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true,
+				"headT": "triangle",
 				"anchorF": "TL",
 				"anchorT": "R"
 			},
@@ -375,7 +375,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true,
+				"headT": "triangle",
 				"anchorF": "TR",
 				"anchorT": "B"
 			},
@@ -392,7 +392,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true,
+				"headT": "triangle",
 				"anchorF": "BR",
 				"anchorT": "L"
 			},
@@ -409,7 +409,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true,
+				"headT": "triangle",
 				"anchorF": "BL",
 				"anchorT": "T"
 			},

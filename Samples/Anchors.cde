@@ -906,7 +906,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true,
+				"headT": "triangle",
 				"anchorT": "T"
 			},
 			{
@@ -922,7 +922,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true,
+				"headT": "triangle",
 				"anchorT": "TR"
 			},
 			{
@@ -938,7 +938,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true,
+				"headT": "triangle",
 				"anchorT": "R"
 			},
 			{
@@ -954,7 +954,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true,
+				"headT": "triangle",
 				"anchorT": "BR"
 			},
 			{
@@ -970,7 +970,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true,
+				"headT": "triangle",
 				"anchorT": "B"
 			},
 			{
@@ -986,7 +986,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true,
+				"headT": "triangle",
 				"anchorT": "BL"
 			},
 			{
@@ -1002,7 +1002,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true,
+				"headT": "triangle",
 				"anchorT": "L"
 			},
 			{
@@ -1018,7 +1018,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true,
+				"headT": "triangle",
 				"anchorT": "TL"
 			},
 			{
@@ -1034,7 +1034,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true,
+				"headT": "triangle",
 				"anchorF": "B",
 				"anchorT": "T"
 			},
@@ -1051,7 +1051,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true,
+				"headT": "triangle",
 				"anchorF": "BR",
 				"anchorT": "TL"
 			},
@@ -1068,7 +1068,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true,
+				"headT": "triangle",
 				"anchorF": "R",
 				"anchorT": "L"
 			},
@@ -1085,7 +1085,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true,
+				"headT": "triangle",
 				"anchorF": "TR",
 				"anchorT": "BL"
 			},
@@ -1102,7 +1102,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true,
+				"headT": "triangle",
 				"anchorF": "T",
 				"anchorT": "B"
 			},
@@ -1119,7 +1119,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true,
+				"headT": "triangle",
 				"anchorF": "TL",
 				"anchorT": "BR"
 			},
@@ -1136,7 +1136,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true,
+				"headT": "triangle",
 				"anchorF": "L",
 				"anchorT": "R"
 			},
@@ -1153,7 +1153,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true,
+				"headT": "triangle",
 				"anchorF": "BL",
 				"anchorT": "TR"
 			},
@@ -1170,7 +1170,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true,
+				"headT": "triangle",
 				"anchorF": "TR",
 				"anchorT": "TL"
 			},
@@ -1208,7 +1208,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true,
+				"headT": "triangle",
 				"anchorF": "TR",
 				"anchorT": "TL"
 			},
@@ -1225,7 +1225,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true
+				"headT": "triangle"
 			},
 			{
 				"stroke": "#2563eb",
@@ -1240,7 +1240,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true,
+				"headT": "triangle",
 				"anchorF": "R",
 				"anchorT": "L"
 			},
@@ -1257,7 +1257,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true,
+				"headT": "triangle",
 				"anchorF": "R",
 				"anchorT": "L"
 			},
@@ -1274,7 +1274,7 @@
 			],
 			{
 				"headF": false,
-				"headT": true,
+				"headT": "triangle",
 				"anchorF": "R",
 				"anchorT": "L"
 			},
