@@ -1,6 +1,5 @@
-import { FindNode				} from './Application.js'
-import { XYWH_TLBR				} from './Geo2D.js'
-import { XYWH, BBox, LinkMetrics	} from './GeoDF.js'
+import { FindNode, CanvasSize	} from './Application.js'
+import { XYWH, LinkMetrics		} from './GeoDF.js'
 import { drawForeignLabelSvg	} from './ForeignLabel.js'
 
 const
@@ -157,10 +156,11 @@ const
 buildVectorSVG	= () => {
 	if	( !app.model.nodes.length ) return null
 
+	//	export the full canvas ( origin top-left ), not the node bounding box
 	const
-	[ x, y, w, h ] = XYWH_TLBR( BBox( app.model.nodes ) )
-,	X = _ => _ - x
-,	Y = _ => _ - y
+	[ w, h ] = CanvasSize()
+,	X = _ => _
+,	Y = _ => _
 ,	bg = matchMedia( '(prefers-color-scheme: dark)' ).matches ? '#000000' : '#ffffff'
 ,	parts = [
 	'<?xml version="1.0" encoding="UTF-8"?>'
