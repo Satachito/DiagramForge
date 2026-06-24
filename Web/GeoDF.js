@@ -87,6 +87,23 @@ onOutline		= ( S, dX, dY ) => {
 	return	[ S.cX + dX * scale, S.cY + dY * scale ]
 }
 
+//	auto end facing an anchored end: when the anchored attach point p lies within
+//	the auto rect's vertical span ( and the anchor has an L/R side ) attach on the
+//	near vertical edge at p.y → a horizontal connector; when it lies within the
+//	horizontal span ( anchor has a T/B side ) attach on the near horizontal edge at
+//	p.x → a vertical connector. Otherwise fall back to the centre-ray outline point.
+//	rect / SVG / PNG only; ellipse / rhombus keep their curved attach.
+const
+autoPerp		= ( S, [ px, py ], aOther ) => {
+	if	( S.type !== 'ellipse' && S.type !== 'rhombus' ) {
+		const	hasH = aOther.includes( 'L' ) || aOther.includes( 'R' )
+		,		hasV = aOther.includes( 'T' ) || aOther.includes( 'B' )
+		if	( hasH && T( S ) < py && py < B( S ) )	return [ px <= S.cX ? L( S ) : R( S ), py ]
+		if	( hasV && L( S ) < px && px < R( S ) )	return [ px, py <= S.cY ? T( S ) : B( S ) ]
+	}
+	return	onOutline( S, px - S.cX, py - S.cY )
+}
+
 const
 linkCoordinates	= ( [ [ nF, nT ], A, P ] ) => {
 	const
@@ -116,7 +133,15 @@ linkCoordinates	= ( [ [ nF, nT ], A, P ] ) => {
 			?	onOutline( S, P[ 0 ] - S.cX, P[ 1 ] - S.cY )
 			:	P
 	}
-	return [ $( nF[ 1 ], A.anchorF, nT[ 1 ], A.anchorT ), $( nT[ 1 ], A.anchorT, nF[ 1 ], A.anchorF ) ]
+	const
+	aF = A.anchorF, aT = A.anchorT
+	const
+	pF = $( nF[ 1 ], aF, nT[ 1 ], aT )
+	,	pT = $( nT[ 1 ], aT, nF[ 1 ], aF )
+	//	exactly one end anchored: route the auto end perpendicular to the edge it hits
+	if	( aF && !aT )	return [ pF, autoPerp( nT[ 1 ], pF, aF ) ]
+	if	( aT && !aF )	return [ autoPerp( nF[ 1 ], pT, aT ), pT ]
+	return [ pF, pT ]
 }
 
 const
@@ -136,13 +161,30 @@ pathLength		= pts => {
 	return	sum
 }
 
+//	unit direction ( and length ) of the route's first / last non-degenerate
+//	segment, measured inward from the matching endpoint
 const
-distAlongSeg	= ( a, b, p ) => {
-	const
-	dx = b[ 0 ] - a[ 0 ]
-	,	dy = b[ 1 ] - a[ 1 ]
-	,	len = Math.hypot( dx, dy )
-	return	len < 1e-9 ? 0 : ( ( p[ 0 ] - a[ 0 ] ) * dx + ( p[ 1 ] - a[ 1 ] ) * dy ) / len
+endDir			= ( pts, atStart ) => {
+	if	( atStart ) {
+		const	a = pts[ 0 ]
+		for	( let i = 1; i < pts.length; i++ ) {
+			const
+			dx = pts[ i ][ 0 ] - a[ 0 ]
+			,	dy = pts[ i ][ 1 ] - a[ 1 ]
+			,	d = Math.hypot( dx, dy )
+			if	( d > 1e-6 ) return [ dx / d, dy / d, d ]
+		}
+	} else {
+		const	a = pts[ pts.length - 1 ]
+		for	( let i = pts.length - 2; i >= 0; i-- ) {
+			const
+			dx = pts[ i ][ 0 ] - a[ 0 ]
+			,	dy = pts[ i ][ 1 ] - a[ 1 ]
+			,	d = Math.hypot( dx, dy )
+			if	( d > 1e-6 ) return [ dx / d, dy / d, d ]
+		}
+	}
+	return	[ 0, 0, 0 ]
 }
 
 const
@@ -253,7 +295,8 @@ offsetOutward	= ( p, outward, dist ) => [
 ,	p[ 1 ] + outward[ 1 ] * dist
 ]
 
-//	shaftHalf-independent attachment geometry; computed once per link
+//	attachment geometry ( boundary points, outward normals, stroke-frame insets
+//	and resulting boundary tips ); computed once per link
 const
 linkEnds		= ( [ [ nF, nT ], A, P ] ) => {
 	const
@@ -270,11 +313,13 @@ linkEnds		= ( [ [ nF, nT ], A, P ] ) => {
 	}
 }
 
+//	centerline route whose endpoints are exactly the boundary tips, so the
+//	arrowheads, their necks and the shaft all share one geometry
 const
-routeFrom		= ( e, shaftHalf ) => {
+routeFrom		= e => {
 	const
-	rF = offsetOutward( e.pF, e.outwardF, e.frameF + shaftHalf )
-,	rT = offsetOutward( e.pT, e.outwardT, e.frameT + shaftHalf )
+	rF = e.tipF
+,	rT = e.tipT
 	if	( !e.ortho )	return [ rF, rT ]
 	const
 	midX = ( rF[ 0 ] + rT[ 0 ] ) / 2
@@ -284,106 +329,48 @@ routeFrom		= ( e, shaftHalf ) => {
 	:	[ rF, [ rF[ 0 ], midY ], [ rT[ 0 ], midY ], rT ]
 }
 
-const
-outlinePath		= ( pts, half ) => {
-	if	( pts.length < 2 ) return []
-	const
-	left = []
-,	right = []
-	for	( let i = 0; i < pts.length; i++ ) {
-		let
-		dx
-		,	dy
-		if	( i === 0 ) {
-			dx = pts[ 1 ][ 0 ] - pts[ 0 ][ 0 ]
-			dy = pts[ 1 ][ 1 ] - pts[ 0 ][ 1 ]
-		} else if	( i === pts.length - 1 ) {
-			dx = pts[ i ][ 0 ] - pts[ i - 1 ][ 0 ]
-			dy = pts[ i ][ 1 ] - pts[ i - 1 ][ 1 ]
-		} else {
-			const
-			d0 = unit( pts[ i ][ 0 ] - pts[ i - 1 ][ 0 ], pts[ i ][ 1 ] - pts[ i - 1 ][ 1 ] )
-		,	d1 = unit( pts[ i + 1 ][ 0 ] - pts[ i ][ 0 ], pts[ i + 1 ][ 1 ] - pts[ i ][ 1 ] )
-			;[ dx, dy ] = unit( d0[ 0 ] + d1[ 0 ], d0[ 1 ] + d1[ 1 ] )
-		}
-		const
-		[ nx, ny ] = unit( -dy, dx )
-	,	ox = nx * half
-	,	oy = ny * half
-		left.push( [ pts[ i ][ 0 ] + ox, pts[ i ][ 1 ] + oy ] )
-		right.push( [ pts[ i ][ 0 ] - ox, pts[ i ][ 1 ] - oy ] )
-	}
-	return [ ...left, ...right.reverse() ]
-}
-
 export	const
 LinkMetrics		= ( [ [ nF, nT ], A, P ] ) => {
 
 	const
 	e = linkEnds( [ [ nF, nT ], A, P ] )
-,	{ tipF, tipT } = e
-,	len0 = pathLength( routeFrom( e, 0 ) )
-	if	( len0 < 1 ) return null
-
-	//	route is inset by a gap derived from the tip-to-tip length, then the head
-	//	and shaft are sized from the inset route's length (matches original tuning)
-	const
-	gapHalf = Math.max( 2, Math.max( 5, Math.min( 14, len0 * 0.35 ) * 0.5 ) * 0.45 )
-,	route = routeFrom( e, gapHalf )
+,	route = routeFrom( e )
 ,	len = pathLength( route )
 	if	( len < 1 ) return null
 
 	const
-	headLen   = Math.min( 14, len * 0.35 )
-,	headHalf  = Math.max( 5, headLen * 0.5 )
-,	shaftHalf = Math.max( 2, headHalf * 0.45 )
+	headLen  = Math.min( 14, len * 0.35 )
+,	headHalf = Math.max( 5, headLen * 0.5 )
 
+	//	each arrowhead lies along its own end segment of the centerline and is
+	//	never longer than that segment, so its neck stays on the centerline; the
+	//	shaft is then the centerline between the two necks
+	const
+	heads = []
 	let
 	fDist = 0
 ,	tDist = len
-,	neckF = null
-,	neckT = null
-	const
-	heads = []
+
 	if	( A.headF ) {
 		const
-		dir = unit( route[ 1 ][ 0 ] - route[ 0 ][ 0 ], route[ 1 ][ 1 ] - route[ 0 ][ 1 ] )
-		neckF = [ tipF[ 0 ] + dir[ 0 ] * headLen, tipF[ 1 ] + dir[ 1 ] * headLen ]
-		fDist = Math.max( 0, distAlongSeg( route[ 0 ], route[ 1 ], neckF ) )
-		heads.push( headTriangle( tipF, dir, headLen, headHalf ) )
+		[ ux, uy, segLen ] = endDir( route, true )
+	,	hl = Math.min( headLen, segLen )
+		heads.push( headTriangle( route[ 0 ], [ ux, uy ], hl, headHalf ) )
+		fDist = hl
 	}
 	if	( A.headT ) {
 		const
-		n = route.length - 1
-	,	dir = unit( route[ n - 1 ][ 0 ] - tipT[ 0 ], route[ n - 1 ][ 1 ] - tipT[ 1 ] )
-	,	lastSegLen = Math.hypot(
-			route[ n ][ 0 ] - route[ n - 1 ][ 0 ]
-		,	route[ n ][ 1 ] - route[ n - 1 ][ 1 ]
-		)
-		neckT = [ tipT[ 0 ] + dir[ 0 ] * headLen, tipT[ 1 ] + dir[ 1 ] * headLen ]
-		tDist = len - lastSegLen + distAlongSeg( route[ n - 1 ], route[ n ], neckT )
-		tDist = Math.min( len, Math.max( fDist, tDist ) )
-		heads.push( headTriangle( tipT, dir, headLen, headHalf ) )
+		[ ux, uy, segLen ] = endDir( route, false )
+	,	hl = Math.min( headLen, segLen )
+		heads.push( headTriangle( route[ route.length - 1 ], [ ux, uy ], hl, headHalf ) )
+		tDist = len - hl
 	}
-	const
-	shaft = subPath( route, fDist, tDist )
-	if	( shaft.length < 2 ) return null
+	if	( tDist < fDist )	tDist = fDist
 
 	const
-	endF = A.headF ? neckF : tipF
-,	endT = A.headT ? neckT : tipT
-	if	( endT ) {
-		const
-		last = shaft[ shaft.length - 1 ]
-		if	( Math.hypot( endT[ 0 ] - last[ 0 ], endT[ 1 ] - last[ 1 ] ) > 0.5 )	shaft.push( endT )
-	}
-	if	( endF ) {
-		const
-		first = shaft[ 0 ]
-		if	( Math.hypot( endF[ 0 ] - first[ 0 ], endF[ 1 ] - first[ 1 ] ) > 0.5 )	shaft.unshift( endF )
-	}
+	shaft = subPath( route, fDist, tDist )
 	return {
-		shaft
+		shaft	: shaft.length < 2 ? [ route[ 0 ], route[ route.length - 1 ] ] : shaft
 	,	heads
 	}
 }
