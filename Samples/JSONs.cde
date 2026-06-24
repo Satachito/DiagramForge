@@ -13,8 +13,8 @@
 					"style": ";padding     : 0 0 0 515px\n;line-height : 96px\n;font-size   : 16px\n;text-align  : left\n;align-items : start\n;text-baseline: middle\n;font-weight : 700"
 				},
 				{
-					"stroke": "gray",
-					"lineWidth": "2"
+					"stroke": "#b39ddb",
+					"lineWidth": 2
 				}
 			],
 			[
@@ -42,7 +42,7 @@
 					"style": ";padding     : 8px 12px 8px 46px\n;line-height : 32px\n;font-size   : 14px\n;text-align  : left\n;align-items : start\n;text-baseline: middle\n;font-weight : 700"
 				},
 				{
-					"stroke": "gray",
+					"stroke": "#64b5f6",
 					"lineWidth": 2
 				}
 			],
@@ -70,7 +70,8 @@
 					"style": ";padding     : 8px 8px 8px 38px\n;line-height : 28px\n;font-size   : 14px\n;text-align  : left\n;align-items : start\n;text-baseline: middle"
 				},
 				{
-					"stroke": "gray",
+					"fill": "#00897b",
+					"stroke": "#4db6ac",
 					"lineWidth": 2
 				}
 			],
@@ -98,7 +99,8 @@
 					"style": ";padding     : 8px 8px 8px 38px\n;line-height : 28px\n;font-size   : 14px\n;text-align  : left\n;align-items : start\n;text-baseline: middle"
 				},
 				{
-					"stroke": "gray",
+					"fill": "#f4511e",
+					"stroke": "#ff8a65",
 					"lineWidth": 2
 				}
 			],
@@ -126,7 +128,8 @@
 					"style": ";padding     : 8px 8px 8px 38px\n;line-height : 28px\n;font-size   : 14px\n;text-align  : left\n;align-items : start\n;text-baseline: middle"
 				},
 				{
-					"stroke": "gray",
+					"fill": "#43a047",
+					"stroke": "#81c784",
 					"lineWidth": 2
 				}
 			],
@@ -154,7 +157,8 @@
 					"style": ";padding     : 8px 8px 8px 38px\n;line-height : 28px\n;font-size   : 14px\n;text-align  : left\n;align-items : start\n;text-baseline: middle"
 				},
 				{
-					"stroke": "gray",
+					"fill": "#e53935",
+					"stroke": "#ef5350",
 					"lineWidth": 2
 				}
 			],
@@ -182,8 +186,8 @@
 					"style": ";padding     : 0 0 0 491px\n;line-height : 96px\n;font-size   : 16px\n;text-align  : left\n;align-items : start\n;text-baseline: middle\n;font-weight : 700"
 				},
 				{
-					"stroke": "gray",
-					"lineWidth": "2"
+					"stroke": "#4fc3f7",
+					"lineWidth": 2
 				}
 			],
 			[
@@ -211,7 +215,7 @@
 					"style": ";padding     : 8px 12px 8px 46px\n;line-height : 32px\n;font-size   : 14px\n;text-align  : left\n;align-items : start\n;text-baseline: middle\n;font-weight : 700"
 				},
 				{
-					"stroke": "gray",
+					"stroke": "#ffb74d",
 					"lineWidth": 2
 				}
 			],
@@ -239,8 +243,9 @@
 					"style": ";padding     : 8px 8px 8px 38px\n;line-height : 28px\n;font-size   : 14px\n;text-align  : left\n;align-items : start\n;text-baseline: middle"
 				},
 				{
-					"stroke": "gray",
-					"lineWidth": "2"
+					"fill": "#7cb342",
+					"stroke": "#aed581",
+					"lineWidth": 2
 				}
 			],
 			[
@@ -267,8 +272,9 @@
 					"style": ";padding     : 8px 8px 8px 38px\n;line-height : 28px\n;font-size   : 14px\n;text-align  : left\n;align-items : start\n;text-baseline: middle"
 				},
 				{
-					"stroke": "gray",
-					"lineWidth": "2"
+					"fill": "#8e24aa",
+					"stroke": "#ce93d8",
+					"lineWidth": 2
 				}
 			],
 			[
@@ -295,8 +301,9 @@
 					"style": ";padding     : 8px 8px 8px 38px\n;line-height : 28px\n;font-size   : 14px\n;text-align  : left\n;align-items : start\n;text-baseline: middle"
 				},
 				{
-					"stroke": "gray",
-					"lineWidth": "2"
+					"fill": "#fbc02d",
+					"stroke": "#fff176",
+					"lineWidth": 2
 				}
 			],
 			[
@@ -324,8 +331,9 @@
 					"style": ";padding     : 8px 8px 8px 38px\n;line-height : 28px\n;font-size   : 14px\n;text-align  : left\n;align-items : start\n;text-baseline: middle"
 				},
 				{
-					"stroke": "gray",
-					"lineWidth": "2"
+					"fill": "#3949ab",
+					"stroke": "#7986cb",
+					"lineWidth": 2
 				}
 			],
 			[
@@ -352,7 +360,8 @@
 					"style": ";padding     : 8px 8px 8px 38px\n;line-height : 28px\n;font-size   : 14px\n;text-align  : left\n;align-items : start\n;text-baseline: middle"
 				},
 				{
-					"stroke": "gray",
+					"fill": "#00acc1",
+					"stroke": "#4dd0e1",
 					"lineWidth": 2
 				}
 			],
@@ -380,8 +389,9 @@
 					"style": ";padding     : 8px 8px 8px 38px\n;line-height : 28px\n;font-size   : 14px\n;text-align  : left\n;align-items : start\n;text-baseline: middle"
 				},
 				{
-					"stroke": "gray",
-					"lineWidth": "2"
+					"fill": "#d81b60",
+					"stroke": "#f48fb1",
+					"lineWidth": 2
 				}
 			],
 			[
@@ -408,7 +418,7 @@
 					"headT": "triangle"
 				},
 				{
-					"stroke": "gray",
+					"stroke": "#f48fb1",
 					"lineWidth": 8
 				}
 			],
@@ -422,7 +432,7 @@
 					"headT": "triangle"
 				},
 				{
-					"stroke": "gray",
+					"stroke": "#4fc3f7",
 					"lineWidth": 8
 				}
 			],
@@ -436,7 +446,7 @@
 					"headT": "triangle"
 				},
 				{
-					"stroke": "gray",
+					"stroke": "#81c784",
 					"lineWidth": 8
 				}
 			],
@@ -450,7 +460,7 @@
 					"headT": "triangle"
 				},
 				{
-					"stroke": "gray",
+					"stroke": "#ffb74d",
 					"lineWidth": 8
 				}
 			],
@@ -464,7 +474,7 @@
 					"headT": "triangle"
 				},
 				{
-					"stroke": "gray",
+					"stroke": "#ff8a65",
 					"lineWidth": 8
 				}
 			],
@@ -478,7 +488,7 @@
 					"headT": "triangle"
 				},
 				{
-					"stroke": "gray",
+					"stroke": "#4dd0e1",
 					"lineWidth": 8
 				}
 			],
@@ -492,7 +502,7 @@
 					"headT": "triangle"
 				},
 				{
-					"stroke": "gray",
+					"stroke": "#aed581",
 					"lineWidth": 8
 				}
 			],
@@ -506,7 +516,7 @@
 					"headT": "triangle"
 				},
 				{
-					"stroke": "gray",
+					"stroke": "#ff8a65",
 					"lineWidth": 8
 				}
 			],
@@ -520,7 +530,7 @@
 					"headT": "triangle"
 				},
 				{
-					"stroke": "gray",
+					"stroke": "#7986cb",
 					"lineWidth": 8
 				}
 			],
@@ -534,7 +544,7 @@
 					"headT": "triangle"
 				},
 				{
-					"stroke": "gray",
+					"stroke": "#fff176",
 					"lineWidth": 8
 				}
 			],
@@ -548,7 +558,7 @@
 					"headT": "triangle"
 				},
 				{
-					"stroke": "gray",
+					"stroke": "#ce93d8",
 					"lineWidth": 8
 				}
 			],
@@ -562,7 +572,7 @@
 					"headT": "triangle"
 				},
 				{
-					"stroke": "gray",
+					"stroke": "#ce93d8",
 					"lineWidth": 8
 				}
 			]
