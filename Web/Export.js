@@ -1,45 +1,34 @@
 import { FindNode				} from './Application.js'
-import { EscapeXML				} from './DomUtils.js'
 import { XYWH_TLBR				} from './Geo2D.js'
-import { XYWH, BBox				} from './GeoDF.js'
+import { XYWH, BBox, LinkMetrics	} from './GeoDF.js'
 import { drawForeignLabelSvg	} from './ForeignLabel.js'
-import { C2D, GRAB, LinkMetrics	} from './GeoDF.js'
 
 const
-DrawLinkSvg		= ( parts, X, Y, [ [ nF, nT ], A, P ] ) => {
-console.log( nF, nT )
+DrawLinkSvg		= ( parts, X, Y, link ) => {
 	const
-	$ = LinkMetrics( [ [ nF, nT ], A, P ] )
+	$ = LinkMetrics( link )
 	if	( !$ ) return
 
 	const
-	strokeAttrs		= P => {
-		const
-		a = [
-			`stroke="${ P.stroke }"`
-		,	`stroke-linecap="${ P.lineCap || 'butt' }"`
-		,	`stroke-linejoin="${ P.lineJoin || 'round' }"`
-		]
-		P.lineWidth			&& a.push( `stroke-with=${ P.lineWidth }` )
-		P.lineDash			&& a.push( `stroke-dasharray="${ P.lineDash.join( ' ' ) }"` )
-		P.lineDashOffset	&& a.push( `stroke-dashoffset="${ P.lineDashOffset }"` )
-		return a.join( ' ' )
-	}
-
-	const
-	pointsAttr		= ( X, Y, points ) => points.map(
-		( [ x, y ] ) => `${ X( x ) },${ Y( y ) }`
-	).join( ' ' )
+	P = link[ 2 ]
+	,	a = [
+		`stroke="${ P.stroke }"`
+	,	`stroke-linecap="${ P.lineCap || 'butt' }"`
+	,	`stroke-linejoin="${ P.lineJoin || 'round' }"`
+	]
+	P.lineWidth			&& a.push( `stroke-width="${ P.lineWidth }"` )
+	P.lineDash			&& a.push( `stroke-dasharray="${ P.lineDash.join( ' ' ) }"` )
+	P.lineDashOffset	&& a.push( `stroke-dashoffset="${ P.lineDashOffset }"` )
 
 	parts.push(
-		`<polyline points="${ pointsAttr( X, Y, $.shaft ) }" fill="none" ${ strokeAttrs( P ) }"/>`
+		`<polyline points="${ pointsAttr( X, Y, $.shaft ) }" fill="none" ${ a.join( ' ' ) }/>`
 	)
-	if	( P.fill ) {
-		for ( const head of $.heads ) {
-			parts.push(
-				`<polygon points="${ pointsAttr( X, Y, head ) }" fill="${ P.fill }" stroke="none"/>`
-			)
-		}
+	const
+	headFill = P.fill ?? P.stroke
+	for ( const head of $.heads ) {
+		parts.push(
+			`<polygon points="${ pointsAttr( X, Y, head ) }" fill="${ headFill }" stroke="none"/>`
+		)
 	}
 }
 
@@ -143,11 +132,6 @@ drawPngNode		= ( parts, X, Y, S ) => {
 }
 
 const
-drawLink		= ( parts, X, Y, nF, nT, A, P ) => DrawLinkSvg(
-	parts, X, Y, nF, nT, A, P
-)
-
-const
 buildVectorSVG	= () => {
 	if	( !app.model.nodes.length ) return null
 
@@ -181,7 +165,7 @@ buildVectorSVG	= () => {
 		const
 		nF = FindNode( F )
 	,	nT = FindNode( T )
-		nF && nT && drawLink(
+		nF && nT && DrawLinkSvg(
 			parts, X, Y, [ [ nF, nT ], A, P ]
 		)
 	}

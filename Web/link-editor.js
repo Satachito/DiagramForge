@@ -1,8 +1,6 @@
 import {
-	AC
-,	AE
+	AE
 ,	LabeledSelect
-,	LabeledInput
 ,	LabeledCheckbox
 }	from './DomUtils.js'
 
@@ -56,10 +54,10 @@ LinkEditor extends HTMLElement {
 	get $() {
 		const
 		A = {}
-		this.HEAD_F.checked && ( A[ 'headF' ] = true )
-		this.HEAD_T.checked && ( A[ 'headT' ] = true )
-		this.ANCHOR_F.value && ( A[ "anchorF" ] = this.ANCHOR_F.value )
-		this.ANCHOR_T.value && ( A[ "anchorT" ] = this.ANCHOR_T.value )
+		this.HEAD_F.checked && ( A[ 'headF'		] = true )
+		this.HEAD_T.checked && ( A[ 'headT'		] = true )
+		this.ANCHOR_F.value && ( A[ "anchorF"	] = this.ANCHOR_F.value )
+		this.ANCHOR_T.value && ( A[ "anchorT"	] = this.ANCHOR_T.value )
 		return [ [ this.F.value, this.T.value ], A ]
 	}
 }

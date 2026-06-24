@@ -68,7 +68,6 @@ AvailableLinks	= () => app.model.links.reduce(
 ,	[]
 )
 
-
 import Do from './Jobs.js'
 
 
@@ -77,17 +76,18 @@ import Do from './Jobs.js'
 //	clone (never the snapshot object itself) keeps both snapshots pristine, so a
 //	later redo can't corrupt the snapshot a subsequent undo relies on.
 const
-restoreSnapshot	= snapshot => async () => (
-	app = structuredClone( snapshot )
-/*
-,	app.reforms = app.reforms.flatMap(
-		( [ ID ] ) => {
+restoreFunc = _ => async () => (
+	app = structuredClone( _ )
+,	app.reforms = app.reforms.reduce(
+		( $, [ ID ] ) => {
 			const
 			node = FindNode( ID )
-			return node ? [ [ ID, structuredClone( node[ 1 ] ), structuredClone( node[ 2 ] ) ] ] : []
+			node && $.push( structuredClone( node ) )
+			return $
+
 		}
+	,	[]
 	)
-*/
 ,	MAIN_EDITOR.clearInteraction()
 ,	await MAIN_EDITOR.Draw()
 ,	LINK_EDITOR.Sync()
@@ -101,7 +101,7 @@ DoTypical	= async ( label, mutate ) => {
 	await mutate()
 	const
 	after = structuredClone( app )
-	await Do( label, restoreSnapshot( after ), restoreSnapshot( before ) )
+	await Do( label, restoreFunc( after ), restoreFunc( before ) )
 }
 
 export	const

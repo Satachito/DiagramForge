@@ -29,7 +29,6 @@ import {
 ,	ContainsXY
 ,	ContainsTLBR
 ,	AreaTLBR
-,	Union
 ,	XYWH_XYXY
 ,	XY_EV
 ,	AddXY
@@ -123,9 +122,9 @@ HitLink			= ( _, xy ) => {
 import { DrawForeignLabel	} from './ForeignLabel.js'
 
 const
-NodeMode = ev => CREATE_NODE.checked || ev.metaKey
+NodeMode = ev => CREATE_NODE.checked || !!ev?.metaKey
 const
-LinkMode = ev => CREATE_LINK.checked || ev.altKey
+LinkMode = ev => CREATE_LINK.checked || !!ev?.altKey
 
 const
 Node_XY		= xy => {
@@ -545,15 +544,6 @@ MainEditor extends HTMLElement {
 		SHAPE_EDITOR.$		= node[ 1 ]
 		PAINT_EDITOR.$		= node[ 2 ]
 	}
-/*
-	//	plain click: select just the one node, replacing any selection
-	async selectSingle( node ) {
-		setEditor( node )
-		this.registReform( node )
-		this.rollSelectedToTop()
-		await this.DrawReforms()
-	}
-*/
 
 	//	shift+click: extend the selection with the node and everything it contains
 	async addWithContained( node ) {

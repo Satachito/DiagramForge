@@ -3,13 +3,7 @@ import {
 }	from './DomUtils.js'
 
 import {
-	XYWH_TLBR
-,	TLBR_XYXY
-,	EdgeDist
-,	Outset
-,	ContainsXY
-,	ContainsTLBR
-,	Union
+	Union
 } from './Geo2D.js'
 
 export const
@@ -41,8 +35,6 @@ TLBR			= ( { cX, cY, rH, rV } ) => 0 < rH
 :	0 < rV
 	?	[ cY - rV, cX + rH, cY + rV, cX - rH ]
 	:	[ cY + rV, cX + rH, cY - rV, cX - rH ]
-
-import { FindReform } from './Application.js'
 
 export const
 BBox			= _ => Union( _.map( _ => TLBR( _[ 1 ] ) ) )
