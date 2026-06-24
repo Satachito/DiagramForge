@@ -240,17 +240,24 @@ nav {
 nav cloud-icons {
 ;	display					: block
 }
+.icon-spinner-wrap {
+;	position				: fixed
+;	display					: flex
+;	justify-content			: center
+;	align-items				: center
+;	pointer-events			: none
+;	z-index					: 10
+}
 .icon-spinner {
 ;	width					: 20px
 ;	height					: 20px
-;	margin					: 8px
 ;	border					: 2px solid var( --color-popup-border )
 ;	border-top-color		: currentColor
 ;	border-radius			: 50%
 ;	animation				: icon-spin .7s linear infinite
 }
 @keyframes icon-spin {
-;	to						{ transform: rotate( 360deg ) }
+	to						{ transform: rotate( 360deg ) }
 }
 details {
 ;	padding-left			: 8px

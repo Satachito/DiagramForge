@@ -43,11 +43,24 @@ IMG		= url => {
 	return $
 }
 
+//	loading spinner centered over the cloud-icons' closed-state area ( the
+//	checkbox row + summary header ). it's created before any icons are added, so
+//	the host rect at that moment is exactly the collapsed region
 const
-SPINNER = () => {
+SPINNER = host => {
 	const
 	$ = E( 'div' )
-	$.className = 'icon-spinner'
+	$.className = 'icon-spinner-wrap'
+	const
+	r = host.getBoundingClientRect()
+	$.style.left	= `${ r.left }px`
+	$.style.top		= `${ r.top }px`
+	$.style.width	= `${ r.width }px`
+	$.style.height	= `${ r.height }px`
+	const
+	s = E( 'div' )
+	s.className = 'icon-spinner'
+	AC( $, s )
 	return $
 }
 
@@ -69,6 +82,64 @@ clearIcons = root => {
 	for	( const child of Array.from( root.children ) ) {
 		child.tagName !== 'SUMMARY' && child.remove()
 	}
+}
+
+//	build one clickable icon row. the image ( object URL ) is only created when
+//	this runs, so callers can defer it until a folder is actually opened
+const
+iconRow = ( parent, { name, path, bytes } ) => {
+	const
+	row = AE( parent, 'div' )
+	row.setAttribute( 'path', path )
+	row.style.marginLeft	= '8px'
+	row.style.display		= 'flex'
+	row.style.borderBottom	= '1px solid gray'
+	const
+	isSVG = path.endsWith( '.svg' )
+	,	img = row.appendChild(
+		IMG(
+			URL.createObjectURL(
+				new Blob(
+					[ bytes ]
+				,	{ type: isSVG ? 'image/svg+xml;charset=utf-8' : 'image/png' }
+				)
+			)
+		)
+	)
+	img.onload = () => {
+		row.onclick = async () => {
+			const
+			rH	= img.naturalWidth	/ 2
+			,	rV	= img.naturalHeight / 2
+			await Node(
+				isSVG
+				?	[ null, { type: 'SVG', cX: rH, cY: rV, rH, rV, SVG: Base64( bytes ) }, {} ]
+				:	[ null, { type: 'PNG', cX: rH, cY: rV, rH, rV, PNG: Base64( bytes ) }, {} ]
+			)
+		}
+	}
+	const
+	span = row.appendChild( SPAN( name ) )
+	span.style.height	= '100%'
+	span.style.padding	= '4px'
+}
+
+//	render a folder tree node into parent. sub-folders get their summaries now
+//	but their contents ( images included ) are built lazily on first expand
+const
+renderFolder = ( parent, node ) => {
+	for ( const [ name, child ] of node.dirs ) {
+		const
+		d = parent.appendChild( DETAILS( name ) )
+		let
+		built = false
+		d.ontoggle = () => {
+			if	( !d.open || built ) return
+			built = true
+			renderFolder( d, child )
+		}
+	}
+	for ( const file of node.files ) iconRow( parent, file )
 }
 
 export default class
@@ -152,9 +223,14 @@ CloudIcons extends HTMLElement {
 		gen = ++this._buildGen
 		clearIcons( root )
 		const
-		status = root.appendChild( SPINNER() )
+		status = root.appendChild( SPINNER( this ) )
 
 		try {
+			//	let the browser paint the spinner before the ( possibly
+			//	microtask-only, cached ) fetch + unzip work runs
+			await new Promise( requestAnimationFrame )
+			if	( gen !== this._buildGen || !root.open ) return
+
 			await this.fetchZip()
 			if	( gen !== this._buildGen || !root.open ) return
 
@@ -162,94 +238,39 @@ CloudIcons extends HTMLElement {
 			icons = await this.unzipIcons()
 			if	( gen !== this._buildGen || !root.open ) return
 
-			status.remove()
+			//	group the flat path list into a folder tree first ( cheap )
 			let
 			shown = 0
+			const
+			tree = { dirs: new Map(), files: [] }
 			for ( const [ path, bytes ] of Object.entries( icons ) ) {
-				if	( gen !== this._buildGen || !root.open ) return
 				if	( path.endsWith( '.png' ) && !showPNG ) continue
 				if	( path.endsWith( '.svg' ) && !showSVG ) continue
-
 				const
-				pathComponents = path.split( '/' )
+				parts = path.split( '/' )
+				,	name = parts.pop()
 				let
-				current = root
-				let
-				i = 0
-				while ( i < pathComponents.length - 1 ) {
-					const
-					pathComponent = pathComponents[ i ]
-					const
-					details = Array.from(
-						current.querySelectorAll( ':scope > details' )
-					).find(
-						_ => _.querySelector( ':scope > summary' )?.textContent.trim() === pathComponent
-					)
-					current = details
-					?	details
-					:	current.appendChild( DETAILS( pathComponent ) )
-					i++
+				node = tree
+				for ( const dir of parts ) {
+					node.dirs.has( dir ) || node.dirs.set( dir, { dirs: new Map(), files: [] } )
+					node = node.dirs.get( dir )
 				}
-				const
-				row = AE( current, 'div' )
-				row.setAttribute( 'path', path )
-				row.style.marginLeft = '8px'
-				row.style.display = 'flex'
-				row.style.borderBottom = '1px solid gray'
-				const
-				img = row.appendChild(
-					IMG(
-						URL.createObjectURL(
-							new Blob(
-								[ bytes ]
-							,	{
-									type: path.endsWith( '.svg' )
-										?	'image/svg+xml;charset=utf-8'
-										:	'image/png'
-								}
-							)
-						)
-					)
-				)
-				img.onload = () => {
-					row.onclick = async () => {
-						const
-						rH	= img.naturalWidth	/ 2
-						,	rV	= img.naturalHeight / 2
-						await Node(
-							path.endsWith( '.svg' )
-							?	[	null
-								,	{	type	: 'SVG'
-									,	cX		: rH
-									,	cY		: rV
-									,	rH
-									,	rV
-									,	SVG		: Base64( bytes )
-									}
-								,	{}
-								]
-							:	[	null
-								,	{ type: 'PNG', cX: rH, cY: rV, rH, rV, PNG: Base64( bytes ) }
-								,	{}
-								]
-						)
-					}
-				}
-				const
-				span = row.appendChild( SPAN( pathComponents[ i ] ) )
-				span.style.height = '100%'
-				span.style.padding = '4px'
+				node.files.push( { name, path, bytes } )
 				shown++
 			}
+
+			renderFolder( root, tree )
+
 			if	( !shown ) {
 				AE( root, 'p' ).textContent = 'Check SVG and/or PNG.'
 			}
 		} catch ( er ) {
 			if	( gen === this._buildGen ) {
-				status.remove()
 				AE( root, 'p' ).textContent = String( er )
 			}
 			throw er
+		} finally {
+			status.remove()
 		}
 	}
 }
