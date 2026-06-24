@@ -74,7 +74,7 @@ DrawLinkCanvas	= ( c2D, _ ) => {
 	for	( let i = 1; i < $.shaft.length; i++ )	c2D.lineTo( ...$.shaft[ i ] )
 	c2D.stroke()
 
-	P.fill				&& ( c2D.fillStyle	 	= P.fill )
+	c2D.fillStyle = P.fill ?? P.stroke
 	c2D.beginPath()
 	for ( const [ [ ax, ay ], [ bx, by ], [ cx, cy ] ] of $.heads ) {
 		c2D.moveTo( ax, ay )
