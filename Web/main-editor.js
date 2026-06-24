@@ -686,16 +686,18 @@ MainEditor extends HTMLElement {
 				return
 			}
 
-			$
-			?	(	this.drag = ContainsXY( TLBR( $[ 1 ] ), xy ) ? this.beginMove() : this.beginResize()
-				,	ev.shiftKey
-					?	(	this.selectEditor( $ )
-						,	this.registReform( node )
-						,	this.rollSelectedToTop()
-						)
-					:	this.addWithContained( $ )
-				)
-			:	this.drag = this.beginArea()
+			void (
+				$
+				?	(	this.drag = ContainsXY( TLBR( $[ 1 ] ), xy ) ? this.beginMove() : this.beginResize()
+					,	ev.shiftKey
+						?	(	this.setEditor( $ )
+							,	this.registReform( $ )
+							,	this.rollSelectedToTop()
+							)
+						:	this.addWithContained( $ )
+					)
+				:	this.drag = this.beginArea()
+			)
 		} finally {
 			needsRedraw && await this.DrawReforms()
 		}
@@ -846,11 +848,15 @@ MainEditor extends HTMLElement {
 
 	async onMouseUp( ev ) {
 		void ev
+
+		const
+		drag = this.drag
+		this.drag = null
+
 		const
 		[ mouseD, mouseU ] = mouse
-		,	drag = this.drag
 		mouse[ 0 ] = mouse[ 1 ] = null
-		this.drag = null
+
 		if	( mouseD === null || mouseU === null ) return
 		if	( EqualXY( mouseD, mouseU ) ) return
 
