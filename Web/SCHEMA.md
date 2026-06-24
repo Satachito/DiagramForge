@@ -3,7 +3,7 @@
 A `.cde` file is the JSON of the diagram model, tab-indented:
 
 ```json
-{ "nodes": [ ... ], "links": [ ... ] }
+{ "model": { "nodes": [ ... ], "links": [ ... ] } }
 ```
 
 `index.html` loads it via the `↑` upload button, and the last session is

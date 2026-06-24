@@ -1,569 +1,571 @@
 {
-	"nodes": [
-		[
-			"VPN",
-			{
-				"type": "rhombus",
-				"cX": 960,
-				"cY": 560,
-				"rH": 512,
-				"rV": 48,
-				"html": "VPN",
-				"style": ";padding     : 0 0 0 515px\n;line-height : 96px\n;font-size   : 16px\n;text-align  : left\n;align-items : start\n;text-baseline: middle\n;font-weight : 700"
-			},
-			{
-				"stroke": "gray",
-				"lineWidth": "2"
-			}
-		],
-		[
-			"VPN Icon",
-			{
-				"type": "SVG",
-				"cX": 943,
-				"cY": 560,
-				"rH": 14,
-				"rV": 14,
-				"SVG": "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2NjYiIHN0cm9rZS13aWR0aD0iMS43NSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTIgMjJzOC00IDgtMTBWNWwtOC0zLTggM3Y3YzAgNiA4IDEwIDggMTB6Ii8+PHJlY3QgeD0iOSIgeT0iMTEiIHdpZHRoPSI2IiBoZWlnaHQ9IjQiIHJ4PSIxIi8+PHBhdGggZD0iTTEyIDExVjlhMiAyIDAgMCAxIDQgMHYyIi8+PC9zdmc+"
-			},
-			{}
-		],
-		[
-			"Cloud",
-			{
-				"type": "rect",
-				"cX": 960,
-				"cY": 336,
-				"rH": 464,
-				"rV": 176,
-				"radii": 18,
-				"html": "Cloud",
-				"style": ";padding     : 8px 12px 8px 46px\n;line-height : 32px\n;font-size   : 14px\n;text-align  : left\n;align-items : start\n;text-baseline: middle\n;font-weight : 700"
-			},
-			{
-				"stroke": "gray",
-				"lineWidth": 2
-			}
-		],
-		[
-			"Cloud Icon",
-			{
-				"type": "SVG",
-				"cX": 520,
-				"cY": 184,
-				"rH": 16,
-				"rV": 16,
-				"SVG": "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2NjYiIHN0cm9rZS13aWR0aD0iMS43NSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTcuNSAxOUg5YTcgNyAwIDEgMSA2LjcxLTloMS43OWE0LjUgNC41IDAgMSAxIDAgOVoiLz48L3N2Zz4="
-			},
-			{}
-		],
-		[
-			"Private WAF",
-			{
-				"type": "rect",
-				"cX": 816,
-				"cY": 256,
-				"rH": 128,
-				"rV": 32,
-				"html": "Private WAF",
-				"style": ";padding     : 8px 8px 8px 38px\n;line-height : 28px\n;font-size   : 14px\n;text-align  : left\n;align-items : start\n;text-baseline: middle"
-			},
-			{
-				"stroke": "gray",
-				"lineWidth": 2
-			}
-		],
-		[
-			"Private WAF Icon",
-			{
-				"type": "SVG",
-				"cX": 708,
-				"cY": 244,
-				"rH": 12,
-				"rV": 12,
-				"SVG": "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2NjYiIHN0cm9rZS13aWR0aD0iMS43NSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTIgMjJzOC00IDgtMTBWNWwtOC0zLTggM3Y3YzAgNiA4IDEwIDggMTB6Ii8+PC9zdmc+"
-			},
-			{}
-		],
-		[
-			"Public WAF",
-			{
-				"type": "rect",
-				"cX": 1104,
-				"cY": 256,
-				"rH": 128,
-				"rV": 32,
-				"html": "Public WAF",
-				"style": ";padding     : 8px 8px 8px 38px\n;line-height : 28px\n;font-size   : 14px\n;text-align  : left\n;align-items : start\n;text-baseline: middle"
-			},
-			{
-				"stroke": "gray",
-				"lineWidth": 2
-			}
-		],
-		[
-			"Public WAF Icon",
-			{
-				"type": "SVG",
-				"cX": 996,
-				"cY": 244,
-				"rH": 12,
-				"rV": 12,
-				"SVG": "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2NjYiIHN0cm9rZS13aWR0aD0iMS43NSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTIgMjJzOC00IDgtMTBWNWwtOC0zLTggM3Y3YzAgNiA4IDEwIDggMTB6Ii8+PHBhdGggZD0ibTkgMTIgMiAyIDQtNCIvPjwvc3ZnPg=="
-			},
-			{}
-		],
-		[
-			"Private Application",
-			{
-				"type": "rect",
-				"cX": 816,
-				"cY": 384,
-				"rH": 128,
-				"rV": 32,
-				"html": "Private Application",
-				"style": ";padding     : 8px 8px 8px 38px\n;line-height : 28px\n;font-size   : 14px\n;text-align  : left\n;align-items : start\n;text-baseline: middle"
-			},
-			{
-				"stroke": "gray",
-				"lineWidth": 2
-			}
-		],
-		[
-			"Private Application Icon",
-			{
-				"type": "SVG",
-				"cX": 708,
-				"cY": 372,
-				"rH": 12,
-				"rV": 12,
-				"SVG": "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2NjYiIHN0cm9rZS13aWR0aD0iMS43NSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjE2IiByPSIxIi8+PHJlY3QgeD0iMyIgeT0iMTAiIHdpZHRoPSIxOCIgaGVpZ2h0PSIxMiIgcng9IjIiLz48cGF0aCBkPSJNNyAxMFY3YTUgNSAwIDAgMSAxMCAwdjMiLz48L3N2Zz4="
-			},
-			{}
-		],
-		[
-			"Public Application",
-			{
-				"type": "rect",
-				"cX": 1104,
-				"cY": 384,
-				"rH": 128,
-				"rV": 32,
-				"html": "Public Application",
-				"style": ";padding     : 8px 8px 8px 38px\n;line-height : 28px\n;font-size   : 14px\n;text-align  : left\n;align-items : start\n;text-baseline: middle"
-			},
-			{
-				"stroke": "gray",
-				"lineWidth": 2
-			}
-		],
-		[
-			"Public Application Icon",
-			{
-				"type": "SVG",
-				"cX": 996,
-				"cY": 372,
-				"rH": 12,
-				"rV": 12,
-				"SVG": "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2NjYiIHN0cm9rZS13aWR0aD0iMS43NSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cmVjdCB4PSIyIiB5PSI0IiB3aWR0aD0iMjAiIGhlaWdodD0iMTYiIHJ4PSIyIi8+PHBhdGggZD0iTTEwIDR2NCIvPjxwYXRoIGQ9Ik0yIDhoMjAiLz48cGF0aCBkPSJNNiA0djQiLz48L3N2Zz4="
-			},
-			{}
-		],
-		[
-			"Internet",
-			{
-				"type": "ellipse",
-				"cX": 960,
-				"cY": 112,
-				"rH": 512,
-				"rV": 48,
-				"html": "Internet",
-				"style": ";padding     : 0 0 0 491px\n;line-height : 96px\n;font-size   : 16px\n;text-align  : left\n;align-items : start\n;text-baseline: middle\n;font-weight : 700"
-			},
-			{
-				"stroke": "gray",
-				"lineWidth": "2"
-			}
-		],
-		[
-			"Internet Icon",
-			{
-				"type": "SVG",
-				"cX": 919,
-				"cY": 112,
-				"rH": 14,
-				"rV": 14,
-				"SVG": "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2NjYiIHN0cm9rZS13aWR0aD0iMS43NSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjxwYXRoIGQ9Ik0yIDEyaDIwIi8+PHBhdGggZD0iTTEyIDJhMTUuMyAxNS4zIDAgMCAxIDQgMTAgMTUuMyAxNS4zIDAgMCAxLTQgMTAgMTUuMyAxNS4zIDAgMCAxLTQtMTAgMTUuMyAxNS4zIDAgMCAxIDQtMTB6Ii8+PC9zdmc+"
-			},
-			{}
-		],
-		[
-			"Inhouse",
-			{
-				"type": "rect",
-				"cX": 960,
-				"cY": 832,
-				"rH": 464,
-				"rV": 224,
-				"radii": 18,
-				"html": "Inhouse",
-				"style": ";padding     : 8px 12px 8px 46px\n;line-height : 32px\n;font-size   : 14px\n;text-align  : left\n;align-items : start\n;text-baseline: middle\n;font-weight : 700"
-			},
-			{
-				"stroke": "gray",
-				"lineWidth": 2
-			}
-		],
-		[
-			"Inhouse Icon",
-			{
-				"type": "SVG",
-				"cX": 520,
-				"cY": 632,
-				"rH": 16,
-				"rV": 16,
-				"SVG": "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2NjYiIHN0cm9rZS13aWR0aD0iMS43NSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNNiAyMlY0YTIgMiAwIDAgMSAyLTJoOGEyIDIgMCAwIDEgMiAydjE4WiIvPjxwYXRoIGQ9Ik02IDEySDRhMiAyIDAgMCAwLTIgMnY2YTIgMiAwIDAgMCAyIDJoMiIvPjxwYXRoIGQ9Ik0xOCA5aDJhMiAyIDAgMCAxIDIgMnY5YTIgMiAwIDAgMS0yIDJoLTIiLz48cGF0aCBkPSJNMTAgNmg0Ii8+PHBhdGggZD0iTTEwIDEwaDQiLz48cGF0aCBkPSJNMTAgMTRoNCIvPjxwYXRoIGQ9Ik0xMCAxOGg0Ii8+PC9zdmc+"
-			},
-			{}
-		],
-		[
-			"Writer API",
-			{
-				"type": "rect",
-				"cX": 795,
-				"cY": 706,
-				"rH": 128,
-				"rV": 32,
-				"html": "Writer API",
-				"style": ";padding     : 8px 8px 8px 38px\n;line-height : 28px\n;font-size   : 14px\n;text-align  : left\n;align-items : start\n;text-baseline: middle"
-			},
-			{
-				"stroke": "gray",
-				"lineWidth": "2"
-			}
-		],
-		[
-			"Writer API Icon",
-			{
-				"type": "SVG",
-				"cX": 687,
-				"cY": 694,
-				"rH": 12,
-				"rV": 12,
-				"SVG": "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2NjYiIHN0cm9rZS13aWR0aD0iMS43NSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTIgMjBoOSIvPjxwYXRoIGQ9Ik0xNi41IDMuNWEyLjEyIDIuMTIgMCAwIDEgMyAzTDcgMTlsLTQgMSAxLTRaIi8+PC9zdmc+"
-			},
-			{}
-		],
-		[
-			"Sanitized Reader",
-			{
-				"type": "rect",
-				"cX": 1191,
-				"cY": 707,
-				"rH": 128,
-				"rV": 32,
-				"html": "Sanitized Reader",
-				"style": ";padding     : 8px 8px 8px 38px\n;line-height : 28px\n;font-size   : 14px\n;text-align  : left\n;align-items : start\n;text-baseline: middle"
-			},
-			{
-				"stroke": "gray",
-				"lineWidth": "2"
-			}
-		],
-		[
-			"Sanitized Reader Icon",
-			{
-				"type": "SVG",
-				"cX": 1083,
-				"cY": 695,
-				"rH": 12,
-				"rV": 12,
-				"SVG": "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2NjYiIHN0cm9rZS13aWR0aD0iMS43NSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTIgN3YxNCIvPjxwYXRoIGQ9Ik0zIDE4YTEgMSAwIDAgMS0xLTFWNGExIDEgMCAwIDEgMS0xaDVhNCA0IDAgMCAxIDQgNCA0IDQgMCAwIDEgNC00aDVhMSAxIDAgMCAxIDEgMXYxM2ExIDEgMCAwIDEtMSAxaC02YTMgMyAwIDAgMC0zIDMgMyAzIDAgMCAwLTMtM3oiLz48L3N2Zz4="
-			},
-			{}
-		],
-		[
-			"Audit Log",
-			{
-				"type": "rect",
-				"cX": 656,
-				"cY": 848,
-				"rH": 128,
-				"rV": 32,
-				"html": "Audit Log",
-				"style": ";padding     : 8px 8px 8px 38px\n;line-height : 28px\n;font-size   : 14px\n;text-align  : left\n;align-items : start\n;text-baseline: middle"
-			},
-			{
-				"stroke": "gray",
-				"lineWidth": "2"
-			}
-		],
-		[
-			"Audit Log Icon",
-			{
-				"type": "SVG",
-				"cX": 548,
-				"cY": 836,
-				"rH": 12,
-				"rV": 12,
-				"SVG": "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2NjYiIHN0cm9rZS13aWR0aD0iMS43NSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cmVjdCB3aWR0aD0iOCIgaGVpZ2h0PSI0IiB4PSI4IiB5PSIyIiByeD0iMSIvPjxwYXRoIGQ9Ik0xNiA0aDJhMiAyIDAgMCAxIDIgMnYxNGEyIDIgMCAwIDEtMiAySDZhMiAyIDAgMCAxLTItMlY2YTIgMiAwIDAgMSAyLTJoMiIvPjxwYXRoIGQ9Ik0xMiAxMWg0Ii8+PHBhdGggZD0iTTEyIDE2aDQiLz48cGF0aCBkPSJNOCAxMWguMDEiLz48cGF0aCBkPSJNOCAxNmguMDEiLz48L3N2Zz4="
-			},
-			{}
-		],
-		[
-			"Core Data",
-			{
-				"type": "rect",
-				"cX": 960,
-				"cY": 848,
-				"rH": 128,
-				"rV": 32,
-				"radii": 32,
-				"html": "Core Data",
-				"style": ";padding     : 8px 8px 8px 38px\n;line-height : 28px\n;font-size   : 14px\n;text-align  : left\n;align-items : start\n;text-baseline: middle"
-			},
-			{
-				"stroke": "gray",
-				"lineWidth": "2"
-			}
-		],
-		[
-			"Core Data Icon",
-			{
-				"type": "SVG",
-				"cX": 852,
-				"cY": 836,
-				"rH": 12,
-				"rV": 12,
-				"SVG": "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2NjYiIHN0cm9rZS13aWR0aD0iMS43NSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48ZWxsaXBzZSBjeD0iMTIiIGN5PSI1IiByeD0iOSIgcnk9IjMiLz48cGF0aCBkPSJNMyA1djE0YzAgMS42NiA0IDMgOSAzczktMS4zNCA5LTNWNSIvPjxwYXRoIGQ9Ik0zIDEyYzAgMS42NiA0IDMgOSAzczktMS4zNCA5LTMiLz48L3N2Zz4="
-			},
-			{}
-		],
-		[
-			"Importer",
-			{
-				"type": "rect",
-				"cX": 960,
-				"cY": 976,
-				"rH": 128,
-				"rV": 32,
-				"html": "Importer",
-				"style": ";padding     : 8px 8px 8px 38px\n;line-height : 28px\n;font-size   : 14px\n;text-align  : left\n;align-items : start\n;text-baseline: middle"
-			},
-			{
-				"stroke": "gray",
-				"lineWidth": 2
-			}
-		],
-		[
-			"Importer Icon",
-			{
-				"type": "SVG",
-				"cX": 852,
-				"cY": 964,
-				"rH": 12,
-				"rV": 12,
-				"SVG": "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2NjYiIHN0cm9rZS13aWR0aD0iMS43NSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTIgMTdWMyIvPjxwYXRoIGQ9Im02IDExIDYgNiA2LTYiLz48cGF0aCBkPSJNMTkgMjFINSIvPjwvc3ZnPg=="
-			},
-			{}
-		],
-		[
-			"Analysis",
-			{
-				"type": "rect",
-				"cX": 1264,
-				"cY": 976,
-				"rH": 128,
-				"rV": 32,
-				"html": "Analysis",
-				"style": ";padding     : 8px 8px 8px 38px\n;line-height : 28px\n;font-size   : 14px\n;text-align  : left\n;align-items : start\n;text-baseline: middle"
-			},
-			{
-				"stroke": "gray",
-				"lineWidth": "2"
-			}
-		],
-		[
-			"Analysis Icon",
-			{
-				"type": "SVG",
-				"cX": 1156,
-				"cY": 964,
-				"rH": 12,
-				"rV": 12,
-				"SVG": "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2NjYiIHN0cm9rZS13aWR0aD0iMS43NSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMyAzdjE2YTIgMiAwIDAgMCAyIDJoMTYiLz48cGF0aCBkPSJNMTggMTdWOSIvPjxwYXRoIGQ9Ik0xMyAxN1Y1Ii8+PHBhdGggZD0iTTggMTd2LTMiLz48L3N2Zz4="
-			},
-			{}
-		]
-	],
-	"links": [
-		[
+	"model": {
+		"nodes": [
 			[
-				"Core Data",
-				"Analysis"
+				"VPN",
+				{
+					"type": "rhombus",
+					"cX": 960,
+					"cY": 560,
+					"rH": 512,
+					"rV": 48,
+					"html": "VPN",
+					"style": ";padding     : 0 0 0 515px\n;line-height : 96px\n;font-size   : 16px\n;text-align  : left\n;align-items : start\n;text-baseline: middle\n;font-weight : 700"
+				},
+				{
+					"stroke": "gray",
+					"lineWidth": "2"
+				}
 			],
-			{
-				"headF": false,
-				"headT": "triangle"
-			},
-			{
-				"stroke": "gray",
-				"lineWidth": 8
-			}
-		],
-		[
 			[
-				"Internet",
-				"Private WAF"
+				"VPN Icon",
+				{
+					"type": "SVG",
+					"cX": 943,
+					"cY": 560,
+					"rH": 14,
+					"rV": 14,
+					"SVG": "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2NjYiIHN0cm9rZS13aWR0aD0iMS43NSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTIgMjJzOC00IDgtMTBWNWwtOC0zLTggM3Y3YzAgNiA4IDEwIDggMTB6Ii8+PHJlY3QgeD0iOSIgeT0iMTEiIHdpZHRoPSI2IiBoZWlnaHQ9IjQiIHJ4PSIxIi8+PHBhdGggZD0iTTEyIDExVjlhMiAyIDAgMCAxIDQgMHYyIi8+PC9zdmc+"
+				},
+				{}
 			],
-			{
-				"headF": "triangle",
-				"headT": "triangle"
-			},
-			{
-				"stroke": "gray",
-				"lineWidth": 8
-			}
-		],
-		[
+			[
+				"Cloud",
+				{
+					"type": "rect",
+					"cX": 960,
+					"cY": 336,
+					"rH": 464,
+					"rV": 176,
+					"radii": 18,
+					"html": "Cloud",
+					"style": ";padding     : 8px 12px 8px 46px\n;line-height : 32px\n;font-size   : 14px\n;text-align  : left\n;align-items : start\n;text-baseline: middle\n;font-weight : 700"
+				},
+				{
+					"stroke": "gray",
+					"lineWidth": 2
+				}
+			],
+			[
+				"Cloud Icon",
+				{
+					"type": "SVG",
+					"cX": 520,
+					"cY": 184,
+					"rH": 16,
+					"rV": 16,
+					"SVG": "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2NjYiIHN0cm9rZS13aWR0aD0iMS43NSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTcuNSAxOUg5YTcgNyAwIDEgMSA2LjcxLTloMS43OWE0LjUgNC41IDAgMSAxIDAgOVoiLz48L3N2Zz4="
+				},
+				{}
+			],
 			[
 				"Private WAF",
-				"Private Application"
+				{
+					"type": "rect",
+					"cX": 816,
+					"cY": 256,
+					"rH": 128,
+					"rV": 32,
+					"html": "Private WAF",
+					"style": ";padding     : 8px 8px 8px 38px\n;line-height : 28px\n;font-size   : 14px\n;text-align  : left\n;align-items : start\n;text-baseline: middle"
+				},
+				{
+					"stroke": "gray",
+					"lineWidth": 2
+				}
 			],
-			{
-				"headF": "triangle",
-				"headT": "triangle"
-			},
-			{
-				"stroke": "gray",
-				"lineWidth": 8
-			}
-		],
-		[
 			[
-				"Internet",
-				"Public WAF"
+				"Private WAF Icon",
+				{
+					"type": "SVG",
+					"cX": 708,
+					"cY": 244,
+					"rH": 12,
+					"rV": 12,
+					"SVG": "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2NjYiIHN0cm9rZS13aWR0aD0iMS43NSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTIgMjJzOC00IDgtMTBWNWwtOC0zLTggM3Y3YzAgNiA4IDEwIDggMTB6Ii8+PC9zdmc+"
+				},
+				{}
 			],
-			{
-				"headF": "triangle",
-				"headT": "triangle"
-			},
-			{
-				"stroke": "gray",
-				"lineWidth": 8
-			}
-		],
-		[
 			[
 				"Public WAF",
-				"Public Application"
+				{
+					"type": "rect",
+					"cX": 1104,
+					"cY": 256,
+					"rH": 128,
+					"rV": 32,
+					"html": "Public WAF",
+					"style": ";padding     : 8px 8px 8px 38px\n;line-height : 28px\n;font-size   : 14px\n;text-align  : left\n;align-items : start\n;text-baseline: middle"
+				},
+				{
+					"stroke": "gray",
+					"lineWidth": 2
+				}
 			],
-			{
-				"headF": "triangle",
-				"headT": "triangle"
-			},
-			{
-				"stroke": "gray",
-				"lineWidth": 8
-			}
-		],
-		[
 			[
-				"Importer",
-				"Core Data"
+				"Public WAF Icon",
+				{
+					"type": "SVG",
+					"cX": 996,
+					"cY": 244,
+					"rH": 12,
+					"rV": 12,
+					"SVG": "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2NjYiIHN0cm9rZS13aWR0aD0iMS43NSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTIgMjJzOC00IDgtMTBWNWwtOC0zLTggM3Y3YzAgNiA4IDEwIDggMTB6Ii8+PHBhdGggZD0ibTkgMTIgMiAyIDQtNCIvPjwvc3ZnPg=="
+				},
+				{}
 			],
-			{
-				"headF": false,
-				"headT": "triangle"
-			},
-			{
-				"stroke": "gray",
-				"lineWidth": 8
-			}
-		],
-		[
 			[
 				"Private Application",
-				"Writer API"
+				{
+					"type": "rect",
+					"cX": 816,
+					"cY": 384,
+					"rH": 128,
+					"rV": 32,
+					"html": "Private Application",
+					"style": ";padding     : 8px 8px 8px 38px\n;line-height : 28px\n;font-size   : 14px\n;text-align  : left\n;align-items : start\n;text-baseline: middle"
+				},
+				{
+					"stroke": "gray",
+					"lineWidth": 2
+				}
 			],
-			{
-				"headF": false,
-				"headT": "triangle"
-			},
-			{
-				"stroke": "gray",
-				"lineWidth": 8
-			}
-		],
-		[
+			[
+				"Private Application Icon",
+				{
+					"type": "SVG",
+					"cX": 708,
+					"cY": 372,
+					"rH": 12,
+					"rV": 12,
+					"SVG": "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2NjYiIHN0cm9rZS13aWR0aD0iMS43NSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjE2IiByPSIxIi8+PHJlY3QgeD0iMyIgeT0iMTAiIHdpZHRoPSIxOCIgaGVpZ2h0PSIxMiIgcng9IjIiLz48cGF0aCBkPSJNNyAxMFY3YTUgNSAwIDAgMSAxMCAwdjMiLz48L3N2Zz4="
+				},
+				{}
+			],
 			[
 				"Public Application",
-				"Writer API"
+				{
+					"type": "rect",
+					"cX": 1104,
+					"cY": 384,
+					"rH": 128,
+					"rV": 32,
+					"html": "Public Application",
+					"style": ";padding     : 8px 8px 8px 38px\n;line-height : 28px\n;font-size   : 14px\n;text-align  : left\n;align-items : start\n;text-baseline: middle"
+				},
+				{
+					"stroke": "gray",
+					"lineWidth": 2
+				}
 			],
-			{
-				"headF": false,
-				"headT": "triangle"
-			},
-			{
-				"stroke": "gray",
-				"lineWidth": 8
-			}
-		],
-		[
+			[
+				"Public Application Icon",
+				{
+					"type": "SVG",
+					"cX": 996,
+					"cY": 372,
+					"rH": 12,
+					"rV": 12,
+					"SVG": "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2NjYiIHN0cm9rZS13aWR0aD0iMS43NSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cmVjdCB4PSIyIiB5PSI0IiB3aWR0aD0iMjAiIGhlaWdodD0iMTYiIHJ4PSIyIi8+PHBhdGggZD0iTTEwIDR2NCIvPjxwYXRoIGQ9Ik0yIDhoMjAiLz48cGF0aCBkPSJNNiA0djQiLz48L3N2Zz4="
+				},
+				{}
+			],
+			[
+				"Internet",
+				{
+					"type": "ellipse",
+					"cX": 960,
+					"cY": 112,
+					"rH": 512,
+					"rV": 48,
+					"html": "Internet",
+					"style": ";padding     : 0 0 0 491px\n;line-height : 96px\n;font-size   : 16px\n;text-align  : left\n;align-items : start\n;text-baseline: middle\n;font-weight : 700"
+				},
+				{
+					"stroke": "gray",
+					"lineWidth": "2"
+				}
+			],
+			[
+				"Internet Icon",
+				{
+					"type": "SVG",
+					"cX": 919,
+					"cY": 112,
+					"rH": 14,
+					"rV": 14,
+					"SVG": "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2NjYiIHN0cm9rZS13aWR0aD0iMS43NSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjxwYXRoIGQ9Ik0yIDEyaDIwIi8+PHBhdGggZD0iTTEyIDJhMTUuMyAxNS4zIDAgMCAxIDQgMTAgMTUuMyAxNS4zIDAgMCAxLTQgMTAgMTUuMyAxNS4zIDAgMCAxLTQtMTAgMTUuMyAxNS4zIDAgMCAxIDQtMTB6Ii8+PC9zdmc+"
+				},
+				{}
+			],
+			[
+				"Inhouse",
+				{
+					"type": "rect",
+					"cX": 960,
+					"cY": 832,
+					"rH": 464,
+					"rV": 224,
+					"radii": 18,
+					"html": "Inhouse",
+					"style": ";padding     : 8px 12px 8px 46px\n;line-height : 32px\n;font-size   : 14px\n;text-align  : left\n;align-items : start\n;text-baseline: middle\n;font-weight : 700"
+				},
+				{
+					"stroke": "gray",
+					"lineWidth": 2
+				}
+			],
+			[
+				"Inhouse Icon",
+				{
+					"type": "SVG",
+					"cX": 520,
+					"cY": 632,
+					"rH": 16,
+					"rV": 16,
+					"SVG": "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2NjYiIHN0cm9rZS13aWR0aD0iMS43NSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNNiAyMlY0YTIgMiAwIDAgMSAyLTJoOGEyIDIgMCAwIDEgMiAydjE4WiIvPjxwYXRoIGQ9Ik02IDEySDRhMiAyIDAgMCAwLTIgMnY2YTIgMiAwIDAgMCAyIDJoMiIvPjxwYXRoIGQ9Ik0xOCA5aDJhMiAyIDAgMCAxIDIgMnY5YTIgMiAwIDAgMS0yIDJoLTIiLz48cGF0aCBkPSJNMTAgNmg0Ii8+PHBhdGggZD0iTTEwIDEwaDQiLz48cGF0aCBkPSJNMTAgMTRoNCIvPjxwYXRoIGQ9Ik0xMCAxOGg0Ii8+PC9zdmc+"
+				},
+				{}
+			],
 			[
 				"Writer API",
-				"Core Data"
+				{
+					"type": "rect",
+					"cX": 795,
+					"cY": 706,
+					"rH": 128,
+					"rV": 32,
+					"html": "Writer API",
+					"style": ";padding     : 8px 8px 8px 38px\n;line-height : 28px\n;font-size   : 14px\n;text-align  : left\n;align-items : start\n;text-baseline: middle"
+				},
+				{
+					"stroke": "gray",
+					"lineWidth": "2"
+				}
 			],
-			{
-				"headF": false,
-				"headT": "triangle"
-			},
-			{
-				"stroke": "gray",
-				"lineWidth": 8
-			}
-		],
-		[
 			[
-				"Writer API",
-				"Audit Log"
+				"Writer API Icon",
+				{
+					"type": "SVG",
+					"cX": 687,
+					"cY": 694,
+					"rH": 12,
+					"rV": 12,
+					"SVG": "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2NjYiIHN0cm9rZS13aWR0aD0iMS43NSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTIgMjBoOSIvPjxwYXRoIGQ9Ik0xNi41IDMuNWEyLjEyIDIuMTIgMCAwIDEgMyAzTDcgMTlsLTQgMSAxLTRaIi8+PC9zdmc+"
+				},
+				{}
 			],
-			{
-				"headF": false,
-				"headT": "triangle"
-			},
-			{
-				"stroke": "gray",
-				"lineWidth": 8
-			}
-		],
-		[
 			[
 				"Sanitized Reader",
-				"Public Application"
+				{
+					"type": "rect",
+					"cX": 1191,
+					"cY": 707,
+					"rH": 128,
+					"rV": 32,
+					"html": "Sanitized Reader",
+					"style": ";padding     : 8px 8px 8px 38px\n;line-height : 28px\n;font-size   : 14px\n;text-align  : left\n;align-items : start\n;text-baseline: middle"
+				},
+				{
+					"stroke": "gray",
+					"lineWidth": "2"
+				}
 			],
-			{
-				"headF": false,
-				"headT": "triangle"
-			},
-			{
-				"stroke": "gray",
-				"lineWidth": 8
-			}
-		],
-		[
+			[
+				"Sanitized Reader Icon",
+				{
+					"type": "SVG",
+					"cX": 1083,
+					"cY": 695,
+					"rH": 12,
+					"rV": 12,
+					"SVG": "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2NjYiIHN0cm9rZS13aWR0aD0iMS43NSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTIgN3YxNCIvPjxwYXRoIGQ9Ik0zIDE4YTEgMSAwIDAgMS0xLTFWNGExIDEgMCAwIDEgMS0xaDVhNCA0IDAgMCAxIDQgNCA0IDQgMCAwIDEgNC00aDVhMSAxIDAgMCAxIDEgMXYxM2ExIDEgMCAwIDEtMSAxaC02YTMgMyAwIDAgMC0zIDMgMyAzIDAgMCAwLTMtM3oiLz48L3N2Zz4="
+				},
+				{}
+			],
+			[
+				"Audit Log",
+				{
+					"type": "rect",
+					"cX": 656,
+					"cY": 848,
+					"rH": 128,
+					"rV": 32,
+					"html": "Audit Log",
+					"style": ";padding     : 8px 8px 8px 38px\n;line-height : 28px\n;font-size   : 14px\n;text-align  : left\n;align-items : start\n;text-baseline: middle"
+				},
+				{
+					"stroke": "gray",
+					"lineWidth": "2"
+				}
+			],
+			[
+				"Audit Log Icon",
+				{
+					"type": "SVG",
+					"cX": 548,
+					"cY": 836,
+					"rH": 12,
+					"rV": 12,
+					"SVG": "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2NjYiIHN0cm9rZS13aWR0aD0iMS43NSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cmVjdCB3aWR0aD0iOCIgaGVpZ2h0PSI0IiB4PSI4IiB5PSIyIiByeD0iMSIvPjxwYXRoIGQ9Ik0xNiA0aDJhMiAyIDAgMCAxIDIgMnYxNGEyIDIgMCAwIDEtMiAySDZhMiAyIDAgMCAxLTItMlY2YTIgMiAwIDAgMSAyLTJoMiIvPjxwYXRoIGQ9Ik0xMiAxMWg0Ii8+PHBhdGggZD0iTTEyIDE2aDQiLz48cGF0aCBkPSJNOCAxMWguMDEiLz48cGF0aCBkPSJNOCAxNmguMDEiLz48L3N2Zz4="
+				},
+				{}
+			],
 			[
 				"Core Data",
-				"Sanitized Reader"
+				{
+					"type": "rect",
+					"cX": 960,
+					"cY": 848,
+					"rH": 128,
+					"rV": 32,
+					"radii": 32,
+					"html": "Core Data",
+					"style": ";padding     : 8px 8px 8px 38px\n;line-height : 28px\n;font-size   : 14px\n;text-align  : left\n;align-items : start\n;text-baseline: middle"
+				},
+				{
+					"stroke": "gray",
+					"lineWidth": "2"
+				}
 			],
-			{
-				"headF": false,
-				"headT": "triangle"
-			},
-			{
-				"stroke": "gray",
-				"lineWidth": 8
-			}
+			[
+				"Core Data Icon",
+				{
+					"type": "SVG",
+					"cX": 852,
+					"cY": 836,
+					"rH": 12,
+					"rV": 12,
+					"SVG": "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2NjYiIHN0cm9rZS13aWR0aD0iMS43NSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48ZWxsaXBzZSBjeD0iMTIiIGN5PSI1IiByeD0iOSIgcnk9IjMiLz48cGF0aCBkPSJNMyA1djE0YzAgMS42NiA0IDMgOSAzczktMS4zNCA5LTNWNSIvPjxwYXRoIGQ9Ik0zIDEyYzAgMS42NiA0IDMgOSAzczktMS4zNCA5LTMiLz48L3N2Zz4="
+				},
+				{}
+			],
+			[
+				"Importer",
+				{
+					"type": "rect",
+					"cX": 960,
+					"cY": 976,
+					"rH": 128,
+					"rV": 32,
+					"html": "Importer",
+					"style": ";padding     : 8px 8px 8px 38px\n;line-height : 28px\n;font-size   : 14px\n;text-align  : left\n;align-items : start\n;text-baseline: middle"
+				},
+				{
+					"stroke": "gray",
+					"lineWidth": 2
+				}
+			],
+			[
+				"Importer Icon",
+				{
+					"type": "SVG",
+					"cX": 852,
+					"cY": 964,
+					"rH": 12,
+					"rV": 12,
+					"SVG": "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2NjYiIHN0cm9rZS13aWR0aD0iMS43NSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTIgMTdWMyIvPjxwYXRoIGQ9Im02IDExIDYgNiA2LTYiLz48cGF0aCBkPSJNMTkgMjFINSIvPjwvc3ZnPg=="
+				},
+				{}
+			],
+			[
+				"Analysis",
+				{
+					"type": "rect",
+					"cX": 1264,
+					"cY": 976,
+					"rH": 128,
+					"rV": 32,
+					"html": "Analysis",
+					"style": ";padding     : 8px 8px 8px 38px\n;line-height : 28px\n;font-size   : 14px\n;text-align  : left\n;align-items : start\n;text-baseline: middle"
+				},
+				{
+					"stroke": "gray",
+					"lineWidth": "2"
+				}
+			],
+			[
+				"Analysis Icon",
+				{
+					"type": "SVG",
+					"cX": 1156,
+					"cY": 964,
+					"rH": 12,
+					"rV": 12,
+					"SVG": "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2NjYiIHN0cm9rZS13aWR0aD0iMS43NSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMyAzdjE2YTIgMiAwIDAgMCAyIDJoMTYiLz48cGF0aCBkPSJNMTggMTdWOSIvPjxwYXRoIGQ9Ik0xMyAxN1Y1Ii8+PHBhdGggZD0iTTggMTd2LTMiLz48L3N2Zz4="
+				},
+				{}
+			]
+		],
+		"links": [
+			[
+				[
+					"Core Data",
+					"Analysis"
+				],
+				{
+					"headF": false,
+					"headT": "triangle"
+				},
+				{
+					"stroke": "gray",
+					"lineWidth": 8
+				}
+			],
+			[
+				[
+					"Internet",
+					"Private WAF"
+				],
+				{
+					"headF": "triangle",
+					"headT": "triangle"
+				},
+				{
+					"stroke": "gray",
+					"lineWidth": 8
+				}
+			],
+			[
+				[
+					"Private WAF",
+					"Private Application"
+				],
+				{
+					"headF": "triangle",
+					"headT": "triangle"
+				},
+				{
+					"stroke": "gray",
+					"lineWidth": 8
+				}
+			],
+			[
+				[
+					"Internet",
+					"Public WAF"
+				],
+				{
+					"headF": "triangle",
+					"headT": "triangle"
+				},
+				{
+					"stroke": "gray",
+					"lineWidth": 8
+				}
+			],
+			[
+				[
+					"Public WAF",
+					"Public Application"
+				],
+				{
+					"headF": "triangle",
+					"headT": "triangle"
+				},
+				{
+					"stroke": "gray",
+					"lineWidth": 8
+				}
+			],
+			[
+				[
+					"Importer",
+					"Core Data"
+				],
+				{
+					"headF": false,
+					"headT": "triangle"
+				},
+				{
+					"stroke": "gray",
+					"lineWidth": 8
+				}
+			],
+			[
+				[
+					"Private Application",
+					"Writer API"
+				],
+				{
+					"headF": false,
+					"headT": "triangle"
+				},
+				{
+					"stroke": "gray",
+					"lineWidth": 8
+				}
+			],
+			[
+				[
+					"Public Application",
+					"Writer API"
+				],
+				{
+					"headF": false,
+					"headT": "triangle"
+				},
+				{
+					"stroke": "gray",
+					"lineWidth": 8
+				}
+			],
+			[
+				[
+					"Writer API",
+					"Core Data"
+				],
+				{
+					"headF": false,
+					"headT": "triangle"
+				},
+				{
+					"stroke": "gray",
+					"lineWidth": 8
+				}
+			],
+			[
+				[
+					"Writer API",
+					"Audit Log"
+				],
+				{
+					"headF": false,
+					"headT": "triangle"
+				},
+				{
+					"stroke": "gray",
+					"lineWidth": 8
+				}
+			],
+			[
+				[
+					"Sanitized Reader",
+					"Public Application"
+				],
+				{
+					"headF": false,
+					"headT": "triangle"
+				},
+				{
+					"stroke": "gray",
+					"lineWidth": 8
+				}
+			],
+			[
+				[
+					"Core Data",
+					"Sanitized Reader"
+				],
+				{
+					"headF": false,
+					"headT": "triangle"
+				},
+				{
+					"stroke": "gray",
+					"lineWidth": 8
+				}
+			]
 		]
-	]
+	}
 }

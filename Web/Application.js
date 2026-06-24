@@ -13,7 +13,7 @@ export	const
 STORAGE_KEY	= 'tokyo.828.diagramforge'
 
 export	const
-JSONString	= () => JSON.stringify( { ...app.model, canvasWidth, canvasHeight }, null, '\t' )
+JSONString	= () => JSON.stringify( { model: app.model, canvasWidth, canvasHeight }, null, '\t' )
 
 export	const
 CANVAS_DEFAULT	= 4096
@@ -316,14 +316,14 @@ Load		= _ => DoTypical(
 ,	() => {
 		const
 		$ = JSON.parse( _ )
-		app.model.nodes	= $.nodes
-		app.model.links	= $.links
+		app.model.nodes	= $.model.nodes
+		app.model.links	= $.model.links
 		app.reforms		= []
 		if	( $.canvasWidth > 0 && $.canvasHeight > 0 ) {
 			SetCanvasSize( $.canvasWidth, $.canvasHeight )
-		} else if ( $.nodes.length ) {
+		} else if ( $.model.nodes.length ) {
 			const
-			[ t, l, b, r ] = BBox( $.nodes )
+			[ t, l, b, r ] = BBox( $.model.nodes )
 			const	cw = Math.ceil( ( r + MARGIN ) / 256 ) * 256
 			const	ch = Math.ceil( ( b + MARGIN ) / 256 ) * 256
 			SetCanvasSize( Math.max( 256, cw ), Math.max( 256, ch ) )
