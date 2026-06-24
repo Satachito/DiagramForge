@@ -3,13 +3,19 @@
 A `.cde` file is the JSON of the diagram model, tab-indented:
 
 ```json
-{ "model": { "nodes": [ ... ], "links": [ ... ] } }
+{ "model": { "nodes": [ ... ], "links": [ ... ] },
+  "canvasWidth": 4096, "canvasHeight": 4096 }
 ```
 
 `index.html` loads it via the `↑` upload button, and the last session is
-auto-restored from `localStorage` (`tokyo.828.diagramforge`). The editor canvas
-defaults to **4096 × 4096** pixels (origin top-left, **y axis pointing down**);
-canvas size is editor-only and is not stored in `.cde`.
+auto-restored from `localStorage` (`tokyo.828.diagramforge`). The canvas origin
+is top-left with the **y axis pointing down**.
+
+- **`canvasWidth` / `canvasHeight`** — top-level (siblings of `model`), optional.
+  Files saved or exported from the editor include the current canvas size here.
+  When omitted (e.g. hand-written samples) the canvas size is derived from the
+  nodes' bounding box on load; with no nodes either, it defaults to
+  **4096 × 4096** pixels.
 
 ## Node
 
@@ -44,11 +50,11 @@ Example:
 ## Link
 
 ```
-[ [ fromID, toID ], ends, paint ]
+[ [ fromID, toID ], attributes, paint ]
 ```
 
 - **`fromID` / `toID`** — must reference existing node IDs.
-- **`ends`**:
+- **`attributes`**:
   - `headF`, `headT` — arrowhead at the from / to end. Use `false` (or omit)
     for none, or one of the styles:
     - `"triangle"` — filled triangle (default)
