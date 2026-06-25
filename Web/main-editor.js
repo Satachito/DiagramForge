@@ -485,7 +485,10 @@ MainEditor extends HTMLElement {
 		addEventListener( 'keydown', ev => this.onKeyDown( ev ) )
 		//	⌘/⌥ momentarily act as Create-node / Create-link; refresh cursor on release
 		addEventListener( 'keyup', ev => this.refreshModeCursor( ev ) )
-		CREATE_NODE.onchange = CREATE_LINK.onchange = () => this.refreshModeCursor()
+		//	entering create-node mode: clear NODE_ID so the placeholder ( auto-id )
+		//	shows and a previously selected node's id can't pollute the new node
+		CREATE_NODE.onchange = () => ( CREATE_NODE.checked && ( NODE_ID.value = '' ), this.refreshModeCursor() )
+		CREATE_LINK.onchange = () => this.refreshModeCursor()
 
 		//	Pointer Capture: once a drag starts we capture the pointer so move/up
 		//	are delivered to the canvas even when the cursor leaves it — the release
