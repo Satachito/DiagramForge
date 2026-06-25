@@ -107,25 +107,19 @@ autoPerp		= ( S, [ px, py ], aOther ) => {
 const
 linkCoordinates	= ( [ [ nF, nT ], A, P ] ) => {
 	const
-	xAlong	= ( S, s, a ) =>
-		a === 'TL' || a === 'BL' ? L( s ) :
-		a === 'TR' || a === 'BR' ? R( s ) : S.cX
-	,	yAlong	= ( S, s, a ) =>
-		a === 'TL' || a === 'TR' ? T( s ) :
-		a === 'BL' || a === 'BR' ? B( s ) : S.cY
-
-	const
-	$ = ( S, A, s, a ) => {
+	$ = ( S, A, s ) => {
 		let	P
 		switch	( A ) {
+		//	corners → the corner point; sides → the edge midpoint ( so the line
+		//	always lands on the edge and connects cleanly )
 		case 'TL'	: P = [ L( S ), T( S ) ]; break
 		case 'TR'	: P = [ R( S ), T( S ) ]; break
 		case 'BL'	: P = [ L( S ), B( S ) ]; break
 		case 'BR'	: P = [ R( S ), B( S ) ]; break
-		case 'T'	: P = [ xAlong( S, s, a ), T( S ) ]; break
-		case 'B'	: P = [ xAlong( S, s, a ), B( S ) ]; break
-		case 'L'	: P = [ L( S ), yAlong( S, s, a ) ]; break
-		case 'R'	: P = [ R( S ), yAlong( S, s, a ) ]; break
+		case 'T'	: P = [ S.cX, T( S ) ]; break
+		case 'B'	: P = [ S.cX, B( S ) ]; break
+		case 'L'	: P = [ L( S ), S.cY ]; break
+		case 'R'	: P = [ R( S ), S.cY ]; break
 		default		: return onOutline( S, s.cX - S.cX, s.cY - S.cY )
 		}
 		//	anchored: rects keep the box point; ellipse / rhombus project onto the outline
