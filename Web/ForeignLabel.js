@@ -13,8 +13,21 @@ labelWrapperStyle	= S => {
 	return	`width:100%;height:100%;box-sizing:border-box;color-scheme:light dark;color:${ color };${ ( S.style || '' ).replace( /\n/g, '' ) }`
 }
 
+//	foreignObject content must be well-formed XML: close void tags and convert
+//	HTML named entities ( &nbsp; etc. ) — undefined in XML — to numeric references.
 const
-htmlToXhtml		= html => String( html ).replace( /<br\s*>/gi, '<br/>' )
+XML_ENTITIES	= new Set( [ 'amp', 'lt', 'gt', 'quot', 'apos' ] )
+const
+entityDecoder	= document.createElement( 'textarea' )
+const
+htmlToXhtml		= html => String( html )
+	.replace( /<br\s*\/?>/gi, '<br/>' )
+	.replace( /&([a-zA-Z][a-zA-Z0-9]*);/g, ( m, name ) => {
+		if	( XML_ENTITIES.has( name ) ) return m
+		entityDecoder.innerHTML = `&${ name };`
+		const	ch = entityDecoder.value
+		return	ch === `&${ name };` ? m : `&#${ ch.codePointAt( 0 ) };`
+	} )
 
 export const
 foreignObjectSvg	= S => {
