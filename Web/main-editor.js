@@ -829,7 +829,9 @@ MainEditor extends HTMLElement {
 				S.cY = c[ 1 ]
 				S.rH = r[ 0 ]
 				S.rV = r[ 1 ]
-				await Node( [ NODE_ID.value, S, PAINT_EDITOR.$ ] )
+				//	drag = a new node. Don't reuse a selected node's id left in the
+				//	field ( that would update it ); only honor a fresh, unused id.
+				await Node( [ FindNode( NODE_ID.value ) ? '' : NODE_ID.value, S, PAINT_EDITOR.$ ] )
 			}
 		}
 	}

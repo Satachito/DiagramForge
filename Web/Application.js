@@ -226,7 +226,7 @@ Paste		= async _ => {	//	ClipboardData
 		}
 	}
 
-	{	_.items.filter( item => item.type === 'image/png' ).forEach(
+	{	Array.from( _.items ?? [] ).filter( item => item.type === 'image/png' ).forEach(
 			async item => {
 				try {
 					const blob = item.getAsFile()
@@ -268,7 +268,7 @@ Paste		= async _ => {	//	ClipboardData
 				$.src = url
 			}
 		)
-		_.items.filter( item => item.type === 'image/svg+xml' ).forEach(
+		Array.from( _.items ?? [] ).filter( item => item.type === 'image/svg+xml' ).forEach(
 			async item => {
 				try {
 					const SVG = item.kind === 'string'
@@ -294,7 +294,17 @@ Paste		= async _ => {	//	ClipboardData
 		)
 	}
 
-	const $ = await Promise.all( nodes.map( async _ => [ await GenerateID(), ..._ ] ) )
+	//	assign ids unique against the model AND within this batch ( concurrent
+	//	GenerateID could otherwise hand out the same timestamp id to siblings )
+	const
+	taken = new Set( app.model.nodes.map( _ => _[ 0 ] ) )
+	,	newID = () => {
+		let	id = String( Date.now() - 176722560000 )
+		while	( taken.has( id ) )	id = String( Number( id ) + 1 )
+		taken.add( id )
+		return	id
+	}
+	const $ = nodes.map( _ => [ newID(), ..._ ] )
 	void DoTypical(
 		'Paste'
 	,	() => (
