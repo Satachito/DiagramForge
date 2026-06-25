@@ -630,7 +630,7 @@ MainEditor extends HTMLElement {
 		if	( links.length ) {
 			ev.preventDefault()
 			this.hideContextMenus()
-			this.linkMenuKey	= links[ 0 ][ 0 ]
+			this.linkMenuKey	= links[ 0 ][ 0 ].map( _ => _[ 0 ] )	//	[ nodeF, nodeT ] → [ idF, idT ]
 			LINK_MENU.style.display	= 'block'
 			this.positionContextMenu( LINK_MENU, ev )
 			return
