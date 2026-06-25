@@ -43,6 +43,8 @@
 ;	--color-popup-fg		: light-dark( #111, #eee )
 ;	--color-popup-hover		: light-dark( #ddd, #444 )
 ;	--color-shadow			: light-dark( rgba( 0, 0, 0, .15 ), rgba( 0, 0, 0, .4 ) )
+;	--color-checker-a		: light-dark( #d4d4d4, #2a2a2a )
+;	--color-checker-b		: light-dark( #b0b0b0, #161616 )
 ;	--topbar-h				: 70px
 }
 html {
@@ -157,6 +159,10 @@ main-editor {
 ;	position				: relative
 ;	grid-row				: 2
 ;	grid-column				: 2
+;	background				: repeating-conic-gradient( var( --color-checker-a ) 0% 25%, var( --color-checker-b ) 0% 50% ) 0 0 / 128px 128px
+}
+main-editor > canvas:first-of-type {
+;	background				: var( --color-bg )
 }
 header {
 ;	border-bottom			: 1px solid gray
@@ -304,6 +310,20 @@ summary {
 #LINK_MENU > button:hover
 ,	#NODE_MENU > button:hover {
 ;	background		: var( --color-popup-hover )
+}
+#LINK_MENU > button.corner-opt::before {
+;	content			: '○'
+;	margin-right	: 7px
+;	opacity			: .35
+}
+#LINK_MENU > button.corner-opt.active::before {
+;	content			: '●'
+;	opacity			: 1
+}
+.link-menu-sep {
+;	height			: 1px
+;	margin			: 4px 0
+;	background		: var( --color-popup-border )
 }
 #UNDER_HOVER {
 ;	display			: none
@@ -591,6 +611,11 @@ aside .node-id-row {
 	</div>
 	<div			id=UNDER_HOVER		></div>
 	<div			id=LINK_MENU		>
+		<button		id=LINK_CORNER_CURVE	class=corner-opt	>bezier</button>
+		<button		id=LINK_CORNER_ARC		class=corner-opt	>arc</button>
+		<button		id=LINK_CORNER_ORTHO	class=corner-opt	>sharp</button>
+		<button		id=LINK_CORNER_STRAIGHT	class=corner-opt	>straight</button>
+		<div		class=link-menu-sep	></div>
 		<button		id=LINK_MENU_REMOVE	>Remove</button>
 	</div>
 	<div			id=NODE_MENU		>

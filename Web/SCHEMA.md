@@ -69,13 +69,15 @@ Example:
   - `anchorF`, `anchorT` — where the link attaches on each node:
     one of `"T"`, `"L"`, `"B"`, `"R"`, `"TL"`, `"TR"`, `"BL"`, `"BR"`,
     or omit (auto: points at the other node's center)
-  - `corner` — how a multi-point (orthogonal) shaft is drawn. Only matters
-    when the route bends (no anchors, so the link is routed in right angles);
-    a 2-point straight shaft ignores it:
+  - `corner` — shaft routing / corner style. With no anchors the link is
+    routed in right angles (a multi-point shaft); the style chooses how it is
+    drawn. A 2-point shaft (anchored ends) is always a straight line:
     - `"bezier"` — smooth Bézier that leaves each node perpendicular and rounds
       the corners (default)
-    - `"sharp"` — legacy polyline with right-angle corners
+    - `"sharp"` — polyline with right-angle corners (orthogonal)
     - `"arc"` — straight runs joined by quarter-circle fillets
+    - `"straight"` — forces a direct node-to-node line, ignoring the orthogonal
+      route even when no anchors are set
 - **`paint`** — same shape as node `paint`.
 
 Example:

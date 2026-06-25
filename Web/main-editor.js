@@ -264,17 +264,31 @@ DrawPath		= ( c2D, path, P ) => {
 }
 
 const
-UpdateHoverLabel = ev => {
-	const
-	node = Node_EV( ev )
-	if ( !node ) {
-		UNDER_HOVER.style.display = 'none'
-		return
-	}
-	UNDER_HOVER.textContent		= node[ 0 ]
+ShowHoverLabel = ( ev, text ) => {
+	UNDER_HOVER.textContent		= text
 	UNDER_HOVER.style.display	= 'block'
 	UNDER_HOVER.style.left		= `${ ev.clientX + 12 }px`
 	UNDER_HOVER.style.top		= `${ Math.max( 8, ev.clientY - 28 ) }px`
+}
+const
+UpdateHoverLabel = ev => {
+	const
+	xy = XY_EV( ev )
+	//	links take priority over nodes ( same as the pointer cursor ), so a link
+	//	running under a node still reports its endpoints rather than the node id
+	const
+	links = Links_XY( xy )
+	if	( links.length ) {
+		const	[ [ nF, nT ] ] = links[ 0 ]
+		return ShowHoverLabel( ev, `${ nF[ 0 ] } - ${ nT[ 0 ] }` )
+	}
+	const
+	node = Node_XY( xy )
+	if	( !node ) {
+		UNDER_HOVER.style.display = 'none'
+		return
+	}
+	ShowHoverLabel( ev, node[ 0 ] )
 }
 
 
@@ -443,6 +457,18 @@ MainEditor extends HTMLElement {
 		,	this.reformer.focus()
 		)
 
+		const
+		cornerClick	= corner => ev => (
+			ev.stopPropagation()
+		,	this.setLinkCorner( corner )
+		,	this.hideContextMenus()
+		,	this.reformer.focus()
+		)
+		LINK_CORNER_CURVE.onclick		= cornerClick( 'bezier' )
+		LINK_CORNER_ORTHO.onclick		= cornerClick( 'sharp' )
+		LINK_CORNER_ARC.onclick			= cornerClick( 'arc' )
+		LINK_CORNER_STRAIGHT.onclick	= cornerClick( 'straight' )
+
 		NODE_MENU_DELETE.onclick	= async ev => (
 			ev.stopPropagation()
 		,	this.nodeMenuTarget && await Delete()
@@ -505,6 +531,18 @@ MainEditor extends HTMLElement {
 			'change'
 		,	() => this.Draw()
 		)
+	}
+
+	setLinkCorner( corner ) {
+		if	( !this.linkMenuKey ) return
+		const
+		[ F, T ] = this.linkMenuKey
+		,	link = app.model.links.find( ( [ [ f, t ] ] ) => f === F && t === T )
+		if	( !link ) return
+		const
+		A = structuredClone( link[ 1 ] ?? {} )
+		corner ? ( A.corner = corner ) : ( delete A.corner )
+		Link( [ [ F, T ], A, link[ 2 ] ] )
 	}
 
 	hideContextMenus() {
@@ -631,6 +669,12 @@ MainEditor extends HTMLElement {
 			ev.preventDefault()
 			this.hideContextMenus()
 			this.linkMenuKey	= links[ 0 ][ 0 ].map( _ => _[ 0 ] )	//	[ nodeF, nodeT ] → [ idF, idT ]
+			const
+			corner = links[ 0 ][ 1 ]?.corner || 'bezier'	//	no attribute → default shaft is bezier
+			LINK_CORNER_CURVE.classList.toggle	( 'active', corner === 'bezier'		)
+			LINK_CORNER_ORTHO.classList.toggle	( 'active', corner === 'sharp'		)
+			LINK_CORNER_ARC.classList.toggle	( 'active', corner === 'arc'		)
+			LINK_CORNER_STRAIGHT.classList.toggle( 'active', corner === 'straight'	)
 			LINK_MENU.style.display	= 'block'
 			this.positionContextMenu( LINK_MENU, ev )
 			return

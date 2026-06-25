@@ -339,11 +339,13 @@ linkEnds		= ( [ [ nF, nT ], A, P ] ) => {
 //	centerline route whose endpoints are exactly the boundary tips, so the
 //	arrowheads, their necks and the shaft all share one geometry
 const
-routeFrom		= e => {
+routeFrom		= ( e, corner ) => {
 	const
 	rF = e.tipF
 ,	rT = e.tipT
-	if	( !e.ortho )	return [ rF, rT ]
+	//	'straight' forces a direct node-to-node line, overriding the orthogonal
+	//	routing that otherwise kicks in when neither end has an explicit anchor
+	if	( !e.ortho || corner === 'straight' )	return [ rF, rT ]
 	const
 	midX = ( rF[ 0 ] + rT[ 0 ] ) / 2
 ,	midY = ( rF[ 1 ] + rT[ 1 ] ) / 2
@@ -357,7 +359,7 @@ LinkMetrics		= ( [ [ nF, nT ], A, P ] ) => {
 
 	const
 	e = linkEnds( [ [ nF, nT ], A, P ] )
-,	route = routeFrom( e )
+,	route = routeFrom( e, A.corner )
 ,	len = pathLength( route )
 	if	( len < 1 ) return null
 
