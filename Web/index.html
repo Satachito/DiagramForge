@@ -782,6 +782,7 @@ import './link-editor.js'
 import './cloud-icons.js'
 import './main-editor.js'
 import './ai-api.js'
+import { loadCdeFile, initLiveReload, setWatchPath } from './live-reload.js'
 import { saveSVG, printPDF, copySVG, baseName, downloadBlob } from './Export.js'
 
 /*
@@ -805,12 +806,11 @@ SyncCanvasInputs = () => {
 
 const
 LoadSample = async path => {
-	const
-	res = await fetch( new URL( path, import.meta.url ), { cache: 'no-store' } )
-	if	( ! res.ok )	throw new Error( `${ res.status } ${ path }` )
-	await Load( await res.text() )
-	FILE_NAME.value	= path.replace( /^.*\//, '' )
-	SyncCanvasInputs()
+	try {
+		await loadCdeFile( path, { SyncCanvasInputs, FILE_NAME } )
+	} catch ( er ) {
+		throw new Error( `${ er.message || er }` )
+	}
 }
 
 CANVAS_APPLY	.onclick = async () => {
@@ -892,6 +892,9 @@ UPLOAD			.onchange = async ev => {
 			)
 			FILE_NAME.value = files.map( _ => _.name ).join( ',' )
 			SyncCanvasInputs()
+			//	uploaded files are not on-server paths — disable live .cde watch
+			setWatchPath( null )
+			sessionStorage.removeItem( 'df-watch' )
 		} catch ( er ) {
 			Report( er )
 		} finally {
@@ -901,6 +904,10 @@ UPLOAD			.onchange = async ev => {
 }
 
 onload = async () => {
+	await initLiveReload( { SyncCanvasInputs, FILE_NAME }, { Report } )
+	const
+	fromUrl = new URLSearchParams( location.search ).get( 'cde' )
+	if	( fromUrl ) return	//	initLiveReload loaded it
 	const
 	_ = localStorage.getItem( STORAGE_KEY )
 	_	? await Load( _ ).catch( Report )	//	Load() draws on success

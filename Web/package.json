@@ -4,6 +4,7 @@
   "description": "Canvas-based cloud architecture diagram editor (AWS / Azure / GCP icons).",
   "main": "Application.js",
   "scripts": {
+    "dev": "node ../tools/df-server.mjs",
     "lint": "eslint *.js"
   },
   "keywords": [

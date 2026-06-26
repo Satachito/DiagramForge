@@ -61,7 +61,7 @@ In Cursor, project rules in **[Web/.cursorrules](Web/.cursorrules)** and **[Web/
 
 ## Run locally
 
-The app is static files under `Web/`. Serve that folder and open `index.html`:
+The app is static files under `Web/`. For a quick one-off preview:
 
 ```bash
 cd Web
@@ -71,11 +71,70 @@ python3 -m http.server 8080
 
 `Web/Samples` is a symlink to `../Samples`. Icon ZIPs are symlinked from `ICONs/`.
 
-## Development
+## Development (live reload + AI API)
+
+For day-to-day editing — especially **`.cde` files in Cursor with the browser open beside it** — use the dev server. It serves `Web/`, watches `Samples/*.cde`, and pushes reload events over WebSocket so the open diagram refreshes when you save.
+
+### Setup
 
 ```bash
 cd Web
 npm install
+npm run dev
+```
+
+Open a sample (or any repo-relative path under `Web/`):
+
+```
+http://localhost:8080/?cde=Samples/JSONs.cde
+```
+
+### Workflow
+
+1. Start `npm run dev` and open a diagram with `?cde=…` (or click a **Sample( … )** button — that path is watched too).
+2. Edit the `.cde` file in your editor and **save**.
+3. The browser reloads that file in place; pan/zoom and selection are not preserved, but you see layout changes immediately.
+4. Use **↑ / ↓** in the app for one-off uploads and downloads. Uploading a local file clears the watch path (no auto-reload until you load a server path again).
+
+**Port in use?** Another `df-server` may still be running:
+
+```bash
+lsof -ti:8080 | xargs kill
+# or: PORT=8081 npm run dev
+```
+
+### `window.DF` — in-browser command API
+
+When the app is open, the live model is exposed as **`window.DF`** (`Web/ai-api.js`). Each call goes through `Application.js`, so edits are undoable and the canvas redraws.
+
+Try in DevTools console:
+
+```js
+DF.getModel()                          // current { nodes, links }
+DF.validate()                          // [] if OK, else error strings
+DF.apply([
+  { op: 'addNode', id: 'Box', area: { type: 'rect', cX: 400, cY: 300, rH: 80, rV: 40, html: 'Hi' } },
+  { op: 'addLink', from: 'Box', to: 'Core Data' }
+])
+DF.autoLayout({ algorithm: 'grid', cols: 4 })
+```
+
+| Method | Purpose |
+|--------|---------|
+| `getModel()` | Clone of `{ nodes, links }` |
+| `setModel(model)` | Replace the whole diagram |
+| `validate(model?)` | Schema / ID checks |
+| `apply(ops)` | Run ops sequentially (see below) |
+| `autoLayout({ algorithm, cols, gap, startX, startY })` | Grid layout (`algorithm: 'grid'`) |
+
+**Ops** for `apply()` (and also on `DF` directly): `addNode`, `updateNode`, `removeNode`, `restack`, `addLink`, `updateLink`, `removeLink`, `autoLayout`, `setCanvas`.
+
+External agents (Cursor, MCP bridge, CDP) can call these from the browser context. File-based editing still uses **[Web/SCHEMA.md](Web/SCHEMA.md)**; live reload connects the two.
+
+### Lint
+
+```bash
+cd Web
 npm run lint
 ```
 
@@ -88,7 +147,7 @@ DiagramForge/
 ├── Web/           App (HTML + ES modules)
 ├── Samples/       Example .cde files
 ├── ICONs/         Cloud icon ZIP archives
-└── tools/         Utilities (e.g. drawio2cde.py)
+├── tools/         Dev server (df-server.mjs) and utilities (e.g. drawio2cde.py)
 ```
 
 ## Author
