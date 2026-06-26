@@ -210,6 +210,52 @@ footer {
 ;	font-size				: 10px
 ;	opacity					: .85
 }
+#NODE_ID_DIALOG {
+;	border					: 1px solid var( --color-popup-border )
+;	border-radius			: 8px
+;	background				: var( --color-popup-bg )
+;	color					: var( --color-popup-fg )
+;	padding					: 16px
+;	box-shadow				: 0 8px 28px var( --color-shadow )
+}
+#NODE_ID_DIALOG::backdrop {
+;	background				: rgba( 0, 0, 0, .35 )
+}
+.id-dialog {
+;	display					: flex
+;	flex-direction			: column
+;	gap						: 8px
+;	min-width				: 240px
+;	font-size				: 13px
+}
+.id-dialog input {
+;	padding					: 6px 8px
+;	font-family				: inherit
+;	font-size				: 13px
+}
+.id-dialog-err {
+;	color					: #cf222e
+;	font-size				: 11px
+;	min-height				: 1em
+}
+.id-dialog-buttons {
+;	display					: flex
+;	justify-content			: flex-end
+;	gap						: 8px
+}
+.id-dialog-buttons button {
+;	padding					: 5px 12px
+;	border					: 1px solid var( --color-popup-border )
+;	border-radius			: 6px
+;	background				: var( --color-popup-bg )
+;	color					: var( --color-popup-fg )
+;	cursor					: pointer
+;	font-family				: inherit
+;	font-size				: 12px
+}
+.id-dialog-buttons button:hover {
+;	background				: var( --color-popup-hover )
+}
 aside {
 ;	border-left				: 1px solid gray
 ;	overflow				: scroll
@@ -668,6 +714,18 @@ aside .node-id-row {
 		<button		id=NODE_MENU_COPY_STYLE	>Copy Style</button>
 	</div>
 </footer>
+
+<dialog id=NODE_ID_DIALOG>
+	<form id=NODE_ID_DIALOG_FORM class=id-dialog>
+		<label for=NODE_ID_DIALOG_INPUT><b>New node ID</b></label>
+		<input id=NODE_ID_DIALOG_INPUT placeholder="空欄で自動採番" spellcheck=false autocomplete=off>
+		<div id=NODE_ID_DIALOG_ERR class=id-dialog-err></div>
+		<div class=id-dialog-buttons>
+			<button type=button id=NODE_ID_DIALOG_CANCEL>Cancel</button>
+			<button type=submit id=NODE_ID_DIALOG_OK>Create</button>
+		</div>
+	</form>
+</dialog>
 
 <script type=module>
 

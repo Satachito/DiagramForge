@@ -638,6 +638,38 @@ MainEditor extends HTMLElement {
 		:	( ( NodeMode( ev ) || LinkMode( ev ) ) ? 'crosshair' : 'default' )
 	}
 
+	//	modal prompt for a new node's id. Resolves '' ( auto-assign ), the typed id,
+	//	or null when cancelled. Rejects a typed id that already exists ( keeps open ).
+	promptNodeId() {
+		return	new Promise( resolve => {
+			const
+			finish = val => {
+				NODE_ID_DIALOG_FORM.onsubmit	= null
+				NODE_ID_DIALOG_CANCEL.onclick	= null
+				NODE_ID_DIALOG.oncancel			= null
+				NODE_ID_DIALOG.open && NODE_ID_DIALOG.close()
+				this.reformer.focus()
+				resolve( val )
+			}
+			NODE_ID_DIALOG_INPUT.value		= ''
+			NODE_ID_DIALOG_ERR.textContent	= ''
+			NODE_ID_DIALOG_FORM.onsubmit	= ev => {
+				ev.preventDefault()
+				const
+				v = NODE_ID_DIALOG_INPUT.value.trim()
+				if	( v && FindNode( v ) ) {
+					NODE_ID_DIALOG_ERR.textContent = `ID "${ v }" は既に存在します`
+					return
+				}
+				finish( v )
+			}
+			NODE_ID_DIALOG_CANCEL.onclick	= () => finish( null )
+			NODE_ID_DIALOG.oncancel			= ev => ( ev.preventDefault(), finish( null ) )
+			NODE_ID_DIALOG.showModal()
+			NODE_ID_DIALOG_INPUT.focus()
+		} )
+	}
+
 	async onKeyDown( ev ) {
 		this.refreshModeCursor( ev )
 		const	t = ev.target
@@ -979,9 +1011,11 @@ MainEditor extends HTMLElement {
 				S.cY = c[ 1 ]
 				S.rH = r[ 0 ]
 				S.rV = r[ 1 ]
-				//	drag = a new node. Don't reuse a selected node's id left in the
-				//	field ( that would update it ); only honor a fresh, unused id.
-				await Node( [ FindNode( NODE_ID.value ) ? '' : NODE_ID.value, S, P ] )
+				//	ask for the new node's id in a modal ( empty = auto-assign );
+				//	Cancel / Esc aborts and creates nothing.
+				const	id = await this.promptNodeId()
+				if	( id === null ) return
+				await Node( [ id, S, P ] )
 			}
 		}
 	}
