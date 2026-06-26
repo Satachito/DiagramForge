@@ -728,7 +728,7 @@
 					"cY": 1066,
 					"rH": 150,
 					"rV": 16,
-					"html": "one anchored → perpendicular",
+					"html": "one anchored<br>→ horizontal",
 					"style": ";display:grid\n;place-items:center\n;text-align:center\n;font-size:12px"
 				},
 				{}
@@ -755,7 +755,7 @@
 				{
 					"type": "rect",
 					"cX": 810,
-					"cY": 1196,
+					"cY": 1132,
 					"rH": 54,
 					"rV": 32,
 					"html": "B",
@@ -775,7 +775,7 @@
 					"cY": 1066,
 					"rH": 150,
 					"rV": 16,
-					"html": "both anchored → orthogonal",
+					"html": "both anchored<br>→ orthogonal",
 					"style": ";display:grid\n;place-items:center\n;text-align:center\n;font-size:12px"
 				},
 				{}
@@ -869,7 +869,7 @@
 					"cY": 1290,
 					"rH": 320,
 					"rV": 20,
-					"html": "<b>6 · Anchor sides (anchorT)</b>",
+					"html": "<b>6 · Anchor sides (anchorT) — perpendicular snaps to H / V</b>",
 					"style": ";display:grid\n;place-items:center start\n;font-size:15px"
 				},
 				{}
@@ -878,8 +878,8 @@
 				"anchors",
 				{
 					"type": "rect",
-					"cX": 890,
-					"cY": 1500,
+					"cX": 850,
+					"cY": 1480,
 					"rH": 96,
 					"rV": 58,
 					"radii": 10,
