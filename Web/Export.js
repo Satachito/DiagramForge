@@ -229,3 +229,66 @@ saveSVG = async ( editor, filename ) => {
 	void editor
 	saveVectorSVG( filename )
 }
+
+//	Copy the full-fidelity vector SVG to the clipboard. SVG is origin-clean ( no
+//	canvas, no taint ), so this just works. text/plain carries the markup — vector
+//	tools ( Figma / Illustrator / Inkscape ) paste it as editable vectors, editors
+//	paste the source. Also offer image/svg+xml where the browser allows it.
+export const
+copySVG		= async () => {
+	const
+	built = buildVectorSVG()
+	if	( !built ) throw new Error( 'Nothing to export' )
+	const
+	{ svg } = built
+	try {
+		await navigator.clipboard.write( [
+			new ClipboardItem( {
+				'image/svg+xml'	: new Blob( [ svg ], { type: 'image/svg+xml' } )
+			,	'text/plain'	: new Blob( [ svg ], { type: 'text/plain'	 } )
+			} )
+		] )
+	} catch {
+		//	browsers that reject image/svg+xml on the clipboard: fall back to markup
+		await navigator.clipboard.writeText( svg )
+	}
+}
+
+//	PDF via the browser's own print engine: drop the full-fidelity vector SVG
+//	( foreignObject HTML labels and all ) into a hidden iframe sized to the canvas,
+//	then print. The print renderer keeps labels exactly as on screen and emits a
+//	vector PDF — no canvas, so no taint, and no PDF library to hand-roll.
+export const
+printPDF	= filename => {
+	const
+	built = buildVectorSVG()
+	if	( !built ) throw new Error( 'Nothing to export' )
+	const
+	{ svg, w, h } = built
+	,	inline = svg.replace( /^<\?xml[^>]*\?>\s*/, '' )	//	XML prolog is invalid inside HTML
+
+	const
+	iframe = document.createElement( 'iframe' )
+	iframe.setAttribute( 'aria-hidden', 'true' )
+	iframe.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;visibility:hidden'
+
+	const	cleanup = () => iframe.isConnected && iframe.remove()
+
+	iframe.onload = () => {
+		const	win = iframe.contentWindow
+		win.onafterprint = cleanup
+		//	let foreignObject labels and images paint before printing
+		setTimeout( () => ( win.focus(), win.print() ), 100 )
+		setTimeout( cleanup, 60000 )	//	fallback if onafterprint never fires
+	}
+
+	document.body.appendChild( iframe )
+	const	doc = iframe.contentDocument
+	doc.open()
+	doc.write(
+		`<!doctype html><html><head><meta charset="utf-8"><title>${ baseName( filename ) }</title>`
+	+	`<style>@page{size:${ w }px ${ h }px;margin:0}html,body{margin:0;padding:0}svg{display:block}</style>`
+	+	`</head><body>${ inline }</body></html>`
+	)
+	doc.close()
+}

@@ -128,7 +128,7 @@ body.aside-collapsed	> aside	{ display: none }
 }
 .sample-list {
 ;	display			: grid
-;	grid-template-columns	: repeat( 4, auto )
+;	grid-template-columns	: repeat( 5, auto )
 ;	grid-template-rows		: repeat( 2, 1fr )
 ;	gap				: 2px
 ;	height			: 100%
@@ -559,6 +559,7 @@ aside .node-id-row {
 		<button id=SAMPLE_AZURE		>Azure		</button>
 		<button id=SAMPLE_MINDMAP	>MindMap	</button>
 		<button id=SAMPLE_SEQUENCE	>Sequence	</button>
+		<button id=SAMPLE_SCREENFLOW	>ScreenFlow</button>
 		<button id=SAMPLE_ANCHORS	>Anchors	</button>
 		<button id=SAMPLE_ARROWHEADS	>Arrowheads	</button>
 	</div>
@@ -595,6 +596,14 @@ aside .node-id-row {
 			<button id=EXPORT_SVG class="file-btn file-btn-export" title="Export SVG">
 				<svg viewBox="0 0 16 16" aria-hidden=true fill=none stroke=currentColor stroke-width=1.5 stroke-linecap=round stroke-linejoin=round><path d="M4 2.5h5.5L13 6v7.5a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1Z"/><path d="M9 2.5V6H12.5"/><path d="M5.5 9.5h5M5.5 11.5h3"/></svg>
 				<span>Export SVG</span>
+			</button>
+			<button id=EXPORT_PDF class="file-btn file-btn-export" title="Export PDF (print → Save as PDF)">
+				<svg viewBox="0 0 16 16" aria-hidden=true fill=none stroke=currentColor stroke-width=1.5 stroke-linecap=round stroke-linejoin=round><path d="M4 2.5h5.5L13 6v7.5a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1Z"/><path d="M9 2.5V6H12.5"/><path d="M5.5 9.5h6"/></svg>
+				<span>Export PDF</span>
+			</button>
+			<button id=COPY_SVG class="file-btn file-btn-export" title="Copy SVG to clipboard (paste into Figma / Illustrator / editors)">
+				<svg viewBox="0 0 16 16" aria-hidden=true fill=none stroke=currentColor stroke-width=1.5 stroke-linecap=round stroke-linejoin=round><rect x="5" y="5" width="8" height="9" rx="1"/><path d="M3 11V3a1 1 0 0 1 1-1h6"/></svg>
+				<span>Copy SVG</span>
 			</button>
 		</div>
 	</div>
@@ -677,7 +686,7 @@ import './node-editor.js'
 import './link-editor.js'
 import './cloud-icons.js'
 import './main-editor.js'
-import { saveSVG, baseName, downloadBlob } from './Export.js'
+import { saveSVG, printPDF, copySVG, baseName, downloadBlob } from './Export.js'
 
 /*
 const
@@ -734,6 +743,7 @@ SAMPLE_GCP		.onclick = () => LoadSample( 'Samples/GCP.cde'		).catch( Report )
 SAMPLE_AZURE	.onclick = () => LoadSample( 'Samples/Azure.cde'	).catch( Report )
 SAMPLE_MINDMAP	.onclick = () => LoadSample( 'Samples/MindMap.cde'	).catch( Report )
 SAMPLE_SEQUENCE	.onclick = () => LoadSample( 'Samples/Sequence.cde'		).catch( Report )
+SAMPLE_SCREENFLOW.onclick = () => LoadSample( 'Samples/ScreenFlow.cde'	).catch( Report )
 SAMPLE_ANCHORS		.onclick = () => LoadSample( 'Samples/Anchors.cde'		).catch( Report )
 SAMPLE_ARROWHEADS	.onclick = () => LoadSample( 'Samples/Arrowheads.cde'	).catch( Report )
 
@@ -761,6 +771,16 @@ DOWNLOAD		.onclick = () => downloadBlob(
 )
 
 EXPORT_SVG		.onclick = () => saveSVG( MAIN_EDITOR, FILE_NAME.value ).catch( Report )
+EXPORT_PDF		.onclick = () => { try { printPDF( FILE_NAME.value ) } catch ( er ) { Report( er ) } }
+COPY_SVG		.onclick = async () => {
+	const	label = COPY_SVG.querySelector( 'span' )
+	try {
+		await copySVG()
+		const	prev = label.textContent
+		label.textContent = 'Copied!'
+		setTimeout( () => ( label.textContent = prev ), 1200 )
+	} catch ( er ) { Report( er ) }
+}
 
 UPLOAD			.onchange = async ev => {
 	const
