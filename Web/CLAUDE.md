@@ -15,7 +15,7 @@ The diagram is a plain JSON file (`.cde`). To add/modify/arrange nodes and links
 and browser tab are open (see **[USAGE.md](../USAGE.md)**).
 
 Format and safe-edit rules: **[SCHEMA.md](SCHEMA.md)** (English).  
-AI contract + `window.DF` / MCP ops: **[AUTO.md](../AUTO.md)** (Japanese).
+AI contract + `window.DF` / MCP ops: **[AUTO.md](../AUTO.md)**.
 Sample files live in `Samples/`.
 
 Cloud icon archives (AWS / Azure / GCP) are zipped under `../ICONs/`. You can list
