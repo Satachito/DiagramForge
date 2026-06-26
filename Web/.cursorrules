@@ -3,6 +3,6 @@ Static site: plain ES modules + Web Components, no build. Lint with `npm run lin
 Code style: leading-comma/leading-semicolon layout, tabs, `$`/`_` shorthand. Match surrounding code.
 
 Diagrams are plain JSON files (`.cde`). To add/modify/arrange nodes and links, edit the `.cde`
-file directly — there is no in-app AI console. Read **SCHEMA.md** for the format; **AUTO.md**
+file directly — there is no in-app AI console. Read **SCHEMA.md** for the format; **AI.md**
 (AI contract + MCP ops) and **USAGE.md** (dev server / MCP setup) for live editing.
 Sample files are in Samples/.

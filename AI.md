@@ -4,7 +4,7 @@ Implementation-accurate contract for agents (Cursor, MCP, scripts) working on Di
 
 | Document | Role |
 |----------|------|
-| **This file (AUTO.md)** | AI contract, MCP / `window.DF` operations |
+| **This file (AI.md)** | AI contract, MCP / `window.DF` operations |
 | **[Web/SCHEMA.md](Web/SCHEMA.md)** | `.cde` schema detail (link `corner`, anchors, examples) |
 | **[USAGE.md](USAGE.md)** | Dev server, Phase 2/3/4, MCP setup |
 

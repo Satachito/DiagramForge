@@ -56,7 +56,7 @@ A saved `.cde` file is JSON:
 
 Each node is `[ ID, area, paint ]`. Each link is `[ [ fromID, toID ], ends, paint ]`.
 
-Authoring rules for AI and hand edits: **[Web/SCHEMA.md](Web/SCHEMA.md)** · **[AUTO.md](AUTO.md)** (AI contract + MCP)  
+Authoring rules for AI and hand edits: **[Web/SCHEMA.md](Web/SCHEMA.md)** · **[AI.md](AI.md)** (AI contract + MCP)  
 Sample files: **[Samples/](Samples/)**
 
 ## Editing with Cursor
@@ -107,7 +107,7 @@ DiagramForge/
 ├── tools/            df-server, df-mcp, utilities
 ├── .cursor/mcp.json  Cursor MCP config
 ├── USAGE.md          Dev server + MCP workflow
-├── AUTO.md           AI contract + MCP ops
+├── AI.md             AI contract + MCP ops
 └── Web/SCHEMA.md     .cde schema reference
 ```
 
