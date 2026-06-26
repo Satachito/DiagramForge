@@ -124,12 +124,19 @@ Reform		= () => {
 }
 
 const
+ID_EPOCH	= 176722560000	//	 Since 2026.01.01
+
+//	the id auto-assign would currently hand out ( for placeholder previews )
+export	const
+PreviewID	= () => String( Date.now() - ID_EPOCH )
+
+const
 GenerateID	= async $ => {
 	if	( $ && !app.model.nodes.some( _ => _[ 0 ] === $ ) ) return $
-	$ = String( ( new Date() ).getTime() - 176722560000 )	//	 Since 2026.01.01
+	$ = PreviewID()
 	while	( app.model.nodes.some( _ => _[ 0 ] === $ ) ) {
 		await new Promise( R => setTimeout( R, 1 ) )
-		$ = String( ( new Date() ).getTime() - 176722560000 )	//	 Since 2026.01.01
+		$ = PreviewID()
 	}
 	return $
 }
@@ -158,6 +165,64 @@ Node	= ( [ ID, S, P ] ) => DoTypical(
 	}
 )
 
+//	rename and restyle an existing node in a single history step: changes its id
+//	( oldID → ID, updating every link that references it ) and its shape / paint
+export	const
+EditNode	= ( oldID, [ ID, S, P ] ) => DoTypical(
+	'EditNode'
+,	() => {
+		const
+		node = FindNode( oldID )
+		if	( !node ) return
+		node[ 0 ] = ID
+		node[ 1 ] = S
+		node[ 2 ] = P
+		ID !== oldID && app.model.links.forEach(
+			link => link[ 0 ] = [
+				link[ 0 ][ 0 ] === oldID ? ID : link[ 0 ][ 0 ]
+			,	link[ 0 ][ 1 ] === oldID ? ID : link[ 0 ][ 1 ]
+			]
+		)
+		app.reforms = [ structuredClone( node ) ]
+	}
+)
+
+//	remove a node by id ( and every link touching it ). Selection-independent,
+//	unlike Delete which acts on app.reforms.
+export	const
+RemoveNode	= ID => DoTypical(
+	'RemoveNode'
+,	() => {
+		app.model.nodes = app.model.nodes.filter( _ => _[ 0 ] !== ID )
+		app.model.links = app.model.links.filter( ( [ [ F, T ] ] ) => F !== ID && T !== ID )
+		app.reforms = app.reforms.filter( _ => _[ 0 ] !== ID )
+	}
+)
+
+//	replace the whole model ( nodes + links ) in one history step
+export	const
+SetModel	= model => DoTypical(
+	'SetModel'
+,	() => {
+		app.model	= { nodes: model.nodes ?? [], links: model.links ?? [] }
+		app.reforms	= []
+	}
+)
+
+//	move a node to the front ( drawn last → on top ) or back ( drawn first ) of
+//	the z-order
+export	const
+Restack	= ( ID, toFront ) => DoTypical(
+	toFront ? 'BringToFront' : 'BringToBack'
+,	() => {
+		const
+		node = FindNode( ID )
+		if	( !node ) return
+		app.model.nodes = app.model.nodes.filter( _ => _ !== node )
+		toFront ? app.model.nodes.push( node ) : app.model.nodes.unshift( node )
+	}
+)
+
 export	const
 Link	= ( [ [ F, T ], A, P ] ) => DoTypical(
 	'Link'
@@ -177,6 +242,22 @@ Link	= ( [ [ F, T ], A, P ] ) => DoTypical(
 				,	structuredClone( FindNode( T ) )
 				] 
 			)
+	}
+)
+
+//	re-point and restyle an existing link in a single history step: changes its
+//	endpoints ( oldF/oldT → F/T ) and replaces its attributes / paint
+export	const
+EditLink	= ( [ oldF, oldT ], [ [ F, T ], A, P ] ) => DoTypical(
+	'EditLink'
+,	() => {
+		const
+		link = app.model.links.find( ( [ [ f, t ] ] ) => f === oldF && t === oldT )
+		link && (
+			link[ 0 ] = [ F, T ]
+		,	link[ 1 ] = A
+		,	link[ 2 ] = P
+		)
 	}
 )
 

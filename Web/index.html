@@ -68,27 +68,24 @@ body.nav-collapsed		> nav	{ display: none }
 body.aside-collapsed	> aside	{ display: none }
 
 .panel-toggle {
-;	position		: fixed
-;	top				: 50%
-;	transform		: translateY( -50% )
-;	z-index			: 1500
-;	width			: 16px
-;	height			: 60px
+;	flex-shrink		: 0
+;	align-self		: stretch
+;	width			: 28px
 ;	display			: flex
 ;	align-items		: center
 ;	justify-content	: center
 ;	padding			: 0
-;	border			: 1px solid var( --color-popup-border )
+;	border			: none
 ;	background		: var( --color-popup-bg )
 ;	color			: var( --color-popup-fg )
-;	box-shadow		: 0 2px 8px var( --color-shadow )
 ;	cursor			: pointer
-;	font-size		: 13px
-;	opacity			: .5
+;	font-size		: 16px
+;	font-weight		: 700
+;	opacity			: .85
 }
-.panel-toggle:hover		{ opacity: 1 }
-#NAV_TOGGLE				{ left	: 0; border-left	: none; border-radius: 0 6px 6px 0 }
-#ASIDE_TOGGLE			{ right	: 0; border-right	: none; border-radius: 6px 0 0 6px }
+.panel-toggle:hover		{ opacity: 1; background: var( --color-popup-hover ) }
+#NAV_TOGGLE				{ border-right	: 1px solid gray }
+#ASIDE_TOGGLE			{ border-left	: 1px solid gray }
 
 /* full-width header bar: independent of the nav / aside columns so collapsing
    a side panel never shifts the header */
@@ -97,28 +94,31 @@ body.aside-collapsed	> aside	{ display: none }
 ;	grid-column		: 1 / 4
 ;	display			: flex
 ;	align-items		: stretch
-;	height			: var( --topbar-h )
+;	flex-wrap		: wrap
 ;	min-height		: var( --topbar-h )
-;	max-height		: var( --topbar-h )
 ;	box-sizing		: border-box
-;	overflow			: visible
+;	overflow-x		: auto
+;	overflow-y		: visible
 ;	border-bottom	: 1px solid gray
 }
 .topbar > header {
 ;	box-sizing		: border-box
 ;	min-height		: 0
-;	overflow		: hidden
 ;	padding			: 5px 8px
 }
+.topbar > header.controls {
+;	flex			: 1 1 280px
+;	min-width		: 0
+;	overflow		: visible
+}
 .topbar > header					{ border-bottom: none }
-.topbar > header:first-child {
+.topbar > header.brand {
 ;	flex-shrink		: 0
 ;	display			: flex
 ;	flex-direction	: column
 ;	justify-content	: center
 }
-.topbar > header:nth-child( 2 )		{ flex: 1; min-width: 0; overflow-y: auto }
-.topbar > header.sample-panel		{ overflow: visible }
+.topbar > header.sample-panel		{ flex-shrink: 0 }
 .sample-panel {
 ;	flex-shrink		: 0
 ;	box-sizing		: border-box
@@ -210,7 +210,9 @@ footer {
 ;	font-size				: 10px
 ;	opacity					: .85
 }
-#NODE_ID_DIALOG {
+#NODE_ID_DIALOG,
+#LINK_EDGE_DIALOG,
+#NODE_EDIT_DIALOG {
 ;	border					: 1px solid var( --color-popup-border )
 ;	border-radius			: 8px
 ;	background				: var( --color-popup-bg )
@@ -218,8 +220,14 @@ footer {
 ;	padding					: 16px
 ;	box-shadow				: 0 8px 28px var( --color-shadow )
 }
-#NODE_ID_DIALOG::backdrop {
+#NODE_ID_DIALOG::backdrop,
+#LINK_EDGE_DIALOG::backdrop,
+#NODE_EDIT_DIALOG::backdrop {
 ;	background				: rgba( 0, 0, 0, .35 )
+}
+.link-dialog {
+;	width					: 340px
+;	max-width				: 90vw
 }
 .id-dialog {
 ;	display					: flex
@@ -257,9 +265,13 @@ footer {
 ;	background				: var( --color-popup-hover )
 }
 aside {
+;	grid-row				: 2
+;	grid-column				: 3
 ;	border-left				: 1px solid gray
 ;	overflow				: scroll
 ;	padding					: 5px
+;	min-height				: 0
+;	min-width				: 0
 }
 aside button:not( .file-btn ) {
 ;	display					: block
@@ -296,9 +308,12 @@ aside summary {
 ;	margin-bottom			: 3px
 }
 nav {
+;	grid-row				: 2
+;	grid-column				: 1
 ;	border-right			: 1px solid gray
 ;	overflow				: auto
 ;	min-height				: 0
+;	min-width				: 0
 }
 nav cloud-icons {
 ;	display					: block
@@ -371,21 +386,14 @@ summary {
 ,	#NODE_MENU > button:hover {
 ;	background		: var( --color-popup-hover )
 }
-#LINK_MENU > button.corner-opt::before
-,	#HEAD_MENU > button.head-opt::before {
+#HEAD_MENU > button.head-opt::before {
 ;	content			: '○'
 ;	margin-right	: 7px
 ;	opacity			: .35
 }
-#LINK_MENU > button.corner-opt.active::before
-,	#HEAD_MENU > button.head-opt.active::before {
+#HEAD_MENU > button.head-opt.active::before {
 ;	content			: '●'
 ;	opacity			: 1
-}
-.link-menu-sep {
-;	height			: 1px
-;	margin			: 4px 0
-;	background		: var( --color-popup-border )
 }
 #UNDER_HOVER {
 ;	display			: none
@@ -422,8 +430,7 @@ paint-editor > div:not( :has( textarea ) )
 }
 paint-editor > div > span
 ,	link-editor > div > span
-,	shape-editor > div:not( :has( textarea ) ) > span
-,	aside .node-id-row label {
+,	shape-editor > div:not( :has( textarea ) ) > span {
 ;	font-size			: 12px
 ;	opacity				: .75
 ;	letter-spacing		: .02em
@@ -442,7 +449,10 @@ shape-editor textarea	{ height : 6em; resize : vertical }
 .file-name
 ,	aside input:not( [type=checkbox] ):not( [type=file] ):not( [type=hidden] )
 ,	aside select
-,	aside textarea {
+,	aside textarea
+,	.link-dialog input:not( [type=checkbox] ):not( [type=file] ):not( [type=hidden] )
+,	.link-dialog select
+,	.link-dialog textarea {
 ;	width				: 100%
 ;	min-width			: 0
 ;	box-sizing			: border-box
@@ -455,7 +465,8 @@ shape-editor textarea	{ height : 6em; resize : vertical }
 ;	font-size			: 12px
 ;	line-height			: 1.2
 }
-aside select {
+aside select
+,	.link-dialog select {
 ;	cursor				: pointer
 ;	appearance			: none
 ;	background-image	: linear-gradient( 45deg, transparent 50%, currentColor 50% )
@@ -465,7 +476,8 @@ aside select {
 ;	background-repeat	: no-repeat
 ;	padding-right		: 22px
 }
-aside input[type=checkbox] {
+aside input[type=checkbox]
+,	.link-dialog input[type=checkbox] {
 ;	width				: auto
 ;	accent-color		: light-dark( #2563eb, #60a5fa )
 ;	cursor				: pointer
@@ -473,16 +485,15 @@ aside input[type=checkbox] {
 .file-name:focus
 ,	aside input:not( [type=checkbox] ):not( [type=file] ):not( [type=hidden] ):focus
 ,	aside select:focus
-,	aside textarea:focus {
+,	aside textarea:focus
+,	.link-dialog input:not( [type=checkbox] ):not( [type=file] ):not( [type=hidden] ):focus
+,	.link-dialog select:focus
+,	.link-dialog textarea:focus {
 ;	outline				: 2px solid light-dark( #60a5fa, #2563eb )
 ;	outline-offset		: 0
 }
 
-aside .node-id-row {
-;	display				: grid
-;	grid-template-columns	: 1fr 120px
-;	align-items			: center
-;	column-gap			: 6px
+.node-id-row {
 ;	margin-bottom		: 3px
 }
 
@@ -570,13 +581,14 @@ aside .node-id-row {
 </style>
 
 <div class=topbar>
-<header style="font-family: fantasy; margin-right: 16px; font-size: 22px; line-height: 1.1">
+<button id=NAV_TOGGLE	class=panel-toggle title="Toggle left panel (cloud icons)">‹</button>
+<header class=brand style="font-family: fantasy; margin-right: 16px; font-size: 22px; line-height: 1.1">
 	DiagramForge
 	<div style="font-family: courier; font-size: 10px; font-weight: normal; margin-top: 2px">
 		Cloud · Mind map · Sequence · JSON .cde
 	</div>
 </header>
-<header>
+<header class=controls>
 	<label style="display:inline-flex; align-items:center; gap:4px;font-size:12px">
 		<input id=CREATE_NODE type=checkbox>Create node <span style="opacity:.55">/ select area</span>
 	</label>
@@ -611,6 +623,7 @@ aside .node-id-row {
 		<button id=SAMPLE_SHOWCASE	>Showcase	</button>
 	</div>
 </header>
+<button id=ASIDE_TOGGLE	class=panel-toggle title="Toggle right panel (editors)">›</button>
 </div>
 
 <nav>
@@ -657,23 +670,23 @@ aside .node-id-row {
 	<hr>
 	<details open>
 		<summary>Link editor</summary>
-		<link-editor	id=LINK_EDITOR		></link-editor>
+		<div			id=LINK_EDITOR_HOME	>
+			<link-editor	id=LINK_EDITOR		></link-editor>
+		</div>
 		<button			id=LINK				>Apply/Create Link	</button>
 	</details>
 	<hr>
 	<details open>
 		<summary>Node editor</summary>
-		<node-editor	id=NODE_EDITOR		></node-editor>
-		<div class=node-id-row>
-			<label for=NODE_ID>Node ID:</label>
-			<input id=NODE_ID placeholder="空欄で自動採番 / 任意でID">
+		<div			id=NODE_EDITOR_HOME	>
+			<div id=NODE_ID_ROW class=node-id-row>
+				<input id=NODE_ID>
+			</div>
+			<node-editor	id=NODE_EDITOR		></node-editor>
 		</div>
 		<button			id=NODE				>Apply/Create Node	</button>
 	</details>
 </aside>
-
-<button id=NAV_TOGGLE	class=panel-toggle title="Toggle left panel">‹</button>
-<button id=ASIDE_TOGGLE	class=panel-toggle title="Toggle right panel">›</button>
 
 <footer>
 	<div class=debug-bar>
@@ -690,12 +703,8 @@ aside .node-id-row {
 	</div>
 	<div			id=UNDER_HOVER		></div>
 	<div			id=LINK_MENU		>
-		<button		id=LINK_CORNER_CURVE	class=corner-opt	>bezier</button>
-		<button		id=LINK_CORNER_ARC		class=corner-opt	>arc</button>
-		<button		id=LINK_CORNER_ORTHO	class=corner-opt	>sharp</button>
-		<button		id=LINK_CORNER_STRAIGHT	class=corner-opt	>straight</button>
-		<div		class=link-menu-sep	></div>
-		<button		id=LINK_MENU_REMOVE	>Remove</button>
+		<button		id=LINK_MENU_EDIT	>Edit</button>
+		<button		id=LINK_MENU_REMOVE	>Delete</button>
 	</div>
 	<div			id=HEAD_MENU		>
 		<button		id=HEAD_NONE			class=head-opt	data-head=			>none</button>
@@ -708,21 +717,48 @@ aside .node-id-row {
 		<button		id=HEAD_CIRCLE_HOLLOW	class=head-opt	data-head=circleHollow	>circleHollow</button>
 	</div>
 	<div			id=NODE_MENU		>
-		<button		id=NODE_MENU_DELETE		>Delete</button>
+		<button		id=NODE_MENU_EDIT		>Edit</button>
+		<button		id=NODE_MENU_FRONT		>Bring to front</button>
+		<button		id=NODE_MENU_BACK		>Bring to back</button>
 		<button		id=NODE_MENU_COPY_ID	>Copy ID</button>
 		<button		id=NODE_MENU_COPY_HTML	>Copy HTML</button>
 		<button		id=NODE_MENU_COPY_STYLE	>Copy Style</button>
+		<button		id=NODE_MENU_DELETE		>Delete</button>
 	</div>
 </footer>
 
 <dialog id=NODE_ID_DIALOG>
 	<form id=NODE_ID_DIALOG_FORM class=id-dialog>
 		<label for=NODE_ID_DIALOG_INPUT><b>New node ID</b></label>
-		<input id=NODE_ID_DIALOG_INPUT placeholder="空欄で自動採番" spellcheck=false autocomplete=off>
+		<input id=NODE_ID_DIALOG_INPUT spellcheck=false autocomplete=off>
 		<div id=NODE_ID_DIALOG_ERR class=id-dialog-err></div>
 		<div class=id-dialog-buttons>
 			<button type=button id=NODE_ID_DIALOG_CANCEL>Cancel</button>
 			<button type=submit id=NODE_ID_DIALOG_OK>Create</button>
+		</div>
+	</form>
+</dialog>
+
+<dialog id=LINK_EDGE_DIALOG>
+	<form id=LINK_EDGE_DIALOG_FORM class="id-dialog link-dialog">
+		<label><b>Edit link</b></label>
+		<div id=LINK_EDITOR_SLOT></div>
+		<div id=LINK_EDGE_DIALOG_ERR class=id-dialog-err></div>
+		<div class=id-dialog-buttons>
+			<button type=button id=LINK_EDGE_DIALOG_CANCEL>Cancel</button>
+			<button type=submit id=LINK_EDGE_DIALOG_OK>OK</button>
+		</div>
+	</form>
+</dialog>
+
+<dialog id=NODE_EDIT_DIALOG>
+	<form id=NODE_EDIT_DIALOG_FORM class="id-dialog link-dialog">
+		<label><b>Edit node</b></label>
+		<div id=NODE_EDITOR_SLOT></div>
+		<div id=NODE_EDIT_DIALOG_ERR class=id-dialog-err></div>
+		<div class=id-dialog-buttons>
+			<button type=button id=NODE_EDIT_DIALOG_CANCEL>Cancel</button>
+			<button type=submit id=NODE_EDIT_DIALOG_OK>OK</button>
 		</div>
 	</form>
 </dialog>
@@ -745,6 +781,7 @@ import './node-editor.js'
 import './link-editor.js'
 import './cloud-icons.js'
 import './main-editor.js'
+import './ai-api.js'
 import { saveSVG, printPDF, copySVG, baseName, downloadBlob } from './Export.js'
 
 /*

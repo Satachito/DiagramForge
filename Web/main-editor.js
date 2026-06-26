@@ -9,7 +9,11 @@ import {
 ,	AvailableLinks
 ,	Reform
 ,	Node
+,	EditNode
+,	Restack
+,	PreviewID
 ,	Link
+,	EditLink
 ,	RemoveLink
 ,	Delete
 ,	Copy
@@ -485,24 +489,20 @@ MainEditor extends HTMLElement {
 		this.spaceDown				= false	//	space held → hand tool armed
 		this.hoverXY				= null	//	last hover position, for refreshModeCursor
 
+		LINK_MENU_EDIT.onclick	= async ev => {
+			ev.stopPropagation()
+			const
+			key = this.linkMenuKey
+			this.hideContextMenus()
+			key && await this.editLink( key )
+		}
+
 		LINK_MENU_REMOVE.onclick	= ev => (
 			ev.stopPropagation()
 		,	this.linkMenuKey && RemoveLink( [ this.linkMenuKey[ 0 ], this.linkMenuKey[ 1 ] ] )
 		,	this.hideContextMenus()
 		,	this.reformer.focus()
 		)
-
-		const
-		cornerClick	= corner => ev => (
-			ev.stopPropagation()
-		,	this.setLinkCorner( corner )
-		,	this.hideContextMenus()
-		,	this.reformer.focus()
-		)
-		LINK_CORNER_CURVE.onclick		= cornerClick( 'bezier' )
-		LINK_CORNER_ORTHO.onclick		= cornerClick( 'sharp' )
-		LINK_CORNER_ARC.onclick			= cornerClick( 'arc' )
-		LINK_CORNER_STRAIGHT.onclick	= cornerClick( 'straight' )
 
 		for ( const b of HEAD_MENU.querySelectorAll( 'button.head-opt' ) ) {
 			b.onclick = ev => (
@@ -512,6 +512,28 @@ MainEditor extends HTMLElement {
 			,	this.reformer.focus()
 			)
 		}
+
+		NODE_MENU_EDIT.onclick	= async ev => {
+			ev.stopPropagation()
+			const
+			target = this.nodeMenuTarget
+			this.hideContextMenus()
+			target && await this.editNode( target )
+		}
+
+		NODE_MENU_FRONT.onclick	= async ev => (
+			ev.stopPropagation()
+		,	this.nodeMenuTarget && await Restack( this.nodeMenuTarget[ 0 ], true )
+		,	this.hideContextMenus()
+		,	this.reformer.focus()
+		)
+
+		NODE_MENU_BACK.onclick	= async ev => (
+			ev.stopPropagation()
+		,	this.nodeMenuTarget && await Restack( this.nodeMenuTarget[ 0 ], false )
+		,	this.hideContextMenus()
+		,	this.reformer.focus()
+		)
 
 		NODE_MENU_DELETE.onclick	= async ev => (
 			ev.stopPropagation()
@@ -558,10 +580,19 @@ MainEditor extends HTMLElement {
 			ev.key === ' ' && ( this.spaceDown = false )
 		,	this.refreshModeCursor( ev )
 		) )
-		//	entering create-node mode: clear NODE_ID so the placeholder ( auto-id )
-		//	shows and a previously selected node's id can't pollute the new node
-		CREATE_NODE.onchange = () => ( CREATE_NODE.checked && ( NODE_ID.value = '' ), this.refreshModeCursor() )
+		//	entering create-node mode: clear NODE_ID so the placeholder ( the next
+		//	auto-id ) shows and a previously selected node's id can't pollute the new node
+		CREATE_NODE.onchange = () => (
+			CREATE_NODE.checked && ( NODE_ID.value = '', NODE_ID.placeholder = PreviewID() )
+		,	this.refreshModeCursor()
+		)
 		CREATE_LINK.onchange = () => this.refreshModeCursor()
+
+		//	keep the auto-id placeholder current whenever the empty field is focused
+		NODE_ID.addEventListener( 'focus', () => NODE_ID.value || ( NODE_ID.placeholder = PreviewID() ) )
+
+		//	show a live auto-id placeholder from the start
+		NODE_ID.placeholder = PreviewID()
 
 		//	Pointer Capture: once a drag starts we capture the pointer so move/up
 		//	are delivered to the canvas even when the cursor leaves it — the release
@@ -580,18 +611,6 @@ MainEditor extends HTMLElement {
 			'change'
 		,	() => this.Draw()
 		)
-	}
-
-	setLinkCorner( corner ) {
-		if	( !this.linkMenuKey ) return
-		const
-		[ F, T ] = this.linkMenuKey
-		,	link = app.model.links.find( ( [ [ f, t ] ] ) => f === F && t === T )
-		if	( !link ) return
-		const
-		A = structuredClone( link[ 1 ] ?? {} )
-		corner ? ( A.corner = corner ) : ( delete A.corner )
-		Link( [ [ F, T ], A, link[ 2 ] ] )
 	}
 
 	setLinkHead( style ) {
@@ -651,14 +670,15 @@ MainEditor extends HTMLElement {
 				this.reformer.focus()
 				resolve( val )
 			}
-			NODE_ID_DIALOG_INPUT.value		= ''
-			NODE_ID_DIALOG_ERR.textContent	= ''
+			NODE_ID_DIALOG_INPUT.value			= ''
+			NODE_ID_DIALOG_INPUT.placeholder	= PreviewID()
+			NODE_ID_DIALOG_ERR.textContent		= ''
 			NODE_ID_DIALOG_FORM.onsubmit	= ev => {
 				ev.preventDefault()
 				const
 				v = NODE_ID_DIALOG_INPUT.value.trim()
 				if	( v && FindNode( v ) ) {
-					NODE_ID_DIALOG_ERR.textContent = `ID "${ v }" は既に存在します`
+					NODE_ID_DIALOG_ERR.textContent = `ID "${ v }" already exists`
 					return
 				}
 				finish( v )
@@ -667,6 +687,115 @@ MainEditor extends HTMLElement {
 			NODE_ID_DIALOG.oncancel			= ev => ( ev.preventDefault(), finish( null ) )
 			NODE_ID_DIALOG.showModal()
 			NODE_ID_DIALOG_INPUT.focus()
+		} )
+	}
+
+	async editLink( [ F, T ] ) {
+		const
+		link = app.model.links.find( ( [ [ f, t ] ] ) => f === F && t === T )
+		if	( !link ) return
+		LINK_EDITOR.$	= [ [ F, T ], link[ 1 ] ?? {}, link[ 2 ] ?? {} ]
+		//	borrow the aside link-editor into the modal, then return it on close
+		LINK_EDITOR_SLOT.appendChild( LINK_EDITOR )
+		let	$
+		try {
+			$ = await this.promptLinkEndpoints( F, T )
+		} finally {
+			LINK_EDITOR_HOME.appendChild( LINK_EDITOR )
+		}
+		if	( !$ ) return
+		await EditLink( [ F, T ], $ )
+		this.reformer.focus()
+	}
+
+	//	modal hosting the full link-editor. Resolves the edited [ [ F, T ], A, P ]
+	//	or null when cancelled. Rejects a self-link or a duplicate of another link.
+	promptLinkEndpoints( F, T ) {
+		return	new Promise( resolve => {
+			LINK_EDGE_DIALOG_ERR.textContent	= ''
+
+			const
+			finish = val => {
+				LINK_EDGE_DIALOG_FORM.onsubmit	= null
+				LINK_EDGE_DIALOG_CANCEL.onclick	= null
+				LINK_EDGE_DIALOG.oncancel		= null
+				LINK_EDGE_DIALOG.open && LINK_EDGE_DIALOG.close()
+				this.reformer.focus()
+				resolve( val )
+			}
+			LINK_EDGE_DIALOG_FORM.onsubmit	= ev => {
+				ev.preventDefault()
+				const
+				$ = LINK_EDITOR.$			//	[ [ nF, nT ], A, P ]
+				,	[ [ nF, nT ] ] = $
+				if	( nF === nT ) {
+					LINK_EDGE_DIALOG_ERR.textContent = 'from and to are the same'
+					return
+				}
+				if	(
+					( nF !== F || nT !== T )
+				&&	app.model.links.some( ( [ [ f, t ] ] ) => f === nF && t === nT )
+				) {
+					LINK_EDGE_DIALOG_ERR.textContent = `link ${ nF } → ${ nT } already exists`
+					return
+				}
+				finish( $ )
+			}
+			LINK_EDGE_DIALOG_CANCEL.onclick	= () => finish( null )
+			LINK_EDGE_DIALOG.oncancel		= ev => ( ev.preventDefault(), finish( null ) )
+			LINK_EDGE_DIALOG.showModal()
+		} )
+	}
+
+	async editNode( node ) {
+		NODE_ID.value	= node[ 0 ]
+		NODE_EDITOR.$	= [ node[ 1 ], node[ 2 ] ]
+		//	borrow the aside node-editor ( + id row ) into the modal, return on close
+		NODE_EDITOR_SLOT.append( NODE_ID_ROW, NODE_EDITOR )
+		let	$
+		try {
+			$ = await this.promptNode( node[ 0 ] )
+		} finally {
+			NODE_EDITOR_HOME.append( NODE_ID_ROW, NODE_EDITOR )
+		}
+		if	( !$ ) return
+		await EditNode( node[ 0 ], $ )
+		this.reformer.focus()
+	}
+
+	//	modal hosting the full node-editor. Resolves the edited [ ID, S, P ] or
+	//	null when cancelled. Rejects an empty id or one taken by another node.
+	promptNode( oldID ) {
+		return	new Promise( resolve => {
+			NODE_EDIT_DIALOG_ERR.textContent	= ''
+
+			const
+			finish = val => {
+				NODE_EDIT_DIALOG_FORM.onsubmit	= null
+				NODE_EDIT_DIALOG_CANCEL.onclick	= null
+				NODE_EDIT_DIALOG.oncancel		= null
+				NODE_EDIT_DIALOG.open && NODE_EDIT_DIALOG.close()
+				this.reformer.focus()
+				resolve( val )
+			}
+			NODE_EDIT_DIALOG_FORM.onsubmit	= ev => {
+				ev.preventDefault()
+				const
+				id = NODE_ID.value.trim()
+				,	[ S, P ] = NODE_EDITOR.$
+				if	( !id ) {
+					NODE_EDIT_DIALOG_ERR.textContent = 'ID is required'
+					return
+				}
+				if	( id !== oldID && FindNode( id ) ) {
+					NODE_EDIT_DIALOG_ERR.textContent = `ID "${ id }" already exists`
+					return
+				}
+				finish( [ id, S, P ] )
+			}
+			NODE_EDIT_DIALOG_CANCEL.onclick	= () => finish( null )
+			NODE_EDIT_DIALOG.oncancel		= ev => ( ev.preventDefault(), finish( null ) )
+			NODE_EDIT_DIALOG.showModal()
 		} )
 	}
 
@@ -714,16 +843,6 @@ MainEditor extends HTMLElement {
 		return FindReform( _[ 0 ] ) || app.reforms.push( structuredClone( _ ) )
 	}
 
-	//	move every selected node to the end of the draw order (front)
-	rollSelectedToTop() {
-		app.model.nodes.forEach(
-			$ => app.reforms.find( _ => _[ 0 ] === $[ 0 ] ) && (
-				app.model.nodes = app.model.nodes.filter( _ => _ !== $ )
-			,	app.model.nodes.push( $ )
-			)
-		)
-	}
-
 	async selectAll() {
 		app.reforms = app.model.nodes.map( _ => structuredClone( _ ) )
 		await this.DrawReforms()
@@ -732,6 +851,22 @@ MainEditor extends HTMLElement {
 	setEditor( node ) {
 		NODE_ID.value		= node[ 0 ]
 		NODE_EDITOR.$		= [ node[ 1 ], node[ 2 ] ]
+	}
+
+	//	the reform with the largest area ( rH * rV ); used to decide which node a
+	//	multi-select move / resize should leave in the node editor
+	largestReform() {
+		return	app.reforms.reduce(
+			( best, _ ) =>
+				!best || _[ 1 ].rH * _[ 1 ].rV > best[ 1 ].rH * best[ 1 ].rV ? _ : best
+		,	null
+		)
+	}
+
+	setEditorToLargestReform() {
+		const
+		_ = this.largestReform()
+		_ && this.setEditor( _ )
 	}
 
 	//	shift+click: extend the selection with the node and everything it contains
@@ -744,7 +879,6 @@ MainEditor extends HTMLElement {
 		app.model.nodes.forEach(
 			_ => ContainsTLBR( tlbr, TLBR( _[ 1 ] ) ) && this.registReform( _ )
 		)
-		this.rollSelectedToTop()
 		await this.DrawReforms()
 	}
 
@@ -765,7 +899,6 @@ MainEditor extends HTMLElement {
 				)
 			}
 		)
-		this.rollSelectedToTop()
 		await this.DrawReforms()
 	}
 
@@ -795,12 +928,6 @@ MainEditor extends HTMLElement {
 			ev.preventDefault()
 			this.hideContextMenus()
 			this.linkMenuKey	= links[ 0 ][ 0 ].map( _ => _[ 0 ] )	//	[ nodeF, nodeT ] → [ idF, idT ]
-			const
-			corner = links[ 0 ][ 1 ]?.corner || 'bezier'	//	no attribute → default shaft is bezier
-			LINK_CORNER_CURVE.classList.toggle	( 'active', corner === 'bezier'		)
-			LINK_CORNER_ORTHO.classList.toggle	( 'active', corner === 'sharp'		)
-			LINK_CORNER_ARC.classList.toggle	( 'active', corner === 'arc'		)
-			LINK_CORNER_STRAIGHT.classList.toggle( 'active', corner === 'straight'	)
 			LINK_MENU.style.display	= 'block'
 			this.positionContextMenu( LINK_MENU, ev )
 			return
@@ -816,7 +943,6 @@ MainEditor extends HTMLElement {
 		await this.DrawReforms()
 
 		this.setEditor( node )
-		this.rollSelectedToTop()
 
 		this.nodeMenuTarget		= node
 		NODE_MENU.style.display	= 'block'
@@ -902,7 +1028,6 @@ MainEditor extends HTMLElement {
 					,	ev.shiftKey
 						?	(	this.setEditor( $ )
 							,	this.registReform( $ )
-							,	this.rollSelectedToTop()
 							)
 						:	this.addWithContained( $ )
 					)
@@ -928,7 +1053,10 @@ MainEditor extends HTMLElement {
 				)
 				return	this.DrawReforms()
 			}
-		,	commit	: () => Reform()
+		,	commit	: async () => {
+				await Reform()
+				this.setEditorToLargestReform()
+			}
 		}
 	}
 
@@ -964,7 +1092,10 @@ MainEditor extends HTMLElement {
 				}
 				return	this.DrawReforms()
 			}
-		,	commit	: () => Reform()
+		,	commit	: async () => {
+				await Reform()
+				this.setEditorToLargestReform()
+			}
 		}
 	}
 
@@ -1016,6 +1147,7 @@ MainEditor extends HTMLElement {
 				const	id = await this.promptNodeId()
 				if	( id === null ) return
 				await Node( [ id, S, P ] )
+				app.reforms[ 0 ] && this.setEditor( app.reforms[ 0 ] )
 			}
 		}
 	}
