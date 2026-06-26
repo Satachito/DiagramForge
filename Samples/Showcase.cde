@@ -728,7 +728,7 @@
 					"cY": 1066,
 					"rH": 150,
 					"rV": 16,
-					"html": "one anchored<br>→ horizontal",
+					"html": "one anchored + straight<br>→ horizontal",
 					"style": ";display:grid\n;place-items:center\n;text-align:center\n;font-size:12px"
 				},
 				{}
@@ -822,7 +822,7 @@
 					"cY": 1066,
 					"rH": 150,
 					"rV": 16,
-					"html": "straight (forced)",
+					"html": "straight (no anchor)<br>→ direct",
 					"style": ";display:grid\n;place-items:center\n;text-align:center\n;font-size:12px"
 				},
 				{}
@@ -869,7 +869,7 @@
 					"cY": 1290,
 					"rH": 320,
 					"rV": 20,
-					"html": "<b>6 · Anchor sides (anchorT) — perpendicular snaps to H / V</b>",
+					"html": "<b>6 · Anchor sides — straight + one anchor snaps to H / V</b>",
 					"style": ";display:grid\n;place-items:center start\n;font-size:15px"
 				},
 				{}
@@ -1203,7 +1203,8 @@
 				],
 				{
 					"headT": "triangle",
-					"anchorF": "R"
+					"anchorF": "R",
+					"corner": "straight"
 				},
 				{
 					"stroke": "#0a7ea4",
@@ -1247,7 +1248,8 @@
 				],
 				{
 					"headT": "triangle",
-					"anchorT": "T"
+					"anchorT": "T",
+					"corner": "straight"
 				},
 				{
 					"stroke": "#57606a",
@@ -1261,7 +1263,8 @@
 				],
 				{
 					"headT": "triangle",
-					"anchorT": "B"
+					"anchorT": "B",
+					"corner": "straight"
 				},
 				{
 					"stroke": "#57606a",
@@ -1275,7 +1278,8 @@
 				],
 				{
 					"headT": "triangle",
-					"anchorT": "L"
+					"anchorT": "L",
+					"corner": "straight"
 				},
 				{
 					"stroke": "#57606a",
@@ -1289,7 +1293,8 @@
 				],
 				{
 					"headT": "triangle",
-					"anchorT": "R"
+					"anchorT": "R",
+					"corner": "straight"
 				},
 				{
 					"stroke": "#57606a",
@@ -1303,7 +1308,8 @@
 				],
 				{
 					"headT": "triangle",
-					"anchorT": "TL"
+					"anchorT": "TL",
+					"corner": "straight"
 				},
 				{
 					"stroke": "#57606a",
@@ -1317,7 +1323,8 @@
 				],
 				{
 					"headT": "triangle",
-					"anchorT": "TR"
+					"anchorT": "TR",
+					"corner": "straight"
 				},
 				{
 					"stroke": "#57606a",
@@ -1331,7 +1338,8 @@
 				],
 				{
 					"headT": "triangle",
-					"anchorT": "BL"
+					"anchorT": "BL",
+					"corner": "straight"
 				},
 				{
 					"stroke": "#57606a",
@@ -1345,7 +1353,8 @@
 				],
 				{
 					"headT": "triangle",
-					"anchorT": "BR"
+					"anchorT": "BR",
+					"corner": "straight"
 				},
 				{
 					"stroke": "#57606a",

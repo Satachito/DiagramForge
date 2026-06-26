@@ -132,11 +132,13 @@ linkCoordinates	= ( [ [ nF, nT ], A, P ] ) => {
 	const
 	pF = $( nF[ 1 ], aF, nT[ 1 ], aT )
 	,	pT = $( nT[ 1 ], aT, nF[ 1 ], aF )
-	//	'straight' is an unconditional direct line: use the plain attach points
-	//	( anchor point, or centre-ray outline toward the other node ) and skip the
-	//	perpendicular autoPerp adjustment so the line actually aims at the other node.
-	if	( A.corner !== 'straight' ) {
-		//	exactly one end anchored: route the auto end perpendicular to the edge it hits
+	//	The perpendicular ( autoPerp ) snap — the auto end attaches level with the
+	//	anchored edge, giving a horizontal / vertical connector — applies only to
+	//	'straight' links. Every other corner style routes the one-anchored link
+	//	orthogonally ( see linkEnds.ortho ), so the auto end keeps its centre-ray
+	//	attach here.
+	if	( A.corner === 'straight' ) {
+		//	exactly one end anchored: snap the auto end perpendicular to the edge it hits
 		if	( aF && !aT )	return [ pF, autoPerp( nT[ 1 ], pF, aF ) ]
 		if	( aT && !aF )	return [ autoPerp( nF[ 1 ], pT, aT ), pT ]
 	}
@@ -337,24 +339,22 @@ linkEnds		= ( [ [ nF, nT ], A, P ] ) => {
 		pF, pT, outwardF, outwardT, frameF, frameT
 	,	tipF	: offsetOutward( pF, outwardF, frameF )
 	,	tipT	: offsetOutward( pT, outwardT, frameT )
-	//	orthogonal route when both ends share the same anchored-ness: neither
-	//	anchored ( auto routing ) OR both anchored ( connect the two anchor points
-	//	with bends, not a diagonal ). Exactly one anchored stays a straight
-	//	perpendicular connector ( the autoPerp attach in linkCoordinates ).
-	,	ortho	: !A.anchorF === !A.anchorT
+	//	every non-'straight' link is routed orthogonally ( right-angle bends ),
+	//	whatever its anchors. 'straight' is the only direct 2-point line — and the
+	//	only case that gets the perpendicular H/V snap ( see linkCoordinates ).
+	,	ortho	: A.corner !== 'straight'
 	}
 }
 
 //	centerline route whose endpoints are exactly the boundary tips, so the
 //	arrowheads, their necks and the shaft all share one geometry
 const
-routeFrom		= ( e, corner ) => {
+routeFrom		= e => {
 	const
 	rF = e.tipF
 ,	rT = e.tipT
-	//	'straight' forces a direct node-to-node line, overriding the orthogonal
-	//	routing. Non-ortho ( exactly one end anchored ) is already a 2-point line.
-	if	( !e.ortho || corner === 'straight' )	return [ rF, rT ]
+	//	non-ortho ( i.e. corner 'straight' ) is the only direct 2-point line
+	if	( !e.ortho )	return [ rF, rT ]
 	const
 	midX = ( rF[ 0 ] + rT[ 0 ] ) / 2
 ,	midY = ( rF[ 1 ] + rT[ 1 ] ) / 2
@@ -368,7 +368,7 @@ LinkMetrics		= ( [ [ nF, nT ], A, P ] ) => {
 
 	const
 	e = linkEnds( [ [ nF, nT ], A, P ] )
-,	route = routeFrom( e, A.corner )
+,	route = routeFrom( e )
 ,	len = pathLength( route )
 	if	( len < 1 ) return null
 

@@ -68,23 +68,18 @@ Example:
     with the link length.
   - `anchorF`, `anchorT` — where the link attaches on each node:
     one of `"T"`, `"L"`, `"B"`, `"R"`, `"TL"`, `"TR"`, `"BL"`, `"BR"`,
-    or omit (auto: points at the other node's center). With exactly one end
-    anchored, the auto end attaches *perpendicular* to the anchored edge, so the
-    connector becomes a clean horizontal / vertical line when the ends line up.
-  - `corner` — shaft routing / corner style. The route depends on the anchors:
-    - **neither anchored**, or **both anchored** → an orthogonal multi-point
-      route (right-angle bends between the two attach points)
-    - **exactly one anchored** → a straight 2-point connector (the auto end
-      attaches perpendicular to the anchored edge)
-
-    `corner` then picks how a multi-point (orthogonal) shaft is drawn — and
-    `"straight"` overrides the routing entirely:
+    or omit (auto: points at the other node's center).
+  - `corner` — shaft routing / corner style. Every style **except** `"straight"`
+    routes the link **orthogonally** (right-angle bends), whatever its anchors;
+    the style only changes how that multi-point shaft is drawn:
     - `"bezier"` — smooth Bézier that leaves each node perpendicular and rounds
       the corners (default)
     - `"sharp"` — polyline with right-angle corners (orthogonal)
     - `"arc"` — straight runs joined by quarter-circle fillets
-    - `"straight"` — forces a direct node-to-node line regardless of anchors,
-      ignoring both the orthogonal route and the perpendicular snap
+    - `"straight"` — a direct 2-point line instead of the orthogonal route. With
+      exactly one end anchored, the auto end attaches *perpendicular* to the
+      anchored edge, so the line snaps to horizontal / vertical when the ends
+      line up. (This perpendicular snap happens **only** with `"straight"`.)
 - **`paint`** — same shape as node `paint`.
 
 Example:
