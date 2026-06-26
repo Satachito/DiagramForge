@@ -132,9 +132,14 @@ linkCoordinates	= ( [ [ nF, nT ], A, P ] ) => {
 	const
 	pF = $( nF[ 1 ], aF, nT[ 1 ], aT )
 	,	pT = $( nT[ 1 ], aT, nF[ 1 ], aF )
-	//	exactly one end anchored: route the auto end perpendicular to the edge it hits
-	if	( aF && !aT )	return [ pF, autoPerp( nT[ 1 ], pF, aF ) ]
-	if	( aT && !aF )	return [ autoPerp( nF[ 1 ], pT, aT ), pT ]
+	//	'straight' is an unconditional direct line: use the plain attach points
+	//	( anchor point, or centre-ray outline toward the other node ) and skip the
+	//	perpendicular autoPerp adjustment so the line actually aims at the other node.
+	if	( A.corner !== 'straight' ) {
+		//	exactly one end anchored: route the auto end perpendicular to the edge it hits
+		if	( aF && !aT )	return [ pF, autoPerp( nT[ 1 ], pF, aF ) ]
+		if	( aT && !aF )	return [ autoPerp( nF[ 1 ], pT, aT ), pT ]
+	}
 	return [ pF, pT ]
 }
 
