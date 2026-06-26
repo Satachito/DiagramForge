@@ -198,6 +198,55 @@ Links_XY	= xy => AvailableLinks().reduce(
 ,	[]
 )
 
+//	which arrowhead ( if any ) of a single link the point lands on → 'F' | 'T'
+const
+HeadEnd_XY	= ( _, xy ) => {
+
+	const
+	$ = LinkMetrics( _ )
+	if	( !$ ) return null
+
+	const
+	P = _[ 2 ]
+
+	C2D.save()
+	try {
+		C2D.lineWidth = Math.max( P.lineWidth ?? GRAB, GRAB )
+
+		for ( const h of $.heads ) {
+			if	( h.kind === 'circle' ) {
+				C2D.beginPath()
+				C2D.arc( h.center[ 0 ], h.center[ 1 ], h.r, 0, 2 * Math.PI )
+				if	( C2D.isPointInPath( ...xy ) ) return h.end
+				continue
+			}
+			C2D.beginPath()
+			C2D.moveTo( ...h.pts[ 0 ] )
+			for	( let i = 1; i < h.pts.length; i++ )	C2D.lineTo( ...h.pts[ i ] )
+			if	( h.kind === 'line' ) {
+				if	( C2D.isPointInStroke( ...xy ) ) return h.end
+			} else {
+				C2D.closePath()
+				if	( C2D.isPointInPath( ...xy ) ) return h.end
+			}
+		}
+		return null
+	} finally {
+		C2D.restore()
+	}
+}
+
+//	first link whose arrowhead is under the point → { link, end } | null
+const
+Head_XY		= xy => {
+	for ( const _ of AvailableLinks() ) {
+		const
+		end = HeadEnd_XY( _, xy )
+		if	( end ) return { link: _, end }
+	}
+	return null
+}
+
 const
 BBoxGrabCursor	= ( bbox, xy ) => {
 	const
@@ -448,6 +497,7 @@ MainEditor extends HTMLElement {
 		//	would fire pointercancel and abort the move before pointerup commits )
 		this.reformer.style.touchAction	= 'none'
 		this.linkMenuKey			= null
+		this.headMenuTarget			= null
 		this.nodeMenuTarget			= null
 
 		LINK_MENU_REMOVE.onclick	= ev => (
@@ -468,6 +518,15 @@ MainEditor extends HTMLElement {
 		LINK_CORNER_ORTHO.onclick		= cornerClick( 'sharp' )
 		LINK_CORNER_ARC.onclick			= cornerClick( 'arc' )
 		LINK_CORNER_STRAIGHT.onclick	= cornerClick( 'straight' )
+
+		for ( const b of HEAD_MENU.querySelectorAll( 'button.head-opt' ) ) {
+			b.onclick = ev => (
+				ev.stopPropagation()
+			,	this.setLinkHead( b.dataset.head || '' )
+			,	this.hideContextMenus()
+			,	this.reformer.focus()
+			)
+		}
 
 		NODE_MENU_DELETE.onclick	= async ev => (
 			ev.stopPropagation()
@@ -497,8 +556,8 @@ MainEditor extends HTMLElement {
 		//	window-level: catches clicks outside main-editor too
 		//	capture(true): runs before stopPropagation() in menu onclick handlers
 		addEventListener( 'pointerdown', ev => {
-			if	( LINK_MENU.style.display === 'none' && NODE_MENU.style.display === 'none' ) return
-			if	( LINK_MENU.contains( ev.target ) || NODE_MENU.contains( ev.target ) ) return
+			if	( LINK_MENU.style.display === 'none' && HEAD_MENU.style.display === 'none' && NODE_MENU.style.display === 'none' ) return
+			if	( LINK_MENU.contains( ev.target ) || HEAD_MENU.contains( ev.target ) || NODE_MENU.contains( ev.target ) ) return
 			this.hideContextMenus()
 		}, true )
 
@@ -545,10 +604,25 @@ MainEditor extends HTMLElement {
 		Link( [ [ F, T ], A, link[ 2 ] ] )
 	}
 
+	setLinkHead( style ) {
+		if	( !this.headMenuTarget ) return
+		const
+		{ F, T, end } = this.headMenuTarget
+		,	link = app.model.links.find( ( [ [ f, t ] ] ) => f === F && t === T )
+		if	( !link ) return
+		const
+		A = structuredClone( link[ 1 ] ?? {} )
+		,	key = end === 'F' ? 'headF' : 'headT'
+		style ? ( A[ key ] = style ) : ( delete A[ key ] )
+		Link( [ [ F, T ], A, link[ 2 ] ] )
+	}
+
 	hideContextMenus() {
 		LINK_MENU.style.display	= 'none'
+		HEAD_MENU.style.display	= 'none'
 		NODE_MENU.style.display	= 'none'
 		this.linkMenuKey		= null
+		this.headMenuTarget		= null
 		this.nodeMenuTarget		= null
 	}
 
@@ -663,6 +737,23 @@ MainEditor extends HTMLElement {
 	async onContextMenu( ev ) {
 		const
 		xy = XY_EV( ev )
+		//	an arrowhead is the most specific target → its own style menu
+		const
+		head = Head_XY( xy )
+		if	( head ) {
+			ev.preventDefault()
+			this.hideContextMenus()
+			const
+			[ [ nF, nT ], A ] = head.link
+			this.headMenuTarget	= { F: nF[ 0 ], T: nT[ 0 ], end: head.end }
+			const
+			cur = ( head.end === 'F' ? A.headF : A.headT ) || ''
+			for ( const b of HEAD_MENU.querySelectorAll( 'button.head-opt' ) )
+				b.classList.toggle( 'active', ( b.dataset.head || '' ) === cur )
+			HEAD_MENU.style.display	= 'block'
+			this.positionContextMenu( HEAD_MENU, ev )
+			return
+		}
 		const
 		links = Links_XY( xy )
 		if	( links.length ) {

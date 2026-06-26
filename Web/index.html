@@ -282,6 +282,7 @@ summary {
 }
 
 #LINK_MENU
+,	#HEAD_MENU
 ,	#NODE_MENU {
 ;	display			: none
 ;	position		: fixed
@@ -296,6 +297,7 @@ summary {
 ;	box-shadow		: 0 4px 12px var( --color-shadow )
 }
 #LINK_MENU > button
+,	#HEAD_MENU > button
 ,	#NODE_MENU > button {
 ;	display			: block
 ;	width			: 100%
@@ -308,15 +310,18 @@ summary {
 ;	cursor			: pointer
 }
 #LINK_MENU > button:hover
+,	#HEAD_MENU > button:hover
 ,	#NODE_MENU > button:hover {
 ;	background		: var( --color-popup-hover )
 }
-#LINK_MENU > button.corner-opt::before {
+#LINK_MENU > button.corner-opt::before
+,	#HEAD_MENU > button.head-opt::before {
 ;	content			: '○'
 ;	margin-right	: 7px
 ;	opacity			: .35
 }
-#LINK_MENU > button.corner-opt.active::before {
+#LINK_MENU > button.corner-opt.active::before
+,	#HEAD_MENU > button.head-opt.active::before {
 ;	content			: '●'
 ;	opacity			: 1
 }
@@ -617,6 +622,16 @@ aside .node-id-row {
 		<button		id=LINK_CORNER_STRAIGHT	class=corner-opt	>straight</button>
 		<div		class=link-menu-sep	></div>
 		<button		id=LINK_MENU_REMOVE	>Remove</button>
+	</div>
+	<div			id=HEAD_MENU		>
+		<button		id=HEAD_NONE			class=head-opt	data-head=			>none</button>
+		<button		id=HEAD_TRIANGLE		class=head-opt	data-head=triangle		>triangle</button>
+		<button		id=HEAD_OPEN			class=head-opt	data-head=open			>open</button>
+		<button		id=HEAD_HOLLOW			class=head-opt	data-head=hollow		>hollow</button>
+		<button		id=HEAD_DIAMOND			class=head-opt	data-head=diamond		>diamond</button>
+		<button		id=HEAD_DIAMOND_HOLLOW	class=head-opt	data-head=diamondHollow	>diamondHollow</button>
+		<button		id=HEAD_CIRCLE			class=head-opt	data-head=circle		>circle</button>
+		<button		id=HEAD_CIRCLE_HOLLOW	class=head-opt	data-head=circleHollow	>circleHollow</button>
 	</div>
 	<div			id=NODE_MENU		>
 		<button		id=NODE_MENU_DELETE		>Delete</button>

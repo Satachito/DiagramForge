@@ -384,6 +384,7 @@ LinkMetrics		= ( [ [ nF, nT ], A, P ] ) => {
 		[ ux, uy, segLen ] = endDir( route, true )
 	,	hl = Math.min( headLen, segLen )
 	,	h = headGeometry( A.headF, route[ 0 ], [ ux, uy ], hl, headHalf )
+		h.end = 'F'
 		heads.push( h )
 		fDist = h.consume
 	}
@@ -392,6 +393,7 @@ LinkMetrics		= ( [ [ nF, nT ], A, P ] ) => {
 		[ ux, uy, segLen ] = endDir( route, false )
 	,	hl = Math.min( headLen, segLen )
 	,	h = headGeometry( A.headT, route[ route.length - 1 ], [ ux, uy ], hl, headHalf )
+		h.end = 'T'
 		heads.push( h )
 		tDist = len - h.consume
 	}
