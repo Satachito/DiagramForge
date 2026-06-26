@@ -131,6 +131,46 @@ DF.autoLayout({ algorithm: 'grid', cols: 4 })
 
 External agents (Cursor, MCP bridge, CDP) can call these from the browser context. File-based editing still uses **[Web/SCHEMA.md](Web/SCHEMA.md)**; live reload connects the two.
 
+### MCP — natural language control from Cursor
+
+With the dev server running and a diagram open in the browser, Cursor can drive the **live canvas** through the **DiagramForge MCP server** (`tools/df-mcp.mjs`). Say things like *“make the VPN band 1.5× taller”* — the agent calls MCP tools, which RPC into the browser via `window.DF`.
+
+**One-time setup:**
+
+```bash
+cd Web && npm install          # dev server
+cd ../tools && npm install     # MCP server deps
+```
+
+The repo includes **[`.cursor/mcp.json`](.cursor/mcp.json)**. Reload Cursor (or enable the `diagramforge` MCP server in settings) after installing.
+
+**Every session:**
+
+1. `cd Web && npm run dev`
+2. Open `http://localhost:8080/?cde=Samples/JSONs.cde` in a browser tab and leave it open.
+3. In Cursor chat, ask for diagram changes. The agent uses MCP tools such as:
+
+| Tool | What it does |
+|------|----------------|
+| `df_status` | Is a browser editor connected? Which `.cde` is watched? |
+| `df_get_model` | Read `{ model, canvasWidth, canvasHeight }` from the live diagram |
+| `df_apply` | Apply ops (`updateNode`, `addLink`, …) — same shape as `DF.apply()` |
+| `df_validate` | Check the live model or a provided model |
+| `df_auto_layout` | Grid layout on the live diagram |
+| `df_save_file` | Write the live diagram to `Web/Samples/….cde` |
+| `df_load_file` | Load a `.cde` path into the browser |
+| `df_read_file` | Read a `.cde` from disk (works without a browser) |
+
+**Example flow** (*“VPN vertical size ×1.5”*):
+
+1. `df_get_model` → find node `"VPN"`, read `rV`
+2. `df_apply` with `updateNode` (merge the full `area` object; `updateNode` replaces the shape, it does not patch fields)
+3. Optionally adjust neighbours and `df_save_file` to persist
+
+`updateNode` needs the complete `area` and `paint` — the agent should read the node first, change numbers, then apply.
+
+**HTTP bridge** (for scripts): `GET /__df/status`, `GET /__df/model`, `POST /__df/rpc` with `{ "method": "apply", "params": { "ops": […] } }`.
+
 ### Lint
 
 ```bash
@@ -147,7 +187,7 @@ DiagramForge/
 ├── Web/           App (HTML + ES modules)
 ├── Samples/       Example .cde files
 ├── ICONs/         Cloud icon ZIP archives
-├── tools/         Dev server (df-server.mjs) and utilities (e.g. drawio2cde.py)
+├── tools/         Dev server, MCP server, utilities ( drawio2cde.py )
 ```
 
 ## Author

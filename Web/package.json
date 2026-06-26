@@ -5,7 +5,8 @@
   "main": "Application.js",
   "scripts": {
     "dev": "node ../tools/df-server.mjs",
-    "lint": "eslint *.js"
+    "lint": "eslint *.js",
+    "mcp": "node ../tools/df-mcp.mjs"
   },
   "keywords": [
     "diagram",

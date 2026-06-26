@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "diagramforge": {
+      "command": "node",
+      "args": ["tools/df-mcp.mjs"],
+      "env": {
+        "DF_PORT": "8080"
+      }
+    }
+  }
+}

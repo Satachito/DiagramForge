@@ -1,11 +1,11 @@
-//	Live .cde reload when tools/df-server.mjs detects a file save.
-//
-//	Watch path comes from ?cde=Samples/JSONs.cde or sessionStorage ( last load ).
+//	Live .cde reload + WebSocket RPC bridge to window.DF ( tools/df-server.mjs ).
 
-import { Load	} from './Application.js'
+import { Load, CanvasSize	} from './Application.js'
 
 let
 watchPath = null
+,	ws = null
+,	uiRef = null
 
 export const
 getWatchPath	= () => watchPath
@@ -14,6 +14,62 @@ export const
 setWatchPath	= path => {
 	watchPath = path
 	path && sessionStorage.setItem( 'df-watch', path )
+}
+
+const
+snapshot	= () => ( {
+	model			: window.DF.getModel()
+,	canvasWidth		: CanvasSize()[ 0 ]
+,	canvasHeight	: CanvasSize()[ 1 ]
+,	watchPath
+} )
+
+const
+pushSnapshot	= () => {
+	if	( !ws || ws.readyState !== WebSocket.OPEN ) return
+	ws.send( JSON.stringify( { type: 'model-update', ...snapshot() } ) )
+}
+
+const
+MUTATING	= new Set( [ 'apply', 'setModel', 'autoLayout', 'addNode', 'updateNode', 'removeNode', 'addLink', 'updateLink', 'removeLink', 'restack', 'setCanvas' ] )
+
+const
+runRpc	= async ( method, params ) => {
+	const
+	DF = window.DF
+	switch ( method ) {
+	case 'getModel':
+		return	snapshot()
+	case 'apply':
+		return	DF.apply( params.ops )
+	case 'validate':
+		return	DF.validate( params.model )
+	case 'autoLayout':
+		return	DF.autoLayout( params )
+	case 'setModel':
+		return	DF.setModel( params.model )
+	case 'loadCde':
+		await loadCdeFile( params.path, uiRef ?? {} )
+		return	snapshot()
+	default: {
+		const	fn = DF[ method ]
+		if	( typeof fn !== 'function' ) throw new Error( `unknown RPC method "${ method }"` )
+		return	fn( params )
+	}
+	}
+}
+
+const
+handleRpc	= async msg => {
+	const	{ id, method, params = {} } = msg
+	try {
+		const
+		result = await runRpc( method, params )
+		ws.send( JSON.stringify( { type: 'rpc-result', id, result } ) )
+		if	( MUTATING.has( method ) || ( method === 'apply' ) ) pushSnapshot()
+	} catch ( er ) {
+		ws.send( JSON.stringify( { type: 'rpc-error', id, error: String( er.message || er ) } ) )
+	}
 }
 
 export const
@@ -25,27 +81,34 @@ loadCdeFile	= async ( path, { SyncCanvasInputs, FILE_NAME } = {} ) => {
 	setWatchPath( path )
 	FILE_NAME && ( FILE_NAME.value = path.replace( /^.*\//, '' ) )
 	SyncCanvasInputs?.()
+	pushSnapshot()
 }
 
-export const
-connectLiveReload	= () => {
+const
+connectBridge	= () => {
 	if	( location.protocol !== 'http:' && location.protocol !== 'https:' ) return
 
 	const
 	proto = location.protocol === 'https:' ? 'wss:' : 'ws:'
 	,	url = `${ proto }//${ location.host }/__df/ws`
 	,	connect = () => {
-		const
 		ws = new WebSocket( url )
+		ws.onopen = () => {
+			ws.send( JSON.stringify( { type: 'editor-ready', ...snapshot() } ) )
+		}
 		ws.onmessage = async ev => {
 			let	msg
 			try { msg = JSON.parse( ev.data ) } catch { return }
-			if	( msg.type !== 'cde-changed' || !watchPath || msg.path !== watchPath ) return
-			try {
-				await loadCdeFile( watchPath, window )
-			} catch ( er ) {
-				console.error( '[live-reload]', er )
+			if	( msg.type === 'cde-changed' ) {
+				if	( !watchPath || msg.path !== watchPath ) return
+				try {
+					await loadCdeFile( watchPath, uiRef ?? {} )
+				} catch ( er ) {
+					console.error( '[live-reload]', er )
+				}
+				return
 			}
+			if	( msg.type === 'rpc' ) handleRpc( msg )
 		}
 		ws.onclose = () => setTimeout( connect, 1500 )
 	}
@@ -54,13 +117,14 @@ connectLiveReload	= () => {
 
 export const
 initLiveReload	= async ( ui, { Report } = {} ) => {
+	uiRef = ui
 	const
 	fromUrl = new URLSearchParams( location.search ).get( 'cde' )
 	,	fromStore = sessionStorage.getItem( 'df-watch' )
 	,	path = fromUrl || fromStore
 
 	setWatchPath( path )
-	connectLiveReload()
+	connectBridge()
 
 	if	( fromUrl ) {
 		try {
@@ -68,5 +132,7 @@ initLiveReload	= async ( ui, { Report } = {} ) => {
 		} catch ( er ) {
 			Report ? Report( er ) : console.error( er )
 		}
+	} else {
+		pushSnapshot()
 	}
 }
