@@ -67,8 +67,15 @@ Example:
     `paint.stroke`. The head tip sits on the node boundary and its size scales
     with the link length.
   - `anchorF`, `anchorT` — where the link attaches on each node:
-    one of `"T"`, `"L"`, `"B"`, `"R"`, `"TL"`, `"TR"`, `"BL"`, `"BR"`,
-    or omit (auto: points at the other node's center).
+    - `"T"` / `"B"` / `"L"` / `"R"` — the **midpoint** of that edge
+    - `"TL"` / `"TR"` / `"BL"` / `"BR"` — that **corner**
+    - omit (auto) — the point where the ray toward the **other node's center**
+      crosses this node's outline
+
+    On an `ellipse` / `rhombus`, an anchored point is projected onto the actual
+    curved / diagonal outline (a `rect`/`SVG`/`PNG` keeps the box point). The
+    perpendicular H/V snap described under `"straight"` below applies only to
+    `rect` / `SVG` / `PNG` ends, not to `ellipse` / `rhombus`.
   - `corner` — shaft routing / corner style. Every style **except** `"straight"`
     routes the link **orthogonally** (right-angle bends), whatever its anchors;
     the style only changes how that multi-point shaft is drawn:
