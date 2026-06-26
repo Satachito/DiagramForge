@@ -499,6 +499,8 @@ MainEditor extends HTMLElement {
 		this.linkMenuKey			= null
 		this.headMenuTarget			= null
 		this.nodeMenuTarget			= null
+		this.panning				= null	//	{ x, y } client coords while hand-tool panning
+		this.spaceDown				= false	//	space held → hand tool armed
 
 		LINK_MENU_REMOVE.onclick	= ev => (
 			ev.stopPropagation()
@@ -569,7 +571,10 @@ MainEditor extends HTMLElement {
 		//	window-level so shortcuts work without the canvas being focused
 		addEventListener( 'keydown', ev => this.onKeyDown( ev ) )
 		//	⌘/⌥ momentarily act as Create-node / Create-link; refresh cursor on release
-		addEventListener( 'keyup', ev => this.refreshModeCursor( ev ) )
+		addEventListener( 'keyup', ev => (
+			ev.key === ' ' && ( this.spaceDown = false )
+		,	this.refreshModeCursor( ev )
+		) )
 		//	entering create-node mode: clear NODE_ID so the placeholder ( auto-id )
 		//	shows and a previously selected node's id can't pollute the new node
 		CREATE_NODE.onchange = () => ( CREATE_NODE.checked && ( NODE_ID.value = '' ), this.refreshModeCursor() )
@@ -579,6 +584,8 @@ MainEditor extends HTMLElement {
 		//	are delivered to the canvas even when the cursor leaves it — the release
 		//	(commit) is never lost over a panel or off-window.
 		this.reformer.onpointerleave	= () => ( UNDER_HOVER.style.display = 'none' )
+		//	suppress middle-click autoscroll so middle-drag can pan instead
+		this.reformer.addEventListener( 'mousedown', ev => ev.button === 1 && ev.preventDefault() )
 		this.reformer.onpointerdown		= ev => this.onMouseDown( ev )
 		this.reformer.onpointermove		= ev => this.onMouseMove( ev )
 		this.reformer.onpointerup		= ev => this.onMouseUp( ev )
@@ -655,6 +662,12 @@ MainEditor extends HTMLElement {
 			break
 		case 'e':	case 'E':
 			if ( ev.metaKey || ev.ctrlKey ) { ev.preventDefault(); await this.expand() }
+			break
+		case ' ':
+			//	space arms the hand tool ( space + left-drag pans )
+			ev.preventDefault()
+			this.spaceDown = true
+			this.panning || ( this.reformer.style.cursor = 'grab' )
 			break
 		case 'Escape':
 			mouse[ 0 ] = mouse[ 1 ] = null
@@ -788,6 +801,16 @@ MainEditor extends HTMLElement {
 
 	async onMouseDown( ev ) {
 		this.reformer.tabIndex = 0
+
+		//	PAN ( hand tool ): middle-drag, or space + left-drag. Moves by raw client
+		//	delta — not canvas coords, which would jump as content scrolls under the cursor.
+		if	( ev.button === 1 || ( ev.button === 0 && this.spaceDown ) ) {
+			ev.preventDefault()
+			this.panning = { x: ev.clientX, y: ev.clientY }
+			ev.pointerId != null && this.reformer.setPointerCapture( ev.pointerId )
+			this.reformer.style.cursor = 'grabbing'
+			return
+		}
 
 		if	( ev.button ) return
 
@@ -991,10 +1014,18 @@ MainEditor extends HTMLElement {
 
 	async onMouseMove( ev ) {
 
+		if	( this.panning ) {
+			this.scrollLeft	-= ev.clientX - this.panning.x
+			this.scrollTop	-= ev.clientY - this.panning.y
+			this.panning.x	= ev.clientX
+			this.panning.y	= ev.clientY
+			return
+		}
+
 		UpdateHoverLabel( ev )
 
 		if	( mouse[ 0 ] === null ) {
-			this.reformer.style.cursor = Cursor_EV( ev )
+			this.reformer.style.cursor = this.spaceDown ? 'grab' : Cursor_EV( ev )
 			return
 		}
 		//	NOTE: no `!ev.buttons` reset here — pointer capture guarantees
@@ -1012,6 +1043,13 @@ MainEditor extends HTMLElement {
 	}
 
 	async onMouseUp( ev ) {
+		if	( this.panning ) {
+			this.panning = null
+			ev?.pointerId != null && this.reformer.releasePointerCapture?.( ev.pointerId )
+			this.reformer.style.cursor = this.spaceDown ? 'grab' : Cursor_EV( ev )
+			return
+		}
+
 		void ev
 
 		const
