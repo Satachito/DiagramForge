@@ -6,6 +6,8 @@ Canvas-based diagram editor for **cloud architecture**, **mind maps**, and **seq
 
 No install, no build step — open the page and start drawing. Diagrams are plain JSON (`.cde`), so they are easy to edit by hand or with AI.
 
+**AI & dev workflow (live reload, MCP, natural language edits):** **[USAGE.md](USAGE.md)**
+
 ## Features
 
 - **4096 × 4096 canvas** with pan/zoom

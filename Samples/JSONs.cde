@@ -179,11 +179,11 @@
 				{
 					"type": "ellipse",
 					"cX": 960,
-					"cY": 112,
+					"cY": 88,
 					"rH": 512,
-					"rV": 48,
+					"rV": 72,
 					"html": "Internet",
-					"style": ";padding     : 0 0 0 491px\n;line-height : 96px\n;font-size   : 16px\n;text-align  : left\n;align-items : start\n;text-baseline: middle\n;font-weight : 700"
+					"style": ";padding     : 0 0 0 491px\n;line-height : 144px\n;font-size   : 16px\n;text-align  : left\n;align-items : start\n;text-baseline: middle\n;font-weight : 700"
 				},
 				{
 					"stroke": "#4fc3f7",
@@ -195,7 +195,7 @@
 				{
 					"type": "SVG",
 					"cX": 919,
-					"cY": 112,
+					"cY": 88,
 					"rH": 14,
 					"rV": 14,
 					"SVG": "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2NjYiIHN0cm9rZS13aWR0aD0iMS43NSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjxwYXRoIGQ9Ik0yIDEyaDIwIi8+PHBhdGggZD0iTTEyIDJhMTUuMyAxNS4zIDAgMCAxIDQgMTAgMTUuMyAxNS4zIDAgMCAxLTQgMTAgMTUuMyAxNS4zIDAgMCAxLTQtMTAgMTUuMyAxNS4zIDAgMCAxIDQtMTB6Ii8+PC9zdmc+"
