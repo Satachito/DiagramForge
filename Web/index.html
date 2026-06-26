@@ -187,6 +187,17 @@ footer {
 ;	gap						: 8px
 ;	font-size				: 11px
 }
+.debug-bar {
+;	display					: flex
+;	align-items				: center
+;	gap						: 4px
+;	margin-right			: auto
+}
+.debug-bar button {
+;	font-size				: 11px
+;	padding					: 2px 6px
+;	cursor					: pointer
+}
 .footer-meta {
 ;	display					: flex
 ;	align-items				: center
@@ -348,6 +359,12 @@ summary {
 ;	white-space		: pre-wrap
 }
 
+node-editor
+,	link-editor
+,	paint-editor
+,	shape-editor {
+;	display				: block
+}
 paint-editor > div:not( :has( textarea ) )
 ,	link-editor > div:not( :has( textarea ) )
 ,	shape-editor > div:not( :has( textarea ) ) {
@@ -582,25 +599,20 @@ aside .node-id-row {
 		</div>
 	</div>
 	<hr>
-	<paint-editor	id=PAINT_EDITOR		></paint-editor>
+	<details open>
+		<summary>Link editor</summary>
+		<link-editor	id=LINK_EDITOR		></link-editor>
+		<button			id=LINK				>Apply/Create Link	</button>
+	</details>
 	<hr>
-	<link-editor	id=LINK_EDITOR		></link-editor>
-	<button			id=LINK				>Apply/Create Link	</button>
-	<hr>
-	<shape-editor	id=SHAPE_EDITOR		></shape-editor>
-	<hr>
-	<div class=node-id-row>
-		<label for=NODE_ID>Node ID:</label>
-		<input id=NODE_ID placeholder="空欄で自動採番 / 任意でID">
-	</div>
-	<button			id=NODE				>Apply/Create Node	</button>
-
-	<details>
-		<summary>Debug</summary>
-		<button			id=DUMP_CDE			>Dump CDE			</button>
-		<button			id=DUMP_JOBS		>Dump Jobs			</button>
-		<button			id=DUMP_CLIPBOARD	>Dump Clipboard		</button>
-		<button			id=FORCE_DRAW		>Force Draw			</button>
+	<details open>
+		<summary>Node editor</summary>
+		<node-editor	id=NODE_EDITOR		></node-editor>
+		<div class=node-id-row>
+			<label for=NODE_ID>Node ID:</label>
+			<input id=NODE_ID placeholder="空欄で自動採番 / 任意でID">
+		</div>
+		<button			id=NODE				>Apply/Create Node	</button>
 	</details>
 </aside>
 
@@ -608,6 +620,12 @@ aside .node-id-row {
 <button id=ASIDE_TOGGLE	class=panel-toggle title="Toggle right panel">›</button>
 
 <footer>
+	<div class=debug-bar>
+		<button			id=DUMP_CDE			>Dump CDE		</button>
+		<button			id=DUMP_JOBS		>Dump Jobs		</button>
+		<button			id=DUMP_CLIPBOARD	>Dump Clipboard	</button>
+		<button			id=FORCE_DRAW		>Force Draw		</button>
+	</div>
 	<div class=footer-meta>
 		<a href=https://github.com/Satachito/DiagramForge target=_blank rel=noopener>GitHub</a>
 		<span aria-hidden=true>·</span>
@@ -655,8 +673,7 @@ import {
 } from './Application.js'
 
 import	{ DumpJobs } from './Jobs.js'
-import './paint-editor.js'
-import './shape-editor.js'
+import './node-editor.js'
 import './link-editor.js'
 import './cloud-icons.js'
 import './main-editor.js'
@@ -731,12 +748,12 @@ DUMP_CLIPBOARD	.onclick = () => navigator.clipboard.read().then(
 FORCE_DRAW		.onclick = () => MAIN_EDITOR.Draw()
 
 /*
-SHAPE_EDITOR.addEventListener( 'input', UpdateApplyNodeLabel )
-SHAPE_EDITOR.addEventListener( 'change', UpdateApplyNodeLabel )
+NODE_EDITOR.addEventListener( 'input', UpdateApplyNodeLabel )
+NODE_EDITOR.addEventListener( 'change', UpdateApplyNodeLabel )
 */
 
-NODE			.onclick = () => Node( [ NODE_ID.value, SHAPE_EDITOR.$, PAINT_EDITOR.$ ] )
-LINK			.onclick = () => Link( [ ...LINK_EDITOR.$, PAINT_EDITOR.$ ] )
+NODE			.onclick = () => Node( [ NODE_ID.value, ...NODE_EDITOR.$ ] )
+LINK			.onclick = () => Link( LINK_EDITOR.$ )
 
 DOWNLOAD		.onclick = () => downloadBlob(
 	new Blob( [ JSONString() ], { type: 'application/json' } )

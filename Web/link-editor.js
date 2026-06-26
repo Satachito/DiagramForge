@@ -3,6 +3,8 @@ import {
 ,	LabeledSelect
 }	from './DomUtils.js'
 
+import './paint-editor.js'
+
 const
 HEAD_STYLES		= [ '', 'triangle', 'open', 'hollow', 'diamond', 'diamondHollow', 'circle', 'circleHollow' ]
 
@@ -41,6 +43,8 @@ LinkEditor extends HTMLElement {
 		this.ANCHOR_T	= LabeledSelect		( this, '-anchor'	, ...$ )
 
 		this.CORNER		= LabeledSelect		( this, 'corner'	, ...CORNER_STYLES )
+
+		this.PAINT		= AE( this, 'paint-editor' )
 	}
 
 	Sync() {
@@ -48,7 +52,7 @@ LinkEditor extends HTMLElement {
 		RefreshSelect( this.T )
 	}
 
-	set $( [ [ F, T ], { headF, headT, anchorF, anchorT, corner } ] ) {
+	set $( [ [ F, T ], { headF, headT, anchorF, anchorT, corner } = {}, P ] ) {
 		this.Sync()
 		this.F.value		= F
 		this.T.value		= T
@@ -57,6 +61,7 @@ LinkEditor extends HTMLElement {
 		this.ANCHOR_F.value	= anchorF ?? ''
 		this.ANCHOR_T.value	= anchorT ?? ''
 		this.CORNER.value	= corner ?? ''
+		this.PAINT.$		= P ?? {}
 	}
 
 	get $() {
@@ -67,7 +72,7 @@ LinkEditor extends HTMLElement {
 		this.ANCHOR_F.value && ( A[ "anchorF"	] = this.ANCHOR_F.value )
 		this.ANCHOR_T.value && ( A[ "anchorT"	] = this.ANCHOR_T.value )
 		this.CORNER.value && ( A[ "corner"		] = this.CORNER.value )
-		return [ [ this.F.value, this.T.value ], A ]
+		return [ [ this.F.value, this.T.value ], A, this.PAINT.$ ]	//	[ [ F, T ], A, P ]
 	}
 }
 

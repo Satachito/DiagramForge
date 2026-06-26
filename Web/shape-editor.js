@@ -7,8 +7,11 @@ import {
 export default class
 ShapeEditor extends HTMLElement {
 
-	constructor() {
-		super()
+	//	Build fields on connect, not in the constructor: a custom element whose
+	//	constructor adds children can't be created via document.createElement
+	//	( "the result must not have children" ), and node-editor nests this via createElement.
+	connectedCallback() {
+		if	( this.CX )	return
 
 		this.CX				= LabeledInput		( this, 'cX'	, '100' )
 		this.CY				= LabeledInput		( this, 'cY'	, '100' )

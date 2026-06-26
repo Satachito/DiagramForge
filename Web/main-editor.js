@@ -694,15 +694,13 @@ MainEditor extends HTMLElement {
 
 	setEditor( node ) {
 		NODE_ID.value		= node[ 0 ]
-		SHAPE_EDITOR.$		= node[ 1 ]
-		PAINT_EDITOR.$		= node[ 2 ]
+		NODE_EDITOR.$		= [ node[ 1 ], node[ 2 ] ]
 	}
 
 	//	shift+click: extend the selection with the node and everything it contains
 	async addWithContained( node ) {
 		NODE_ID.value		= node[ 0 ]
-		SHAPE_EDITOR.$		= node[ 1 ]
-		PAINT_EDITOR.$		= node[ 2 ]
+		NODE_EDITOR.$		= [ node[ 1 ], node[ 2 ] ]
 		const
 		tlbr = TLBR( node[ 1 ] )
 		this.registReform( node )
@@ -829,8 +827,7 @@ MainEditor extends HTMLElement {
 				HitLink( link, xy ) && (
 					this.registReform( nF )
 				,	this.registReform( nT )
-				,	LINK_EDITOR.$ = [ [ nF[ 0 ], nT[ 0 ] ], A ]
-				,	PAINT_EDITOR.$ = P
+				,	LINK_EDITOR.$ = [ [ nF[ 0 ], nT[ 0 ] ], A, P ]
 				)
 			}
 			if	( app.reforms.length ) {
@@ -927,7 +924,7 @@ MainEditor extends HTMLElement {
 	beginLink() {
 		return	{
 			draw	: ( c2D, d, u ) => {
-				const	paint = PAINT_EDITOR.$
+				const	paint = LINK_EDITOR.PAINT.$
 				c2D.save()
 				c2D.strokeStyle = paint.stroke || 'dodgerblue'
 				c2D.lineWidth = Number( paint.lineWidth || 2 )
@@ -941,8 +938,8 @@ MainEditor extends HTMLElement {
 		,	commit	: async ( d, u ) => {
 				const	F = Node_XY( d );	if	( F === null ) return
 				const	T = Node_XY( u );	if	( T === null ) return
-				const	[ , A ] = LINK_EDITOR.$
-				const	$ = [ [ F[ 0 ], T[ 0 ] ], A, PAINT_EDITOR.$ ]
+				const	[ , A, P ] = LINK_EDITOR.$
+				const	$ = [ [ F[ 0 ], T[ 0 ] ], A, P ]
 				await Link( $ )
 			}
 		}
@@ -951,7 +948,7 @@ MainEditor extends HTMLElement {
 	beginCreate() {
 		return	{
 			draw	: ( c2D, d, u ) => {
-				const	paint = PAINT_EDITOR.$
+				const	paint = NODE_EDITOR.PAINT.$
 				c2D.save()
 				c2D.strokeStyle = paint.stroke || 'dodgerblue'
 				c2D.lineWidth = Number( paint.lineWidth || 2 )
@@ -960,7 +957,7 @@ MainEditor extends HTMLElement {
 				c2D.restore()
 			}
 		,	commit	: async ( d, u ) => {
-				const	S = SHAPE_EDITOR.$
+				const	[ S, P ] = NODE_EDITOR.$
 				const	r = DivXY( DeltaXY( d, u ), 2 )
 				const	c = AddXY( d, r )
 				S.cX = c[ 0 ]
@@ -969,7 +966,7 @@ MainEditor extends HTMLElement {
 				S.rV = r[ 1 ]
 				//	drag = a new node. Don't reuse a selected node's id left in the
 				//	field ( that would update it ); only honor a fresh, unused id.
-				await Node( [ FindNode( NODE_ID.value ) ? '' : NODE_ID.value, S, PAINT_EDITOR.$ ] )
+				await Node( [ FindNode( NODE_ID.value ) ? '' : NODE_ID.value, S, P ] )
 			}
 		}
 	}

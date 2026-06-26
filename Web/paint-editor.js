@@ -3,8 +3,11 @@ import { LabeledInput, LabeledSelect } from './DomUtils.js'
 export default class
 PaintEditor extends HTMLElement {
 
-	constructor() {
-		super()
+	//	Build fields on connect, not in the constructor: a custom element whose
+	//	constructor adds children can't be created via document.createElement
+	//	( "the result must not have children" ), and we nest this via createElement.
+	connectedCallback() {
+		if	( this.FILL )	return
 
 		this.FILL				= LabeledInput	( this, 'fill'			)
 		this.STROKE				= LabeledInput	( this, 'stroke'		, 'gray'	)
@@ -44,4 +47,3 @@ PaintEditor extends HTMLElement {
 }
 
 customElements.define( 'paint-editor', PaintEditor )
-
