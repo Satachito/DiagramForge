@@ -116,7 +116,7 @@ Endpoints:
 | GET | `/__df/model` | Live `{ model, canvasWidth, canvasHeight }` |
 | POST | `/__df/rpc` | Body: `{ "method": "apply", "params": { "ops": […] } }` |
 
-DevTools: `window.DF` — see **[README.md](README.md#development-live-reload--ai-api)**.
+DevTools: `window.DF` in the browser — see **`Web/ai-api.js`** and **[Web/SCHEMA.md](Web/SCHEMA.md)**.
 
 ---
 
