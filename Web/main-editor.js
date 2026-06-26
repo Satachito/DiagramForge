@@ -483,6 +483,7 @@ MainEditor extends HTMLElement {
 		this.nodeMenuTarget			= null
 		this.panning				= null	//	{ x, y } client coords while hand-tool panning
 		this.spaceDown				= false	//	space held → hand tool armed
+		this.hoverXY				= null	//	last hover position, for refreshModeCursor
 
 		LINK_MENU_REMOVE.onclick	= ev => (
 			ev.stopPropagation()
@@ -623,9 +624,18 @@ MainEditor extends HTMLElement {
 		menu.style.top	= `${ Math.max( pad, Math.min( ev.clientY, innerHeight - h - pad ) ) }px`
 	}
 
-	//	coarse cursor for the current mode ( refined per-position by cursorAt on move )
+	//	idle / hover cursor. Recompute from the last hover position so that pressing
+	//	a key that doesn't change the mode ( e.g. Shift while resizing an edge ) keeps
+	//	the resize / move / pointer affordance instead of snapping back to 'default'.
 	refreshModeCursor( ev ) {
-		this.reformer.style.cursor = ( NodeMode( ev ) || LinkMode( ev ) ) ? 'crosshair' : 'default'
+		if	( mouse[ 0 ] !== null )	return	//	mid-drag: keep the drag cursor
+		if	( this.spaceDown ) {
+			this.reformer.style.cursor = 'grab'
+			return
+		}
+		this.reformer.style.cursor = this.hoverXY
+		?	Cursor_EV( { offsetX: this.hoverXY[ 0 ], offsetY: this.hoverXY[ 1 ], metaKey: ev?.metaKey, altKey: ev?.altKey } )
+		:	( ( NodeMode( ev ) || LinkMode( ev ) ) ? 'crosshair' : 'default' )
 	}
 
 	async onKeyDown( ev ) {
@@ -1007,6 +1017,7 @@ MainEditor extends HTMLElement {
 		UpdateHoverLabel( ev )
 
 		if	( mouse[ 0 ] === null ) {
+			this.hoverXY = [ ev.offsetX, ev.offsetY ]	//	remembered for refreshModeCursor
 			this.reformer.style.cursor = this.spaceDown ? 'grab' : Cursor_EV( ev )
 			return
 		}
