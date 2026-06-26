@@ -410,9 +410,23 @@ LinkMetrics		= ( [ [ nF, nT ], A, P ] ) => {
 
 	const
 	shaft = subPath( route, fDist, tDist )
+
+	//	right-click hit zones for the arrowhead menu: a fixed GRAB-radius circle at
+	//	each end, nudged GRAB along the shaft so it sits on the shaft side of the
+	//	boundary tip ( clear of the node ) and works even when no head is drawn.
+	const
+	dF = endDir( route, true )
+,	dT = endDir( route, false )
+,	tipT = route[ route.length - 1 ]
+	const
+	ends = [
+		{ end: 'F', c: [ route[ 0 ][ 0 ] + dF[ 0 ] * GRAB, route[ 0 ][ 1 ] + dF[ 1 ] * GRAB ] }
+	,	{ end: 'T', c: [ tipT[ 0 ] + dT[ 0 ] * GRAB, tipT[ 1 ] + dT[ 1 ] * GRAB ] }
+	]
 	return {
 		shaft	: shaft.length < 2 ? [ route[ 0 ], route[ route.length - 1 ] ] : shaft
 	,	heads
+	,	ends
 	}
 }
 

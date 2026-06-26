@@ -198,7 +198,10 @@ Links_XY	= xy => AvailableLinks().reduce(
 ,	[]
 )
 
-//	which arrowhead ( if any ) of a single link the point lands on → 'F' | 'T'
+//	which end zone ( if any ) of a single link the point lands on → 'F' | 'T'.
+//	fixed GRAB-radius circles at each end ( see LinkMetrics.ends ), on the shaft
+//	side of the boundary tip — so the head menu is reachable even when that end
+//	currently has no arrowhead, and clicks never fall onto the node.
 const
 HeadEnd_XY	= ( _, xy ) => {
 
@@ -206,34 +209,13 @@ HeadEnd_XY	= ( _, xy ) => {
 	$ = LinkMetrics( _ )
 	if	( !$ ) return null
 
-	const
-	P = _[ 2 ]
-
-	C2D.save()
-	try {
-		C2D.lineWidth = Math.max( P.lineWidth ?? GRAB, GRAB )
-
-		for ( const h of $.heads ) {
-			if	( h.kind === 'circle' ) {
-				C2D.beginPath()
-				C2D.arc( h.center[ 0 ], h.center[ 1 ], h.r, 0, 2 * Math.PI )
-				if	( C2D.isPointInPath( ...xy ) ) return h.end
-				continue
-			}
-			C2D.beginPath()
-			C2D.moveTo( ...h.pts[ 0 ] )
-			for	( let i = 1; i < h.pts.length; i++ )	C2D.lineTo( ...h.pts[ i ] )
-			if	( h.kind === 'line' ) {
-				if	( C2D.isPointInStroke( ...xy ) ) return h.end
-			} else {
-				C2D.closePath()
-				if	( C2D.isPointInPath( ...xy ) ) return h.end
-			}
-		}
-		return null
-	} finally {
-		C2D.restore()
+	for ( const z of $.ends ) {
+		const
+		dx = xy[ 0 ] - z.c[ 0 ]
+	,	dy = xy[ 1 ] - z.c[ 1 ]
+		if	( dx * dx + dy * dy <= GRAB * GRAB )	return z.end
 	}
+	return null
 }
 
 //	first link whose arrowhead is under the point → { link, end } | null
