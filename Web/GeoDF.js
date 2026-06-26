@@ -332,7 +332,11 @@ linkEnds		= ( [ [ nF, nT ], A, P ] ) => {
 		pF, pT, outwardF, outwardT, frameF, frameT
 	,	tipF	: offsetOutward( pF, outwardF, frameF )
 	,	tipT	: offsetOutward( pT, outwardT, frameT )
-	,	ortho	: !( A.anchorF || A.anchorT )
+	//	orthogonal route when both ends share the same anchored-ness: neither
+	//	anchored ( auto routing ) OR both anchored ( connect the two anchor points
+	//	with bends, not a diagonal ). Exactly one anchored stays a straight
+	//	perpendicular connector ( the autoPerp attach in linkCoordinates ).
+	,	ortho	: !A.anchorF === !A.anchorT
 	}
 }
 
@@ -344,7 +348,7 @@ routeFrom		= ( e, corner ) => {
 	rF = e.tipF
 ,	rT = e.tipT
 	//	'straight' forces a direct node-to-node line, overriding the orthogonal
-	//	routing that otherwise kicks in when neither end has an explicit anchor
+	//	routing. Non-ortho ( exactly one end anchored ) is already a 2-point line.
 	if	( !e.ortho || corner === 'straight' )	return [ rF, rT ]
 	const
 	midX = ( rF[ 0 ] + rT[ 0 ] ) / 2
