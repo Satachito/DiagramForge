@@ -1119,6 +1119,7 @@ MainEditor extends HTMLElement {
 				const	[ , A, P ] = LINK_EDITOR.$
 				const	$ = [ [ F[ 0 ], T[ 0 ] ], A, P ]
 				await Link( $ )
+				LINK_EDITOR.$	= $	//	reflect the just-created link in the editor
 			}
 		}
 	}
