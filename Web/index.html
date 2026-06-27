@@ -302,6 +302,58 @@ aside button:not( .file-btn ):active {
 aside details {
 ;	margin-top				: 5px
 }
+.ai-panel {
+;	display					: flex
+;	flex-direction			: column
+;	gap						: 4px
+}
+.ai-config {
+;	display					: flex
+;	flex-direction			: column
+;	gap						: 4px
+}
+.ai-config > select			{ width: 100%; box-sizing: border-box }
+.ai-key-row {
+;	display					: flex
+;	gap						: 4px
+}
+.ai-key-row input			{ flex: 1 1 auto; min-width: 0; box-sizing: border-box }
+.ai-config .ai-key-btn {
+;	flex					: 0 0 auto
+;	width					: 28px
+;	margin-top				: 0
+;	padding					: 0
+;	font-size				: 13px
+}
+.ai-log {
+;	max-height				: 220px
+;	overflow-y				: auto
+;	display					: flex
+;	flex-direction			: column
+;	gap						: 4px
+;	font-size				: 11px
+;	line-height				: 1.4
+}
+.ai-log:empty				{ display: none }
+.ai-msg {
+;	padding					: 4px 6px
+;	border-radius			: 6px
+;	white-space				: pre-wrap
+;	word-break				: break-word
+}
+.ai-user {
+;	background				: var( --color-popup-hover )
+;	align-self				: flex-end
+;	max-width				: 90%
+}
+.ai-assistant				{ background: var( --color-popup-bg ); border: 1px solid var( --color-popup-border ) }
+.ai-status					{ opacity: .6; font-style: italic }
+.ai-error					{ color: #cf222e }
+.ai-input {
+;	resize					: vertical
+;	font-family				: inherit
+;	font-size				: 12px
+}
 aside summary {
 ;	cursor					: pointer
 ;	font-size				: 13px
@@ -669,6 +721,27 @@ aside input[type=checkbox]
 	</div>
 	<hr>
 	<details open>
+		<summary>AI assistant</summary>
+		<div class=ai-panel>
+			<div class=ai-config>
+				<div class=ai-key-row>
+					<input id=AI_KEY type=password placeholder="Anthropic API key (sk-ant-…)" spellcheck=false autocomplete=off>
+					<button id=AI_KEY_TOGGLE type=button class=ai-key-btn title="Show / hide key" aria-label="Show / hide key">👁</button>
+					<button id=AI_KEY_CLEAR type=button class=ai-key-btn title="Clear key" aria-label="Clear key">✕</button>
+				</div>
+				<select id=AI_MODEL>
+					<option value=claude-opus-4-8>Opus 4.8 (best)</option>
+					<option value=claude-sonnet-4-6>Sonnet 4.6 (balanced)</option>
+					<option value=claude-haiku-4-5>Haiku 4.5 (cheap)</option>
+				</select>
+			</div>
+			<div id=AI_LOG class=ai-log></div>
+			<textarea id=AI_INPUT class=ai-input rows=2 placeholder="Describe a change… (Enter to send)"></textarea>
+			<button id=AI_SEND>Send</button>
+		</div>
+	</details>
+	<hr>
+	<details open>
 		<summary>Link editor</summary>
 		<div			id=LINK_EDITOR_HOME	>
 			<link-editor	id=LINK_EDITOR		></link-editor>
@@ -784,6 +857,7 @@ import './link-editor.js'
 import './cloud-icons.js'
 import './main-editor.js'
 import './ai-api.js'
+import { initAIPanel } from './ai-panel.js'
 import { loadCdeFile, initLiveReload, setWatchPath } from './live-reload.js'
 import { saveSVG, printPDF, copySVG, baseName, downloadBlob } from './Export.js'
 
@@ -863,6 +937,8 @@ NODE_EDITOR.addEventListener( 'change', UpdateApplyNodeLabel )
 
 NODE			.onclick = () => Node( [ NODE_ID.value, ...NODE_EDITOR.$ ] )
 LINK			.onclick = () => Link( LINK_EDITOR.$ )
+
+initAIPanel()
 
 DOWNLOAD		.onclick = () => downloadBlob(
 	new Blob( [ JSONString() ], { type: 'application/json' } )

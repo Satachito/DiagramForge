@@ -3,9 +3,10 @@
   "configurations": [
     {
       "name": "diagramforge",
-      "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8734", "--directory", "Web"],
-      "port": 8734
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["tools/df-server.mjs"],
+      "port": 8080,
+      "autoPort": true
     }
   ]
 }
