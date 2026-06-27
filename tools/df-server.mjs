@@ -146,8 +146,7 @@ handleEditorMessage	= msg => {
 	case 'model-update':
 		lastSnapshot = {
 			model		: msg.model
-		,	canvasWidth	: msg.canvasWidth
-		,	canvasHeight	: msg.canvasHeight
+		,	canvas		: msg.canvas
 		,	watchPath	: msg.watchPath ?? lastSnapshot?.watchPath ?? null
 		}
 		if	( msg.type === 'editor-ready' ) log( 'snapshot', lastSnapshot.watchPath, `${ msg.model?.nodes?.length ?? 0 } nodes` )
@@ -249,8 +248,7 @@ handleDfApi	= async ( req, res, urlPath ) => {
 		,	watchPath	: lastSnapshot?.watchPath ?? null
 		,	nodeCount	: lastSnapshot?.model?.nodes?.length ?? 0
 		,	linkCount	: lastSnapshot?.model?.links?.length ?? 0
-		,	canvasWidth	: lastSnapshot?.canvasWidth ?? null
-		,	canvasHeight	: lastSnapshot?.canvasHeight ?? null
+		,	canvas		: lastSnapshot?.canvas ?? null
 		} )
 		return
 	}

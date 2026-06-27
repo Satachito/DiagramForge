@@ -112,18 +112,14 @@ server.tool(
 
 server.tool(
 	'df_save_file'
-,	'Save the live diagram to a .cde file under Web/. Writes { model, canvasWidth, canvasHeight }.'
+,	'Save the live diagram to a .cde file under Web/. Writes { model } only; canvas size is derived on load.'
 ,	{
 		path	: z.string()
 	}
 ,	async ( { path: rel } ) => {
 		const	{ rel: clean, abs } = resolveCdePath( rel )
 		,	snap = await dfGetModel()
-		,	doc = {
-			model			: snap.model
-		,	canvasWidth		: snap.canvasWidth
-		,	canvasHeight	: snap.canvasHeight
-		}
+		,	doc = { model: snap.model }
 		,	issues = validateModel( doc.model )
 		if	( issues.length ) return textResult( { saved: false, issues } )
 		await writeFile( abs, formatCdeDoc( doc ) + '\n', 'utf8' )

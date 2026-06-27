@@ -13,7 +13,7 @@ export	const
 STORAGE_KEY	= 'tokyo.828.diagramforge'
 
 export	const
-JSONString	= () => JSON.stringify( { model: app.model, canvasWidth, canvasHeight }, null, '\t' )
+JSONString	= () => JSON.stringify( { model: app.model }, null, '\t' )
 
 export	const
 CANVAS_DEFAULT	= 4096
@@ -21,8 +21,8 @@ CANVAS_DEFAULT	= 4096
 export	const
 CANVAS_STORAGE_KEY	= `${ STORAGE_KEY }.canvas`
 
-const
-loadCanvasSize	= () => {
+export	const
+loadStoredCanvasSize	= () => {
 	try {
 		const
 		[ w, h ] = JSON.parse( localStorage.getItem( CANVAS_STORAGE_KEY ) )
@@ -31,20 +31,13 @@ loadCanvasSize	= () => {
 	return [ CANVAS_DEFAULT, CANVAS_DEFAULT ]
 }
 
-let
-canvasWidth		= CANVAS_DEFAULT
-let
-canvasHeight	= CANVAS_DEFAULT
-
-;[ canvasWidth, canvasHeight ] = loadCanvasSize()
-
 export	const
-CanvasSize		= () => [ canvasWidth, canvasHeight ]
+CanvasSize		= () => MAIN_EDITOR.canvasSize()
 
 export	const
 SetCanvasSize	= ( width, height ) => {
-	canvasWidth		= width
-	canvasHeight	= height
+	if	( !( width > 0 && height > 0 ) )	throw new Error( `Invalid canvas size: ${ width }×${ height }` )
+	MAIN_EDITOR.setCanvasSize( width, height )
 	localStorage.setItem( CANVAS_STORAGE_KEY, JSON.stringify( [ width, height ] ) )
 }
 
@@ -409,15 +402,15 @@ Load		= _ => DoTypical(
 	'Load'
 ,	() => {
 		const
-		{ model, canvasWidth, canvasHeight } = JSON.parse( _ )
+		{ model } = JSON.parse( _ )
 		app.model	= model
 		app.reforms	= []
-		if	( canvasWidth > 0 && canvasHeight > 0 ) {
-			SetCanvasSize( canvasWidth, canvasHeight )
-		} else if ( model.nodes.length ) {
+		if	( model.nodes.length ) {
 			const
 			[ , , b, r ] = BBox( model.nodes )
 			SetCanvasSize( fitCanvas( r ), fitCanvas( b ) )
+		} else {
+			SetCanvasSize( CANVAS_DEFAULT, CANVAS_DEFAULT )
 		}
 	}
 )

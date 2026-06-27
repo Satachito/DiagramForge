@@ -17,12 +17,15 @@ setWatchPath	= path => {
 }
 
 const
-snapshot	= () => ( {
-	model			: window.DF.getModel()
-,	canvasWidth		: CanvasSize()[ 0 ]
-,	canvasHeight	: CanvasSize()[ 1 ]
-,	watchPath
-} )
+snapshot	= () => {
+	const
+	[ width, height ] = CanvasSize()
+	return	{
+		model			: window.DF.getModel()
+	,	canvas			: { width, height }
+	,	watchPath
+	}
+}
 
 const
 pushSnapshot	= () => {

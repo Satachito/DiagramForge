@@ -18,7 +18,7 @@ import {
 ,	Delete
 ,	Copy
 ,	Paste
-,	CanvasSize
+,	loadStoredCanvasSize
 }	from './Application.js'
 
 import {
@@ -331,22 +331,23 @@ export default class
 MainEditor extends HTMLElement {
 
 	Draw() {
-		this.ApplyCanvasSize()
 		window.EMPTY_HINT && ( window.EMPTY_HINT.style.display = app.model.nodes.length ? 'none' : '' )
 		return Promise.all( [ this.DrawModel(), this.DrawReforms() ] ).catch( Report )
+	}
+
+	canvasSize() {
+		return	[ this.drawer.width, this.drawer.height ]
+	}
+
+	setCanvasSize( w, h ) {
+		if	( !( w > 0 && h > 0 ) )	throw new Error( `Invalid canvas size: ${ w }×${ h }` )
+		this.drawer.width		= this.reformer.width		= w
+		this.drawer.height		= this.reformer.height		= h
 	}
 
 	clearInteraction() {
 		mouse[ 0 ] = mouse[ 1 ] = null
 		this.drag = null
-	}
-
-	ApplyCanvasSize() {
-		const
-		[ w, h ] = CanvasSize()
-		if	( !( w > 0 && h > 0 ) )	throw new Error( `Invalid canvas size: ${ w }×${ h }` )
-		this.drawer.width		= this.reformer.width		= w
-		this.drawer.height		= this.reformer.height		= h
 	}
 
 	async DrawModel() {
@@ -482,6 +483,7 @@ MainEditor extends HTMLElement {
 		//	stop the browser from claiming the drag as a scroll / gesture ( which
 		//	would fire pointercancel and abort the move before pointerup commits )
 		this.reformer.style.touchAction	= 'none'
+		this.setCanvasSize( ...loadStoredCanvasSize() )
 		this.linkMenuKey			= null
 		this.headMenuTarget			= null
 		this.nodeMenuTarget			= null

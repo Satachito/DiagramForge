@@ -113,7 +113,7 @@ Endpoints:
 | Method | Path | Purpose |
 |--------|------|---------|
 | GET | `/__df/status` | Browser connected? watch path, node count |
-| GET | `/__df/model` | Live `{ model, canvasWidth, canvasHeight }` |
+| GET | `/__df/model` | Live `{ model, canvas: { width, height } }` |
 | POST | `/__df/rpc` | Body: `{ "method": "apply", "params": { "ops": […] } }` |
 
 DevTools: `window.DF` in the browser — see **`Web/ai-api.js`** and **[Web/SCHEMA.md](Web/SCHEMA.md)**.

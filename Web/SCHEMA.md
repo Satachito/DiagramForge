@@ -3,19 +3,17 @@
 A `.cde` file is the JSON of the diagram model, tab-indented:
 
 ```json
-{ "model": { "nodes": [ ... ], "links": [ ... ] },
-  "canvasWidth": 4096, "canvasHeight": 4096 }
+{ "model": { "nodes": [ ... ], "links": [ ... ] } }
 ```
 
 `index.html` loads it via the `↑` upload button, and the last session is
 auto-restored from `localStorage` (`tokyo.828.diagramforge`). The canvas origin
 is top-left with the **y axis pointing down**.
 
-- **`canvasWidth` / `canvasHeight`** — top-level (siblings of `model`), optional.
-  Files saved or exported from the editor include the current canvas size here.
-  When omitted (e.g. hand-written samples) the canvas size is derived from the
-  nodes' bounding box on load; with no nodes either, it defaults to
-  **4096 × 4096** pixels.
+Canvas size is **not** stored in `.cde`. On load, it is derived from the nodes'
+bounding box (with margin, snapped to 256 px); an empty diagram uses **4096 × 4096**.
+At runtime the `<canvas>` element is the source of truth; manual resizes persist
+in `localStorage` (`tokyo.828.diagramforge.canvas`) for the session.
 
 ## Node
 

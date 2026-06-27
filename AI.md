@@ -19,9 +19,7 @@ Implementation-accurate contract for agents (Cursor, MCP, scripts) working on Di
 	"model": {
 		"nodes": [ … ],
 		"links": [ … ]
-	},
-	"canvasWidth": 4096,
-	"canvasHeight": 4096
+	}
 }
 ```
 
@@ -29,11 +27,13 @@ Implementation-accurate contract for agents (Cursor, MCP, scripts) working on Di
 |-------|-------------|
 | **`model.nodes`** | Node array (draw order ≈ z-order; later entries on top) |
 | **`model.links`** | Link array |
-| **`canvasWidth` / `canvasHeight`** | Optional. If omitted, derived from node bounding box; empty diagram → 4096×4096 |
 
 Coordinate system: origin top-left, **Y axis downward**.
 
-`Load()` in `Web/Application.js` assigns `{ model, canvasWidth, canvasHeight }` directly to `app.model`. **No legacy name rewriting.**
+`.cde` holds diagram content only. Canvas size is derived on load from the node
+bounding box (empty diagram → 4096×4096). At runtime the `<canvas>` element is
+the source of truth; live MCP/API responses may include current canvas dimensions
+separately from the file format.
 
 ---
 
@@ -142,7 +142,7 @@ DF.setModel({ nodes, links })
 | Tool | Purpose |
 |------|---------|
 | `df_status` | Browser connection, `watchPath` |
-| `df_get_model` | Live `{ model, canvasWidth, canvasHeight }` |
+| `df_get_model` | Live `{ model, canvas: { width, height } }` |
 | `df_apply` | `{ ops: [ … ] }` — same ops as above |
 | `df_validate` | Validation |
 | `df_auto_layout` | Grid layout |

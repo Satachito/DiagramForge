@@ -48,9 +48,7 @@ A saved `.cde` file is JSON:
 	"model": {
 		"nodes": [],
 		"links": []
-	},
-	"canvasWidth": 4096,
-	"canvasHeight": 4096
+	}
 }
 ```
 
