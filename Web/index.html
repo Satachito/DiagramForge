@@ -721,7 +721,7 @@ aside input[type=checkbox]
 	</div>
 	<hr>
 	<details open>
-		<summary>AI assistant</summary>
+		<summary>Claude assistant</summary>
 		<div class=ai-panel>
 			<div class=ai-config>
 				<div class=ai-key-row>
@@ -738,6 +738,28 @@ aside input[type=checkbox]
 			<div id=AI_LOG class=ai-log></div>
 			<textarea id=AI_INPUT class=ai-input rows=2 placeholder="Describe a change… (Enter to send)"></textarea>
 			<button id=AI_SEND>Send</button>
+		</div>
+	</details>
+	<hr>
+	<details open>
+		<summary>OpenAI assistant</summary>
+		<div class=ai-panel>
+			<div class=ai-config>
+				<div class=ai-key-row>
+					<input id=OAI_KEY type=password placeholder="OpenAI API key (sk-…)" spellcheck=false autocomplete=off>
+					<button id=OAI_KEY_TOGGLE type=button class=ai-key-btn title="Show / hide key" aria-label="Show / hide key">👁</button>
+					<button id=OAI_KEY_CLEAR type=button class=ai-key-btn title="Clear key" aria-label="Clear key">✕</button>
+				</div>
+				<select id=OAI_MODEL>
+					<option value=gpt-4o>gpt-4o (best)</option>
+					<option value=gpt-4o-mini>gpt-4o-mini (cheap)</option>
+					<option value=gpt-4.1>gpt-4.1</option>
+					<option value=gpt-4.1-mini>gpt-4.1-mini</option>
+				</select>
+			</div>
+			<div id=OAI_LOG class=ai-log></div>
+			<textarea id=OAI_INPUT class=ai-input rows=2 placeholder="Describe a change… (Enter to send)"></textarea>
+			<button id=OAI_SEND>Send</button>
 		</div>
 	</details>
 	<hr>
@@ -858,6 +880,7 @@ import './cloud-icons.js'
 import './main-editor.js'
 import './ai-api.js'
 import { initAIPanel } from './ai-panel.js'
+import { initOpenAIPanel } from './ai-panel-openai.js'
 import { loadCdeFile, initLiveReload, setWatchPath } from './live-reload.js'
 import { saveSVG, printPDF, copySVG, baseName, downloadBlob } from './Export.js'
 
@@ -939,6 +962,7 @@ NODE			.onclick = () => Node( [ NODE_ID.value, ...NODE_EDITOR.$ ] )
 LINK			.onclick = () => Link( LINK_EDITOR.$ )
 
 initAIPanel()
+initOpenAIPanel()
 
 DOWNLOAD		.onclick = () => downloadBlob(
 	new Blob( [ JSONString() ], { type: 'application/json' } )
