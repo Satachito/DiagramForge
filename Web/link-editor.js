@@ -32,6 +32,8 @@ LinkEditor extends HTMLElement {
 		const
 		$	= [ '', 'T', 'L', 'B', 'R', 'TL', 'TR', 'BL', 'BR' ]
 
+		this.CORNER		= LabeledSelect		( this, 'corner'	, ...CORNER_STYLES )
+
 		this.F			= LabeledSelect		( this, 'from' )
 		this.F.onclick	= ev => RefreshSelect( ev.target )
 		this.HEAD_F		= LabeledSelect		( this, '-head'		, ...HEAD_STYLES )
@@ -41,8 +43,6 @@ LinkEditor extends HTMLElement {
 		this.T.onclick	= ev => RefreshSelect( ev.target )
 		this.HEAD_T		= LabeledSelect		( this, '-head'		, ...HEAD_STYLES )
 		this.ANCHOR_T	= LabeledSelect		( this, '-anchor'	, ...$ )
-
-		this.CORNER		= LabeledSelect		( this, 'corner'	, ...CORNER_STYLES )
 
 		this.PAINT		= AE( this, 'paint-editor' )
 	}
