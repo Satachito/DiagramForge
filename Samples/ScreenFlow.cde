@@ -5,9 +5,9 @@
 				"title",
 				{
 					"type": "rect",
-					"cX": 760,
+					"cX": 810,
 					"cY": 70,
-					"rH": 380,
+					"rH": 400,
 					"rV": 30,
 					"html": "<b>Screen transition: shopping app</b>",
 					"style": ";display:grid\n;place-items:center\n;font-size:18px\n;color:light-dark(#0f172a,#e2e8f0)"
@@ -20,10 +20,10 @@
 				"auth-area",
 				{
 					"type": "rect",
-					"cX": 260,
-					"cY": 350,
-					"rH": 190,
-					"rV": 240,
+					"cX": 240,
+					"cY": 400,
+					"rH": 205,
+					"rV": 300,
 					"radii": 18,
 					"html": "Auth / onboarding",
 					"style": ";padding:12px\n;font-weight:700\n;color:light-dark(#1e3a8a,#bfdbfe)"
@@ -38,10 +38,10 @@
 				"shop-area",
 				{
 					"type": "rect",
-					"cX": 760,
-					"cY": 350,
-					"rH": 310,
-					"rV": 240,
+					"cX": 800,
+					"cY": 400,
+					"rH": 350,
+					"rV": 300,
 					"radii": 18,
 					"html": "Main purchase flow",
 					"style": ";padding:12px\n;font-weight:700\n;color:light-dark(#14532d,#bbf7d0)"
@@ -56,10 +56,10 @@
 				"account-area",
 				{
 					"type": "rect",
-					"cX": 1240,
-					"cY": 350,
-					"rH": 190,
-					"rV": 240,
+					"cX": 1360,
+					"cY": 400,
+					"rH": 200,
+					"rV": 300,
 					"radii": 18,
 					"html": "Account",
 					"style": ";padding:12px\n;font-weight:700\n;color:light-dark(#581c87,#e9d5ff)"
@@ -74,8 +74,8 @@
 				"splash",
 				{
 					"type": "rect",
-					"cX": 260,
-					"cY": 170,
+					"cX": 250,
+					"cY": 185,
 					"rH": 105,
 					"rV": 44,
 					"radii": 14,
@@ -92,8 +92,8 @@
 				"login",
 				{
 					"type": "rect",
-					"cX": 170,
-					"cY": 320,
+					"cX": 155,
+					"cY": 360,
 					"rH": 105,
 					"rV": 44,
 					"radii": 14,
@@ -110,8 +110,8 @@
 				"signup",
 				{
 					"type": "rect",
-					"cX": 350,
-					"cY": 320,
+					"cX": 370,
+					"cY": 360,
 					"rH": 105,
 					"rV": 44,
 					"radii": 14,
@@ -128,8 +128,8 @@
 				"forgot",
 				{
 					"type": "rect",
-					"cX": 170,
-					"cY": 470,
+					"cX": 155,
+					"cY": 520,
 					"rH": 105,
 					"rV": 44,
 					"radii": 14,
@@ -146,8 +146,8 @@
 				"home",
 				{
 					"type": "rect",
-					"cX": 560,
-					"cY": 320,
+					"cX": 590,
+					"cY": 360,
 					"rH": 105,
 					"rV": 44,
 					"radii": 14,
@@ -164,8 +164,8 @@
 				"search",
 				{
 					"type": "rect",
-					"cX": 760,
-					"cY": 190,
+					"cX": 810,
+					"cY": 185,
 					"rH": 105,
 					"rV": 44,
 					"radii": 14,
@@ -182,8 +182,8 @@
 				"detail",
 				{
 					"type": "rect",
-					"cX": 760,
-					"cY": 320,
+					"cX": 810,
+					"cY": 360,
 					"rH": 105,
 					"rV": 44,
 					"radii": 14,
@@ -200,8 +200,8 @@
 				"cart",
 				{
 					"type": "rect",
-					"cX": 960,
-					"cY": 320,
+					"cX": 1025,
+					"cY": 360,
 					"rH": 105,
 					"rV": 44,
 					"radii": 14,
@@ -218,8 +218,8 @@
 				"checkout",
 				{
 					"type": "rect",
-					"cX": 960,
-					"cY": 470,
+					"cX": 1025,
+					"cY": 500,
 					"rH": 105,
 					"rV": 44,
 					"radii": 14,
@@ -236,8 +236,8 @@
 				"complete",
 				{
 					"type": "rect",
-					"cX": 760,
-					"cY": 520,
+					"cX": 810,
+					"cY": 640,
 					"rH": 105,
 					"rV": 44,
 					"radii": 14,
@@ -254,8 +254,8 @@
 				"profile",
 				{
 					"type": "rect",
-					"cX": 1240,
-					"cY": 260,
+					"cX": 1360,
+					"cY": 270,
 					"rH": 105,
 					"rV": 44,
 					"radii": 14,
@@ -272,8 +272,8 @@
 				"settings",
 				{
 					"type": "rect",
-					"cX": 1240,
-					"cY": 440,
+					"cX": 1360,
+					"cY": 460,
 					"rH": 105,
 					"rV": 44,
 					"radii": 14,
@@ -290,8 +290,8 @@
 				"login-required",
 				{
 					"type": "rect",
-					"cX": 1160,
-					"cY": 540,
+					"cX": 1270,
+					"cY": 590,
 					"rH": 130,
 					"rV": 34,
 					"radii": 10,
@@ -581,5 +581,7 @@
 				}
 			]
 		]
-	}
+	},
+	"canvasWidth": 1680,
+	"canvasHeight": 768
 }

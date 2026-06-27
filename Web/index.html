@@ -188,10 +188,13 @@ footer {
 ;	font-size				: 11px
 }
 .debug-bar {
-;	display					: flex
+;	display					: none
 ;	align-items				: center
 ;	gap						: 4px
 ;	margin-right			: auto
+}
+body.local-dev .debug-bar {
+;	display					: flex
 }
 .debug-bar button {
 ;	font-size				: 11px
@@ -889,6 +892,11 @@ import { initAIPanel } from './ai-panel.js'
 import { initOpenAIPanel } from './ai-panel-openai.js'
 import { loadCdeFile, initLiveReload, setWatchPath } from './live-reload.js'
 import { saveSVG, printPDF, copySVG, baseName, downloadBlob } from './Export.js'
+
+const
+isLocalDev = /^(localhost|127\.0\.0\.1|\[::1\])$/.test( location.hostname )
+	|| location.protocol === 'file:'
+if	( isLocalDev ) document.body.classList.add( 'local-dev' )
 
 /*
 const
