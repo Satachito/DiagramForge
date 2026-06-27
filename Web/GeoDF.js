@@ -325,6 +325,10 @@ offsetOutward	= ( p, outward, dist ) => [
 ,	p[ 1 ] + outward[ 1 ] * dist
 ]
 
+//	the four pure sides ( as opposed to the diagonal corner anchors )
+const
+SIDE_ANCHOR		= new Set( [ 'T', 'B', 'L', 'R' ] )
+
 //	attachment geometry ( boundary points, outward normals, stroke-frame insets
 //	and resulting boundary tips ); computed once per link
 const
@@ -343,8 +347,15 @@ linkEnds		= ( [ [ nF, nT ], A, P ] ) => {
 	//	whatever its anchors. 'straight' is the only direct 2-point line — and the
 	//	only case that gets the perpendicular H/V snap ( see linkCoordinates ).
 	,	ortho	: A.corner !== 'straight'
+	//	both ends anchored to the same pure side → the shared outward normal, so
+	//	routeFrom can run the link around the outside ( null otherwise )
+	,	sameSideOut	: A.anchorF && A.anchorF === A.anchorT && SIDE_ANCHOR.has( A.anchorF ) ? outwardF : null
 	}
 }
+
+//	how far beyond the furthest edge the same-side detour runs
+const
+OUTSIDE_LANE	= 32
 
 //	centerline route whose endpoints are exactly the boundary tips, so the
 //	arrowheads, their necks and the shaft all share one geometry
@@ -355,6 +366,18 @@ routeFrom		= e => {
 ,	rT = e.tipT
 	//	non-ortho ( i.e. corner 'straight' ) is the only direct 2-point line
 	if	( !e.ortho )	return [ rF, rT ]
+	//	both ends on the same side: run both leads outward to a shared lane beyond
+	//	the furthest edge, then connect — routing the link around the outside
+	if	( e.sameSideOut ) {
+		const
+		[ ox, oy ] = e.sameSideOut
+		if	( ox ) {
+			const	lane = ( ox > 0 ? Math.max( rF[ 0 ], rT[ 0 ] ) : Math.min( rF[ 0 ], rT[ 0 ] ) ) + ox * OUTSIDE_LANE
+			return	[ rF, [ lane, rF[ 1 ] ], [ lane, rT[ 1 ] ], rT ]
+		}
+		const	lane = ( oy > 0 ? Math.max( rF[ 1 ], rT[ 1 ] ) : Math.min( rF[ 1 ], rT[ 1 ] ) ) + oy * OUTSIDE_LANE
+		return	[ rF, [ rF[ 0 ], lane ], [ rT[ 0 ], lane ], rT ]
+	}
 	const
 	midX = ( rF[ 0 ] + rT[ 0 ] ) / 2
 ,	midY = ( rF[ 1 ] + rT[ 1 ] ) / 2
