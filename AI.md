@@ -1,18 +1,18 @@
-# DiagramForge AI contract — `.cde` and live editing
+# Zukai AI contract — `.zu` and live editing
 
-Implementation-accurate contract for agents (Cursor, MCP, scripts) working on DiagramForge.
+Implementation-accurate contract for agents (Cursor, MCP, scripts) working on Zukai.
 
 | Document | Role |
 |----------|------|
 | **This file (AI.md)** | AI contract, MCP / `window.DF` operations |
-| **[Web/SCHEMA.md](Web/SCHEMA.md)** | `.cde` schema detail (link `corner`, anchors, examples) |
+| **[Web/SCHEMA.md](Web/SCHEMA.md)** | `.zu` schema detail (link `corner`, anchors, examples) |
 | **[USAGE.md](USAGE.md)** | Dev server, Phase 2/3/4, MCP setup |
 
 **Early-development policy:** no legacy field normalization or compatibility shims. Invalid JSON fails at load or validation so drift is visible.
 
 ---
 
-## Root object (`.cde` file)
+## Root object (`.zu` file)
 
 ```json
 {
@@ -30,7 +30,7 @@ Implementation-accurate contract for agents (Cursor, MCP, scripts) working on Di
 
 Coordinate system: origin top-left, **Y axis downward**.
 
-`.cde` holds diagram content only. Canvas size is derived on load from the node
+`.zu` holds diagram content only. Canvas size is derived on load from the node
 bounding box (empty diagram → 4096×4096). At runtime the `<canvas>` element is
 the source of truth; live MCP/API responses may include current canvas dimensions
 separately from the file format.
@@ -165,10 +165,10 @@ Provided by `tools/df-server.mjs`:
 
 | Goal | Path |
 |------|------|
-| Save `.cde` → browser updates | Phase 2 — `?cde=Samples/….cde` + file save |
+| Save `.zu` → browser updates | Phase 2 — `?zu=Samples/….zu` + file save |
 | Change live diagram from chat | Phase 4 — MCP `df_apply` |
 | Script / curl | Phase 3 — `/__df/rpc` |
-| GitHub Pages only | Hand-edit `.cde` + **↑** upload |
+| GitHub Pages only | Hand-edit `.zu` + **↑** upload |
 
 Phase 4 changes stay **in memory** until `df_save_file`.
 

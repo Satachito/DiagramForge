@@ -1,4 +1,4 @@
-# DiagramForge
+# Zukai
 
 Canvas-based cloud architecture diagram editor. Static, no build: plain ES
 modules + Web Components loaded directly by `index.html`. Open it from any static
@@ -10,8 +10,8 @@ server.
 
 ## Editing diagrams with AI
 
-The diagram is a plain JSON file (`.cde`). To add/modify/arrange nodes and links,
-**edit the `.cde` file directly** or use the **diagramforge MCP** tools when the dev server
+The diagram is a plain JSON file (`.zu`). To add/modify/arrange nodes and links,
+**edit the `.zu` file directly** or use the **diagramforge MCP** tools when the dev server
 and browser tab are open (see **[USAGE.md](../USAGE.md)**).
 
 Format and safe-edit rules: **[SCHEMA.md](SCHEMA.md)** (English).  

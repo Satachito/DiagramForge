@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-//	DiagramForge MCP server — natural-language agents control the live diagram via df-server.
+//	Zukai MCP server — natural-language agents control the live diagram via df-server.
 //
 //	Prerequisites:
 //	  cd Web && npm run dev          ( df-server on :8080 )
-//	  open http://localhost:8080/?cde=Samples/JSONs.cde
+//	  open http://localhost:8080/?zu=Samples/JSONs.zu
 //
 //	Cursor MCP config ( .cursor/mcp.json ):
 //	  { "mcpServers": { "diagramforge": { "command": "node", "args": ["tools/df-mcp.mjs"] } } }
@@ -33,13 +33,13 @@ resolveCdePath	= rel => {
 	clean = rel.replace( /^\/+/, '' )
 	,	abs = webPath( clean )
 	if	( !isUnderWeb( abs ) ) throw new Error( `Path must be under Web/: ${ rel }` )
-	if	( !clean.endsWith( '.cde' ) ) throw new Error( 'Path must end with .cde' )
+	if	( !clean.endsWith( '.zu' ) ) throw new Error( 'Path must end with .zu' )
 	return	{ rel: clean, abs }
 }
 
 server.tool(
 	'df_status'
-,	'Check whether a browser editor is connected to df-server and which .cde file is watched.'
+,	'Check whether a browser editor is connected to df-server and which .zu file is watched.'
 ,	{}
 ,	async () => textResult( await dfStatus() )
 )
@@ -53,7 +53,7 @@ server.tool(
 
 server.tool(
 	'df_validate'
-,	'Validate a DiagramForge model. Omit model to validate the live browser diagram.'
+,	'Validate a Zukai model. Omit model to validate the live browser diagram.'
 ,	{
 		model	: z.object( {
 			nodes	: z.array( z.any() )
@@ -99,7 +99,7 @@ server.tool(
 
 server.tool(
 	'df_load_file'
-,	'Load a .cde file into the browser editor. Path is relative to Web/ ( e.g. Samples/JSONs.cde ).'
+,	'Load a .zu file into the browser editor. Path is relative to Web/ ( e.g. Samples/JSONs.zu ).'
 ,	{
 		path	: z.string()
 	}
@@ -112,7 +112,7 @@ server.tool(
 
 server.tool(
 	'df_save_file'
-,	'Save the live diagram to a .cde file under Web/. Writes { model } only; canvas size is derived on load.'
+,	'Save the live diagram to a .zu file under Web/. Writes { model } only; canvas size is derived on load.'
 ,	{
 		path	: z.string()
 	}
@@ -129,7 +129,7 @@ server.tool(
 
 server.tool(
 	'df_read_file'
-,	'Read a .cde file from disk ( no browser required ). Path relative to Web/.'
+,	'Read a .zu file from disk ( no browser required ). Path relative to Web/.'
 ,	{
 		path	: z.string()
 	}

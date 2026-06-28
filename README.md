@@ -1,10 +1,10 @@
-# DiagramForge
+# Zukai
 
 Canvas-based diagram editor for **cloud architecture**, **mind maps**, and **sequence diagrams**.
 
-**Live demo:** https://satachito.github.io/DiagramForge/
+**Live demo:** https://satachito.github.io/Zukai/
 
-Open the page and start drawing — no build step for the hosted demo. Diagrams are plain JSON (`.cde` files), editable by hand or with AI in Cursor.
+Open the page and start drawing — no build step for the hosted demo. Diagrams are plain JSON (`.zu` files), editable by hand or with AI in Cursor.
 
 ## Features
 
@@ -13,18 +13,18 @@ Open the page and start drawing — no build step for the hosted demo. Diagrams 
 - **Links** with arrowheads, anchor points, and orthogonal routing
 - **Cloud icon palettes** — AWS, Azure, GCP (bundled ZIP archives)
 - **Sample diagrams** — JSON primitives, cloud layouts, mind map, sequence chart
-- **Import / export** — load and save `.cde` files (↑ / ↓ buttons)
+- **Import / export** — load and save `.zu` files (↑ / ↓ buttons)
 - **Session restore** — last diagram is kept in `localStorage`
 - **Light / dark mode** — follows system preference
-- **AI editing** — dev server with live `.cde` reload, `window.DF` command API, and Cursor MCP for natural-language diagram changes (see **[USAGE.md](USAGE.md)**)
+- **AI editing** — dev server with live `.zu` reload, `window.DF` command API, and Cursor MCP for natural-language diagram changes (see **[USAGE.md](USAGE.md)**)
 
 ## Quick start (demo)
 
-1. Open the [live demo](https://satachito.github.io/DiagramForge/).
+1. Open the [live demo](https://satachito.github.io/Zukai/).
 2. Click a **Sample( … )** button on the right panel to load an example.
 3. Drag on the canvas to move nodes; use the mode selector to create nodes and links.
 4. Expand **GCP / Azure / AWS** in the left panel to place cloud icons.
-5. Press **↓** to download the diagram as a `.cde` file.
+5. Press **↓** to download the diagram as a `.zu` file.
 
 ## Local development & AI workflow
 
@@ -35,13 +35,13 @@ cd Web && npm install && npm run dev
 cd ../tools && npm install   # MCP (one-time)
 ```
 
-Open `http://localhost:8080/?cde=Samples/JSONs.cde` and enable the **`diagramforge`** MCP server in Cursor (**Settings → Tools & MCP**).
+Open `http://localhost:8080/?zu=Samples/JSONs.zu` and enable the **`diagramforge`** MCP server in Cursor (**Settings → Tools & MCP**).
 
 Full setup, Phase 2/3/4 explanation, MCP tools, and troubleshooting: **[USAGE.md](USAGE.md)**
 
-## `.cde` format
+## `.zu` format
 
-A saved `.cde` file is JSON:
+A saved `.zu` file is JSON:
 
 ```json
 {
@@ -59,11 +59,11 @@ Sample files: **[Samples/](Samples/)**
 
 ## Editing with Cursor
 
-DiagramForge has no in-app AI panel. Typical workflows:
+Zukai has no in-app AI panel. Typical workflows:
 
 | Goal | How |
 |------|-----|
-| Edit `.cde` on disk, preview on save | Phase 2 — `npm run dev` + `?cde=Samples/….cde` |
+| Edit `.zu` on disk, preview on save | Phase 2 — `npm run dev` + `?zu=Samples/….zu` |
 | Change the open diagram from chat | Phase 4 — MCP (`df_get_model`, `df_apply`, …) |
 | One-off file load on GitHub Pages | **↑** upload or a Sample button |
 
@@ -71,7 +71,7 @@ Tips:
 
 - Prefer **rect / ellipse / rhombus** over new base64 icons unless you need a specific glyph.
 - Keep **node IDs stable**; every link must reference existing IDs.
-- Use samples as layout references — **[Samples/Sequence.cde](Samples/Sequence.cde)**, **[Samples/MindMap.cde](Samples/MindMap.cde)**, **[Samples/JSONs.cde](Samples/JSONs.cde)** for cloud architecture.
+- Use samples as layout references — **[Samples/Sequence.zu](Samples/Sequence.zu)**, **[Samples/MindMap.zu](Samples/MindMap.zu)**, **[Samples/JSONs.zu](Samples/JSONs.zu)** for cloud architecture.
 
 Cursor rules: **[Web/.cursorrules](Web/.cursorrules)**, **[Web/CLAUDE.md](Web/CLAUDE.md)** → `SCHEMA.md`.
 
@@ -98,15 +98,15 @@ GitHub Pages deploys from `Web/` on push to `main` (`.github/workflows/pages.yml
 ## Project layout
 
 ```
-DiagramForge/
+Zukai/
 ├── Web/              App (HTML + ES modules, ai-api.js)
-├── Samples/          Example .cde files
+├── Samples/          Example .zu files
 ├── ICONs/            Cloud icon ZIP archives
 ├── tools/            df-server, df-mcp, utilities
 ├── .cursor/mcp.json  Cursor MCP config
 ├── USAGE.md          Dev server + MCP workflow
 ├── AI.md             AI contract + MCP ops
-└── Web/SCHEMA.md     .cde schema reference
+└── Web/SCHEMA.md     .zu schema reference
 ```
 
 ## Author

@@ -1,4 +1,4 @@
-//	Live .cde reload + WebSocket RPC bridge to window.DF ( tools/df-server.mjs ).
+//	Live .zu reload + WebSocket RPC bridge to window.DF ( tools/df-server.mjs ).
 
 import { Load	} from './Application.js'
 import { CanvasSize	} from './main-editor.js'
@@ -123,7 +123,7 @@ export const
 initLiveReload	= async ( ui, { Report } = {} ) => {
 	uiRef = ui
 	const
-	fromUrl = new URLSearchParams( location.search ).get( 'cde' )
+	fromUrl = new URLSearchParams( location.search ).get( 'zu' )
 	,	fromStore = sessionStorage.getItem( 'df-watch' )
 	,	path = fromUrl || fromStore
 

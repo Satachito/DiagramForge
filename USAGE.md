@@ -1,18 +1,18 @@
-# DiagramForge — AI & dev workflow guide
+# Zukai — AI & dev workflow guide
 
-This document summarizes how to edit diagrams with Cursor, the dev server, and MCP. For the `.cde` file format, see **[Web/SCHEMA.md](Web/SCHEMA.md)**.
+This document summarizes how to edit diagrams with Cursor, the dev server, and MCP. For the `.zu` file format, see **[Web/SCHEMA.md](Web/SCHEMA.md)**.
 
 ## Three layers (Phase 2 / 3 / 4)
 
 | Layer | What it is | When it runs |
 |-------|------------|--------------|
-| **Phase 2 — live reload** | Save a `.cde` on disk → browser reloads that file | `watchPath` is set (see below) |
+| **Phase 2 — live reload** | Save a `.zu` on disk → browser reloads that file | `watchPath` is set (see below) |
 | **Phase 3 — WebSocket bridge** | `df-server` RPCs into the open tab via `window.DF` | `npm run dev` + browser tab open |
 | **Phase 4 — MCP** | Cursor chat calls MCP tools → Phase 3 → canvas | MCP enabled + same session as Phase 3 |
 
 All three can be used together, or separately:
 
-- **Edit files in Cursor, preview on save** → Phase 2 (`?cde=…`)
+- **Edit files in Cursor, preview on save** → Phase 2 (`?zu=…`)
 - **Script or curl changes the live canvas** → Phase 3 (`/__df/rpc`)
 - **Natural language in Cursor chat** → Phase 4 (`df_apply`, etc.)
 
@@ -29,7 +29,7 @@ cd ../tools && npm install
 
 ### Enable MCP in Cursor
 
-1. Open this repo at **`DiagramForge/`** (project root, not `Web/` alone).
+1. Open this repo at **`Zukai/`** (project root, not `Web/` alone).
 2. **Settings → Tools & MCP** (or **Customize**): find **`diagramforge`** under **Workspace MCP Servers**.
 3. Turn the toggle **ON** (Enabled).
 4. If it does not appear: **Cmd+Q** to quit Cursor completely, reopen, or **Cmd+Shift+P → Developer: Reload Window**.
@@ -53,11 +53,11 @@ Leave a browser tab open on the dev server.
 
 | URL | Phase 2 (auto-reload on save) | Phase 3 / 4 (live MCP) |
 |-----|------------------------------|-------------------------|
-| `http://localhost:8080/?cde=Samples/JSONs.cde` | **Yes** — watches that file | **Yes** |
+| `http://localhost:8080/?zu=Samples/JSONs.zu` | **Yes** — watches that file | **Yes** |
 | `http://localhost:8080/` | **No** (unless `df-watch` left in sessionStorage) | **Yes** |
 | Sample button in the app | **Yes** — sets watch path | **Yes** |
 
-**Recommended for file + AI editing:** use `?cde=Samples/YourDiagram.cde`.
+**Recommended for file + AI editing:** use `?zu=Samples/YourDiagram.zu`.
 
 **MCP-only experiments:** `http://localhost:8080/` is fine; live edits apply to whatever is on the canvas (localStorage restore or empty diagram). They are **not** written to disk until `df_save_file`.
 
@@ -65,11 +65,11 @@ To clear a stale watch path: DevTools → Application → Session Storage → de
 
 ---
 
-## Phase 2 — edit `.cde`, see it in the browser
+## Phase 2 — edit `.zu`, see it in the browser
 
 1. `npm run dev`
-2. Open `http://localhost:8080/?cde=Samples/JSONs.cde`
-3. Edit `Samples/JSONs.cde` in Cursor and **save**
+2. Open `http://localhost:8080/?zu=Samples/JSONs.zu`
+3. Edit `Samples/JSONs.zu` in Cursor and **save**
 4. The browser reloads that file (pan/zoom/selection are not preserved)
 
 Port already in use:
@@ -130,7 +130,7 @@ Ask in chat:
 
 > Run `df_status`.
 
-Expect `"connected": true` and a `watchPath` if you opened with `?cde=…`.
+Expect `"connected": true` and a `watchPath` if you opened with `?zu=…`.
 
 ### Example — resize a band (no save)
 
@@ -144,7 +144,7 @@ Typical agent steps:
 
 ### Example — persist
 
-> Save the current diagram to `Samples/JSONs.cde`.
+> Save the current diagram to `Samples/JSONs.zu`.
 
 Calls `df_save_file`. Phase 2 may then reload the tab when the file is written.
 
@@ -157,9 +157,9 @@ Calls `df_save_file`. Phase 2 may then reload the tab when the file is written.
 | `df_apply` | Apply ops (`updateNode`, `addLink`, …) |
 | `df_validate` | Validate live or given model |
 | `df_auto_layout` | Grid layout |
-| `df_load_file` | Load `.cde` into browser (path under `Web/`) |
+| `df_load_file` | Load `.zu` into browser (path under `Web/`) |
 | `df_save_file` | Write live diagram to disk |
-| `df_read_file` | Read `.cde` from disk (no browser needed) |
+| `df_read_file` | Read `.zu` from disk (no browser needed) |
 
 ### Rules for agents
 
@@ -178,7 +178,7 @@ Calls `df_save_file`. Phase 2 may then reload the tab when the file is written.
 | MCP listed but Disabled | Toggle **ON** in Settings → Tools & MCP |
 | `connected: false` | Open dev URL in browser; keep tab open |
 | RPC timeout | Restart `npm run dev` |
-| Phase 2 not reloading | Use `?cde=…` or Sample button; check `df-watch` in sessionStorage |
+| Phase 2 not reloading | Use `?zu=…` or Sample button; check `df-watch` in sessionStorage |
 | `DrawModel failed` + `atob` | Corrupt SVG/PNG on a node — fix via `df_get_model` / file |
 | Port 8080 in use | `lsof -ti:8080 \| xargs kill` |
 
@@ -187,9 +187,9 @@ Calls `df_save_file`. Phase 2 may then reload the tab when the file is written.
 ## Project layout (dev / AI)
 
 ```
-DiagramForge/
+Zukai/
 ├── Web/              App + ai-api.js (window.DF)
-├── Samples/          Example .cde files
+├── Samples/          Example .zu files
 ├── tools/
 │   df-server.mjs     Dev server + bridge
 │   df-mcp.mjs        MCP server (stdio)

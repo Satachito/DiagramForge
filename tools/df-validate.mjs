@@ -1,4 +1,4 @@
-//	Validate a DiagramForge model ( same rules as Web/ai-api.js ).
+//	Validate a Zukai model ( same rules as Web/ai-api.js ).
 
 const
 isNum	= v => typeof v === 'number' && Number.isFinite( v )
@@ -55,7 +55,7 @@ export const
 parseCdeText	= text => {
 	const
 	doc = JSON.parse( text )
-	if	( !doc?.model ) throw new Error( '.cde root must include "model"' )
+	if	( !doc?.model ) throw new Error( '.zu root must include "model"' )
 	return	doc
 }
 

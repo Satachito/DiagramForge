@@ -11,7 +11,6 @@ import {
 ,	Node
 ,	EditNode
 ,	Restack
-,	PreviewID
 ,	Link
 ,	EditLink
 ,	RemoveLink
@@ -22,25 +21,17 @@ import {
 ,	JSONString
 }	from './Application.js'
 
-export	const
-CANVAS_DEFAULT	= 4096
-
-
-//	lazy ( a function, not a top-level const ): Application.js imports SetCanvasSize
-//	from this module, so reading the Application export STORAGE_KEY at module-eval
-//	time would hit a temporal-dead-zone error in that import cycle. Computing it on
-//	demand keeps this module free of any top-level dependency on Application.js.
 const
 canvasStorageKey	= () => `${ STORAGE_KEY }.canvas`
 
-export	const
+const
 loadStoredCanvasSize	= () => {
 	try {
 		const
 		[ w, h ] = JSON.parse( localStorage.getItem( canvasStorageKey() ) )
 		if	( w > 0 && h > 0 )	return [ w, h ]
 	} catch {}
-	return [ CANVAS_DEFAULT, CANVAS_DEFAULT ]
+	return [ 4096, 4096 ]
 }
 
 export	const
@@ -52,7 +43,6 @@ SetCanvasSize	= ( width, height ) => {
 	MAIN_EDITOR.setCanvasSize( width, height )
 	localStorage.setItem( canvasStorageKey(), JSON.stringify( [ width, height ] ) )
 }
-
 
 import {
 	Redo
@@ -618,16 +608,22 @@ MainEditor extends HTMLElement {
 		//	entering create-node mode: clear NODE_ID so the placeholder ( the next
 		//	auto-id ) shows and a previously selected node's id can't pollute the new node
 		CREATE_NODE.onchange = () => (
-			CREATE_NODE.checked && ( NODE_ID.value = '', NODE_ID.placeholder = PreviewID() )
+			CREATE_NODE.checked && (
+				NODE_ID.value = ''
+			,	NODE_ID.placeholder = String( Date.now() )
+			)
 		,	this.refreshModeCursor()
 		)
 		CREATE_LINK.onchange = () => this.refreshModeCursor()
 
 		//	keep the auto-id placeholder current whenever the empty field is focused
-		NODE_ID.addEventListener( 'focus', () => NODE_ID.value || ( NODE_ID.placeholder = PreviewID() ) )
+		NODE_ID.addEventListener(
+			'focus'
+		,	() => NODE_ID.value || ( NODE_ID.placeholder = String( Date.now() ) )
+		)
 
 		//	show a live auto-id placeholder from the start
-		NODE_ID.placeholder = PreviewID()
+		NODE_ID.placeholder = String( Date.now() )
 
 		//	Pointer Capture: once a drag starts we capture the pointer so move/up
 		//	are delivered to the canvas even when the cursor leaves it — the release
@@ -706,7 +702,7 @@ MainEditor extends HTMLElement {
 				resolve( val )
 			}
 			NODE_ID_DIALOG_INPUT.value			= ''
-			NODE_ID_DIALOG_INPUT.placeholder	= PreviewID()
+			NODE_ID_DIALOG_INPUT.placeholder	= String( Date.now() )
 			NODE_ID_DIALOG_ERR.textContent		= ''
 			NODE_ID_DIALOG_FORM.onsubmit	= ev => {
 				ev.preventDefault()

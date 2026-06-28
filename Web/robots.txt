@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://satachito.github.io/DiagramForge/sitemap.xml
+Sitemap: https://satachito.github.io/Zukai/sitemap.xml

@@ -1,11 +1,11 @@
 #!/usr/bin/env node
-//	DiagramForge dev server: static Web/ + Samples live-reload + model RPC bridge.
+//	Zukai dev server: static Web/ + Samples live-reload + model RPC bridge.
 //
 //	Browser ( window.DF ) ↔ WebSocket ↔ this server ↔ HTTP ↔ df-mcp.mjs
 //
 //	Usage:
 //	  node tools/df-server.mjs
-//	  open http://localhost:8080/?cde=Samples/JSONs.cde
+//	  open http://localhost:8080/?zu=Samples/JSONs.zu
 
 import { createServer	} from 'node:http'
 import { createHash, randomUUID	} from 'node:crypto'
@@ -32,7 +32,7 @@ MIME	= {
 ,	'.js'	: 'text/javascript; charset=utf-8'
 ,	'.css'	: 'text/css; charset=utf-8'
 ,	'.json'	: 'application/json; charset=utf-8'
-,	'.cde'	: 'application/json; charset=utf-8'
+,	'.zu'	: 'application/json; charset=utf-8'
 ,	'.svg'	: 'image/svg+xml'
 ,	'.png'	: 'image/png'
 ,	'.zip'	: 'application/zip'
@@ -232,7 +232,7 @@ notifyCde	= abs => {
 const
 watchCdeTree	= dir => {
 	watch( dir, { recursive: true }, ( ev, name ) => {
-		if	( !name || !name.endsWith( '.cde' ) ) return
+		if	( !name || !name.endsWith( '.zu' ) ) return
 		notifyCde( path.join( dir, name ) )
 	} )
 	log( 'watching', path.relative( ROOT, dir ) || '.' )
@@ -306,7 +306,7 @@ serveStatic	= async ( req, res ) => {
 		ext = path.extname( abs )
 		res.writeHead( 200, {
 			'Content-Type'		: MIME[ ext ] || 'application/octet-stream'
-		,	'Cache-Control'		: ext === '.cde' ? 'no-store' : 'default'
+		,	'Cache-Control'		: ext === '.zu' ? 'no-store' : 'default'
 		} )
 		createReadStream( abs ).pipe( res )
 	} catch {
@@ -369,7 +369,7 @@ server.on( 'upgrade', acceptWs )
 
 server.listen( PORT, () => {
 	log( `http://localhost:${ PORT }/` )
-	log( `example: http://localhost:${ PORT }/?cde=Samples/JSONs.cde` )
+	log( `example: http://localhost:${ PORT }/?zu=Samples/JSONs.zu` )
 	log( `bridge:  GET http://127.0.0.1:${ PORT }/__df/status` )
 } )
 

@@ -1,8 +1,8 @@
-DiagramForge — canvas-based cloud architecture diagram editor.
+Zukai — canvas-based cloud architecture diagram editor.
 Static site: plain ES modules + Web Components, no build. Lint with `npm run lint`.
 Code style: leading-comma/leading-semicolon layout, tabs, `$`/`_` shorthand. Match surrounding code.
 
-Diagrams are plain JSON files (`.cde`). To add/modify/arrange nodes and links, edit the `.cde`
+Diagrams are plain JSON files (`.zu`). To add/modify/arrange nodes and links, edit the `.zu`
 file directly — there is no in-app AI console. Read **SCHEMA.md** for the format; **AI.md**
 (AI contract + MCP ops) and **USAGE.md** (dev server / MCP setup) for live editing.
 Sample files are in Samples/.

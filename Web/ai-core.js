@@ -1,6 +1,6 @@
 //	Shared core for the in-app AI assistant panels ( Claude + OpenAI ).
 //
-//	Provider-neutral: the .cde / ops contract, the ops tool schema, the SSE line
+//	Provider-neutral: the .zu / ops contract, the ops tool schema, the SSE line
 //	reader, and the panel UI + tool loop. Each provider module supplies a
 //	streamTurn() that talks to its own API and normalizes tool calls to
 //	{ id, input }. Edits go through window.DF.apply ( ai-api.js ), so each turn
@@ -9,9 +9,9 @@
 //	Concise, implementation-accurate contract ( mirrors AI.md ). The live model
 //	is appended per request so the assistant edits against current state.
 export const
-SYSTEM			= `You edit a live DiagramForge diagram by calling the apply_ops tool.
+SYSTEM			= `You edit a live Zukai diagram by calling the apply_ops tool.
 
-A .cde model is { nodes, links }.
+A .zu model is { nodes, links }.
 Node  = [ ID, shape, paint ]      shape: { type:"rect"|"ellipse"|"rhombus"|"SVG"|"PNG", cX, cY, rH, rV, radii?, html?, style?, SVG?, PNG? }
                                   cX/cY = center, rH/rV = half-width/half-height ( size ≈ 2*rH × 2*rV ). Y axis points down.
                                   paint: { fill?, stroke?, lineWidth?, lineDash?, ... } ( optional {} )

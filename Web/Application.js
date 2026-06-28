@@ -36,30 +36,6 @@ AvailableLinks	= () => app.model.links.reduce(
 
 import Do from './Jobs.js'
 
-
-//	Snapshot-based history: capture the state before and after the mutation,
-//	then undo/redo simply restore a *clone* of the relevant snapshot. Restoring a
-//	clone (never the snapshot object itself) keeps both snapshots pristine, so a
-//	later redo can't corrupt the snapshot a subsequent undo relies on.
-const
-restoreFunc = _ => async () => (
-	app = structuredClone( _ )
-,	app.reforms = app.reforms.reduce(
-		( $, [ ID ] ) => {
-			const
-			node = FindNode( ID )
-			node && $.push( structuredClone( node ) )
-			return $
-
-		}
-	,	[]
-	)
-,	MAIN_EDITOR.clearInteraction()
-,	await MAIN_EDITOR.Draw()
-,	LINK_EDITOR.Sync()
-,	localStorage.setItem( STORAGE_KEY, JSONString() )
-)
-
 const
 DoTypical	= async ( label, mutate ) => {
 	const
@@ -67,6 +43,24 @@ DoTypical	= async ( label, mutate ) => {
 	await mutate()
 	const
 	after = structuredClone( app )
+	const
+	restoreFunc = _ => async () => (
+		app = structuredClone( _ )
+	,	app.reforms = app.reforms.reduce(
+			( $, [ ID ] ) => {
+				const
+				node = FindNode( ID )
+				node && $.push( structuredClone( node ) )
+				return $
+
+			}
+		,	[]
+		)
+	,	MAIN_EDITOR.clearInteraction()
+	,	await MAIN_EDITOR.Draw()
+	,	LINK_EDITOR.Sync()
+	,	localStorage.setItem( STORAGE_KEY, JSONString() )
+	)
 	await Do( label, restoreFunc( after ), restoreFunc( before ) )
 }
 
@@ -89,20 +83,13 @@ Reform		= () => {
 	)
 }
 
-const
-ID_EPOCH	= 176722560000	//	 Since 2026.01.01
-
-//	the id auto-assign would currently hand out ( for placeholder previews )
 export	const
-PreviewID	= () => String( Date.now() - ID_EPOCH )
-
-const
-GenerateID	= async $ => {
+PreviewID	= async $ => {
 	if	( $ && !app.model.nodes.some( _ => _[ 0 ] === $ ) ) return $
-	$ = PreviewID()
+	$ = String( Date.now() )
 	while	( app.model.nodes.some( _ => _[ 0 ] === $ ) ) {
 		await new Promise( R => setTimeout( R, 1 ) )
-		$ = PreviewID()
+		$ = String( Date.now() )
 	}
 	return $
 }
@@ -344,7 +331,7 @@ Paste		= async _ => {	//	ClipboardData
 	//	keep original IDs when free; on conflict use orig + "-copy" ( then "-copy2", … )
 	const
 	taken = new Set( app.model.nodes.map( _ => _[ 0 ] ) )
-	,	newID = () => {
+,	newID = () => {
 		let	id = PreviewID()
 		while	( taken.has( id ) ) {
 			id = String( Number( id ) + 1 )
@@ -352,7 +339,7 @@ Paste		= async _ => {	//	ClipboardData
 		taken.add( id )
 		return	id
 	}
-	,	idFor = orig => {
+,	idFor = orig => {
 		if	( !taken.has( orig ) ) {
 			taken.add( orig )
 			return	orig
@@ -364,7 +351,7 @@ Paste		= async _ => {	//	ClipboardData
 		taken.add( id )
 		return	id
 	}
-	,	$ = nodes.map( entry => {
+,	$ = nodes.map( entry => {
 		const
 		orig = typeof entry[ 0 ] === 'string' && entry[ 1 ]?.type ? entry[ 0 ] : null
 		return	orig
@@ -380,20 +367,7 @@ Paste		= async _ => {	//	ClipboardData
 	)
 }
 
-
-const
-MARGIN	= 256
-
-//	default square for an empty diagram. Load() resizes the canvas through the
-//	global <main-editor> element directly ( not main-editor.js's SetCanvasSize ),
-//	to avoid an Application.js ↔ main-editor.js import cycle.
-const
-CANVAS_DEFAULT	= 4096
-
 import { BBox } from './GeoDF.js'
-
-const
-fitCanvas	= px => Math.max( 256, Math.ceil( ( px + MARGIN ) / 256 ) * 256 )
 
 export	const
 Load		= _ => DoTypical(
@@ -406,9 +380,7 @@ Load		= _ => DoTypical(
 		if	( model.nodes.length ) {
 			const
 			[ , , b, r ] = BBox( model.nodes )
-			MAIN_EDITOR.setCanvasSize( fitCanvas( r ), fitCanvas( b ) )
-		} else {
-			MAIN_EDITOR.setCanvasSize( CANVAS_DEFAULT, CANVAS_DEFAULT )
+			MAIN_EDITOR.setCanvasSize( r + 256 , b + 256 )
 		}
 	}
 )

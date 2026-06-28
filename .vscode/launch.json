@@ -9,7 +9,7 @@
 			"webRoot": "${workspaceFolder}/Web"
 		},
 		{
-			"name": "Chrome: docroot = DiagramForge/ (e.g. /Web/index.html)",
+			"name": "Chrome: docroot = Zukai/ (e.g. /Web/index.html)",
 			"type": "chrome",
 			"request": "launch",
 			"url": "http://localhost:8080/Web/index.html",

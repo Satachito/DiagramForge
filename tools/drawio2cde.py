@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 drawio2cde.py — Convert a draw.io (.drawio, uncompressed XML) file into
-DiagramForge `.cde` files, one per page.
+Zukai `.zu` files, one per page.
 
 Schema (see Web/SCHEMA.md):
     { "nodes": [ [ID, area, paint], ... ], "links": [ [[from, ends, to], paint], ... ] }
@@ -12,9 +12,9 @@ Mapping:
     then shifted into the canvas with a margin.
   - style -> type (ellipse / rhombus / rect[+radii]) and
     fill / stroke / lineWidth / lineDash.
-  - value -> plain-text `html` label (tags stripped; DiagramForge escapes html).
+  - value -> plain-text `html` label (tags stripped; Zukai escapes html).
   - edges with BOTH endpoints on kept nodes -> links. Free-floating / one-sided
-    edges (and edge labels) are dropped — DiagramForge links are node-to-node only.
+    edges (and edge labels) are dropped — Zukai links are node-to-node only.
 
 Usage:
     python3 tools/drawio2cde.py INPUT.drawio
@@ -186,15 +186,15 @@ def convert_page(diagram, page_index, terms):
 
 
 def main(argv=None):
-    ap = argparse.ArgumentParser(description='Convert a .drawio file into DiagramForge .cde files (one per page).')
+    ap = argparse.ArgumentParser(description='Convert a .drawio file into Zukai .zu files (one per page).')
     ap.add_argument('input', help='Path to the .drawio file (uncompressed XML).')
-    ap.add_argument('-o', '--outdir', help='Output directory (default: <dir>/cde/<basename>/).')
+    ap.add_argument('-o', '--outdir', help='Output directory (default: <dir>/zu/<basename>/).')
     ap.add_argument('--strip', action='append', default=[], metavar='TERM',
                     help='Proper noun / term to remove from labels and page names. Repeatable.')
     args = ap.parse_args(argv)
 
     base = os.path.splitext(os.path.basename(args.input))[0]
-    outdir = args.outdir or os.path.join(os.path.dirname(args.input) or '.', 'cde', base)
+    outdir = args.outdir or os.path.join(os.path.dirname(args.input) or '.', 'zu', base)
     os.makedirs(outdir, exist_ok=True)
 
     tree = ET.parse(args.input)
@@ -206,7 +206,7 @@ def main(argv=None):
     print(f"{'file':46} {'nodes':>5} {'links':>5} {'maxX':>5} {'maxY':>5}")
     for i, d in enumerate(diagrams, 1):
         model, page_name, mx, my = convert_page(d, i, args.strip)
-        fn = f'{i:02d}_{sanitize(page_name)}.cde'
+        fn = f'{i:02d}_{sanitize(page_name)}.zu'
         with open(os.path.join(outdir, fn), 'w', encoding='utf-8') as fp:
             fp.write(json.dumps(model, ensure_ascii=False, indent='\t') + '\n')
         flag = '  !! exceeds canvas' if mx > CANVAS or my > CANVAS else ''

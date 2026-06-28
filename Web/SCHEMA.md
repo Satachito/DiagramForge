@@ -1,6 +1,6 @@
-# DiagramForge `.cde` schema
+# Zukai `.zu` schema
 
-A `.cde` file is the JSON of the diagram model, tab-indented:
+A `.zu` file is the JSON of the diagram model, tab-indented:
 
 ```json
 { "model": { "nodes": [ ... ], "links": [ ... ] } }
@@ -10,7 +10,7 @@ A `.cde` file is the JSON of the diagram model, tab-indented:
 auto-restored from `localStorage` (`tokyo.828.diagramforge`). The canvas origin
 is top-left with the **y axis pointing down**.
 
-Canvas size is **not** stored in `.cde`. On load, it is derived from the nodes'
+Canvas size is **not** stored in `.zu`. On load, it is derived from the nodes'
 bounding box (with margin, snapped to 256 px); an empty diagram uses **4096 × 4096**.
 At runtime the `<canvas>` element is the source of truth; manual resizes persist
 in `localStorage` (`tokyo.828.diagramforge.canvas`) for the session.

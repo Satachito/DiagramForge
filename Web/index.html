@@ -2,23 +2,23 @@
 <html lang=en>
 <meta charset=utf-8>
 <meta name=viewport content="width=device-width, initial-scale=1">
-<meta name=description content="DiagramForge — canvas diagram editor for cloud architecture, mind maps, and sequence diagrams. JSON-native .cde format.">
-<meta property=og:title content=DiagramForge>
+<meta name=description content="Zukai — canvas diagram editor for cloud architecture, mind maps, and sequence diagrams. JSON-native .zu format.">
+<meta property=og:title content=Zukai>
 <meta property=og:description content="Canvas diagram editor for cloud architecture, mind maps, and sequence diagrams.">
-<meta property=og:url content=https://satachito.github.io/DiagramForge/>
+<meta property=og:url content=https://satachito.github.io/Zukai/>
 <meta property=og:type content=website>
-<meta property=og:site_name content=DiagramForge>
+<meta property=og:site_name content=Zukai>
 <meta property=og:locale content=en_US>
 <meta name=twitter:card content=summary>
 <link rel=icon href=favicon.svg type=image/svg+xml>
-<link rel=canonical href=https://satachito.github.io/DiagramForge/>
+<link rel=canonical href=https://satachito.github.io/Zukai/>
 <script type=application/ld+json>
 {
 	"@context": "https://schema.org",
 	"@type": "WebApplication",
-	"name": "DiagramForge",
-	"url": "https://satachito.github.io/DiagramForge/",
-	"description": "Canvas-based diagram editor for cloud architecture, mind maps, and sequence diagrams. JSON-native .cde format, no install or build step.",
+	"name": "Zukai",
+	"url": "https://satachito.github.io/Zukai/",
+	"description": "Canvas-based diagram editor for cloud architecture, mind maps, and sequence diagrams. JSON-native .zu format, no install or build step.",
 	"applicationCategory": "DesignApplication",
 	"operatingSystem": "Web",
 	"isAccessibleForFree": true,
@@ -28,11 +28,11 @@
 		"Mind maps",
 		"Sequence diagrams",
 		"AWS / Azure / GCP icon palettes",
-		"JSON .cde import and export"
+		"JSON .zu import and export"
 	]
 }
 </script>
-<title>DiagramForge</title>
+<title>Zukai</title>
 <style>
 :root {
 ;	color-scheme			: light dark
@@ -642,9 +642,9 @@ aside input[type=checkbox]
 <div class=topbar>
 <button id=NAV_TOGGLE	class=panel-toggle title="Toggle left panel (cloud icons)">‹</button>
 <header class=brand style="font-family: fantasy; margin-right: 16px; font-size: 22px; line-height: 1.1">
-	DiagramForge
+	Zukai
 	<div style="font-family: courier; font-size: 10px; font-weight: normal; margin-top: 2px">
-		Cloud · Mind map · Sequence · JSON .cde
+		Cloud · Mind map · Sequence · JSON .zu
 	</div>
 </header>
 <header class=controls>
@@ -701,14 +701,14 @@ aside input[type=checkbox]
 <aside>
 	<div class=file-section>
 		<div class=file-bar>
-			<label class="file-btn file-btn-upload" title="Open .cde file" aria-label="Open .cde file">
+			<label class="file-btn file-btn-upload" title="Open .zu file" aria-label="Open .zu file">
 				<svg viewBox="0 0 16 16" aria-hidden=true fill=none stroke=currentColor stroke-width=1.5 stroke-linecap=round stroke-linejoin=round><path d="M8 12V4M5 7l3-3 3 3"/><path d="M3 13h10"/></svg>
-				<input id=UPLOAD type=file accept=.cde,application/json hidden>
+				<input id=UPLOAD type=file accept=.zu,application/json hidden>
 			</label>
 			<input id=FILE_NAME class=file-name placeholder=Untitled spellcheck=false>
 		</div>
 		<div class=export-bar>
-			<button id=DOWNLOAD class="file-btn file-btn-download" title="Download .cde">
+			<button id=DOWNLOAD class="file-btn file-btn-download" title="Download .zu">
 				<svg viewBox="0 0 16 16" aria-hidden=true fill=none stroke=currentColor stroke-width=1.5 stroke-linecap=round stroke-linejoin=round><path d="M8 4v8M5 9l3 3 3-3"/><path d="M3 13h10"/></svg>
 				<span>Save</span>
 			</button>
@@ -798,11 +798,11 @@ aside input[type=checkbox]
 		<button			id=FORCE_DRAW		>Force Draw		</button>
 	</div>
 	<div class=footer-meta>
-		<a href=https://github.com/Satachito/DiagramForge target=_blank rel=noopener>GitHub</a>
+		<a href=https://github.com/Satachito/Zukai target=_blank rel=noopener>GitHub</a>
 		<span aria-hidden=true>·</span>
-		<a href=https://github.com/Satachito/DiagramForge/blob/main/USAGE.md target=_blank rel=noopener>Usage</a>
+		<a href=https://github.com/Satachito/Zukai/blob/main/USAGE.md target=_blank rel=noopener>Usage</a>
 		<span aria-hidden=true>·</span>
-		<a href=https://github.com/Satachito/DiagramForge/blob/main/Web/SCHEMA.md target=_blank rel=noopener>.cde schema</a>
+		<a href=https://github.com/Satachito/Zukai/blob/main/Web/SCHEMA.md target=_blank rel=noopener>.zu schema</a>
 		<span aria-hidden=true>·</span>
 		<a href=https://github.com/sponsors/Satachito target=_blank rel=noopener class=footer-sponsor>♥ Sponsor</a>
 		<span class=footer-credit>Written by Satoru Ogura, and AIs.</span>
@@ -944,16 +944,16 @@ ASIDE_TOGGLE	.onclick = () => ApplyPanel( 'aside-collapsed',	ASIDE_TOGGLE,	!docu
 ApplyPanel( 'nav-collapsed',	NAV_TOGGLE,		localStorage.getItem( 'nav-collapsed'	) === '1', '‹', '›' )
 ApplyPanel( 'aside-collapsed',	ASIDE_TOGGLE,	localStorage.getItem( 'aside-collapsed'	) === '1', '›', '‹' )
 
-SAMPLE_JSONS	.onclick = () => LoadSample( 'Samples/JSONs.cde'	).catch( Report )
-SAMPLE_AWS		.onclick = () => LoadSample( 'Samples/AWS.cde'		).catch( Report )
-SAMPLE_GCP		.onclick = () => LoadSample( 'Samples/GCP.cde'		).catch( Report )
-SAMPLE_AZURE	.onclick = () => LoadSample( 'Samples/Azure.cde'	).catch( Report )
-SAMPLE_MINDMAP	.onclick = () => LoadSample( 'Samples/MindMap.cde'	).catch( Report )
-SAMPLE_SEQUENCE	.onclick = () => LoadSample( 'Samples/Sequence.cde'		).catch( Report )
-SAMPLE_SCREENFLOW.onclick = () => LoadSample( 'Samples/ScreenFlow.cde'	).catch( Report )
-SAMPLE_ANCHORS		.onclick = () => LoadSample( 'Samples/Anchors.cde'		).catch( Report )
-SAMPLE_ARROWHEADS	.onclick = () => LoadSample( 'Samples/Arrowheads.cde'	).catch( Report )
-SAMPLE_SHOWCASE		.onclick = () => LoadSample( 'Samples/Showcase.cde'		).catch( Report )
+SAMPLE_JSONS	.onclick = () => LoadSample( 'Samples/JSONs.zu'	).catch( Report )
+SAMPLE_AWS		.onclick = () => LoadSample( 'Samples/AWS.zu'		).catch( Report )
+SAMPLE_GCP		.onclick = () => LoadSample( 'Samples/GCP.zu'		).catch( Report )
+SAMPLE_AZURE	.onclick = () => LoadSample( 'Samples/Azure.zu'	).catch( Report )
+SAMPLE_MINDMAP	.onclick = () => LoadSample( 'Samples/MindMap.zu'	).catch( Report )
+SAMPLE_SEQUENCE	.onclick = () => LoadSample( 'Samples/Sequence.zu'		).catch( Report )
+SAMPLE_SCREENFLOW.onclick = () => LoadSample( 'Samples/ScreenFlow.zu'	).catch( Report )
+SAMPLE_ANCHORS		.onclick = () => LoadSample( 'Samples/Anchors.zu'		).catch( Report )
+SAMPLE_ARROWHEADS	.onclick = () => LoadSample( 'Samples/Arrowheads.zu'	).catch( Report )
+SAMPLE_SHOWCASE		.onclick = () => LoadSample( 'Samples/Showcase.zu'		).catch( Report )
 
 DUMP_CDE		.onclick = () => console.log( JSON.stringify( app, null, '\t' ) )
 DUMP_JOBS		.onclick = DumpJobs
@@ -978,7 +978,7 @@ initOpenAIPanel()
 
 DOWNLOAD		.onclick = () => downloadBlob(
 	new Blob( [ JSONString() ], { type: 'application/json' } )
-,	`${ baseName( FILE_NAME.value ) }.cde`
+,	`${ baseName( FILE_NAME.value ) }.zu`
 )
 
 EXPORT_SVG		.onclick = () => saveSVG( MAIN_EDITOR, FILE_NAME.value ).catch( Report )
@@ -1006,7 +1006,7 @@ UPLOAD			.onchange = async ev => {
 			)
 			FILE_NAME.value = files.map( _ => _.name ).join( ',' )
 			SyncCanvasInputs()
-			//	uploaded files are not on-server paths — disable live .cde watch
+			//	uploaded files are not on-server paths — disable live .zu watch
 			setWatchPath( null )
 			sessionStorage.removeItem( 'df-watch' )
 		} catch ( er ) {
@@ -1020,7 +1020,7 @@ UPLOAD			.onchange = async ev => {
 onload = async () => {
 	await initLiveReload( { SyncCanvasInputs, FILE_NAME }, { Report } )
 	const
-	fromUrl = new URLSearchParams( location.search ).get( 'cde' )
+	fromUrl = new URLSearchParams( location.search ).get( 'zu' )
 	if	( fromUrl ) return	//	initLiveReload loaded it
 	const
 	_ = localStorage.getItem( STORAGE_KEY )
