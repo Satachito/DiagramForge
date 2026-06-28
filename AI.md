@@ -98,9 +98,9 @@ Duplicate `[ from, to ]` pairs are merged by `Link()` / `EditLink()`. Avoid dupl
 
 ---
 
-## Validation (`validateModel` / `df_validate`)
+## Validation (`validateModel` / `zu_validate`)
 
-Same rules in `Web/ai-api.js` and `tools/df-validate.mjs`:
+Same rules in `Web/ai-api.js` and `tools/zu-validate.mjs`:
 
 - Node: `[ ID, shape, paint? ]`, non-empty unique `ID`, `type` set, finite `cX`/`cY`/`rH`/`rV`, width and height > 5px
 - Link: `[ [ from, to ], attrs?, paint? ]`, endpoints exist, no self-links or duplicate pairs
@@ -137,23 +137,23 @@ DF.setModel({ nodes, links })
 
 `area` = **`shape`** object above. `ends` = link **`attributes`**.
 
-### MCP — `diagramforge` server (`tools/df-mcp.mjs`)
+### MCP — `zukai` server (`tools/zu-mcp.mjs`)
 
 | Tool | Purpose |
 |------|---------|
-| `df_status` | Browser connection, `watchPath` |
-| `df_get_model` | Live `{ model, canvas: { width, height } }` |
-| `df_apply` | `{ ops: [ … ] }` — same ops as above |
-| `df_validate` | Validation |
-| `df_auto_layout` | Grid layout |
-| `df_load_file` / `df_save_file` | Load into browser / save to disk (path under `Web/`) |
-| `df_read_file` | Read from disk (no browser) |
+| `zu_status` | Browser connection, `watchPath` |
+| `zu_get_model` | Live `{ model, canvas: { width, height } }` |
+| `zu_apply` | `{ ops: [ … ] }` — same ops as above |
+| `zu_validate` | Validation |
+| `zu_auto_layout` | Grid layout |
+| `zu_load_file` / `zu_save_file` | Load into browser / save to disk (path under `Web/`) |
+| `zu_read_file` | Read from disk (no browser) |
 
-**Requires:** `npm run dev`, open browser tab, **`diagramforge` MCP enabled**. See [USAGE.md](USAGE.md).
+**Requires:** `npm run dev`, open browser tab, **`zukai` MCP enabled**. See [USAGE.md](USAGE.md).
 
 ### HTTP bridge (Phase 3)
 
-Provided by `tools/df-server.mjs`:
+Provided by `tools/zu-server.mjs`:
 
 - `GET /__df/status`
 - `GET /__df/model`
@@ -166,11 +166,11 @@ Provided by `tools/df-server.mjs`:
 | Goal | Path |
 |------|------|
 | Save `.zu` → browser updates | Phase 2 — `?zu=Samples/….zu` + file save |
-| Change live diagram from chat | Phase 4 — MCP `df_apply` |
+| Change live diagram from chat | Phase 4 — MCP `zu_apply` |
 | Script / curl | Phase 3 — `/__df/rpc` |
 | GitHub Pages only | Hand-edit `.zu` + **↑** upload |
 
-Phase 4 changes stay **in memory** until `df_save_file`.
+Phase 4 changes stay **in memory** until `zu_save_file`.
 
 ---
 
@@ -183,9 +183,9 @@ Phase 4 changes stay **in memory** until `df_save_file`.
 | `Web/geoDF.js` | Link routing, arrowheads, frame offsets |
 | `Web/main-editor.js` | Drawing, context menus |
 | `Web/ForeignLabel.js` | `html` labels |
-| `tools/df-server.mjs` | Static serve + live reload + RPC |
-| `tools/df-mcp.mjs` | Cursor MCP |
-| `tools/df-validate.mjs` | File / MCP validation |
+| `tools/zu-server.mjs` | Static serve + live reload + RPC |
+| `tools/zu-mcp.mjs` | Cursor MCP |
+| `tools/zu-validate.mjs` | File / MCP validation |
 
 ---
 

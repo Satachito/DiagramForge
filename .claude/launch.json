@@ -2,9 +2,9 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "diagramforge",
+      "name": "zukai",
       "runtimeExecutable": "node",
-      "runtimeArgs": ["tools/df-server.mjs"],
+      "runtimeArgs": ["tools/zu-server.mjs"],
       "port": 8080,
       "autoPort": true
     }

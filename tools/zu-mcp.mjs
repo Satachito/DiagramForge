@@ -1,24 +1,24 @@
 #!/usr/bin/env node
-//	Zukai MCP server — natural-language agents control the live diagram via df-server.
+//	Zukai MCP server — natural-language agents control the live diagram via zu-server.
 //
 //	Prerequisites:
-//	  cd Web && npm run dev          ( df-server on :8080 )
+//	  cd Web && npm run dev          ( zu-server on :8080 )
 //	  open http://localhost:8080/?zu=Samples/JSONs.zu
 //
 //	Cursor MCP config ( .cursor/mcp.json ):
-//	  { "mcpServers": { "diagramforge": { "command": "node", "args": ["tools/df-mcp.mjs"] } } }
+//	  { "mcpServers": { "zukai": { "command": "node", "args": ["tools/zu-mcp.mjs"] } } }
 
 import { McpServer	} from '@modelcontextprotocol/sdk/server/mcp.js'
 import { StdioServerTransport	} from '@modelcontextprotocol/sdk/server/stdio.js'
 import { readFile, writeFile	} from 'node:fs/promises'
 import { z	} from 'zod'
-import { dfStatus, dfGetModel, dfRpc	} from './df-client.mjs'
-import { WEB, webPath, isUnderWeb	} from './df-paths.mjs'
-import { validateModel, parseCdeText, formatCdeDoc	} from './df-validate.mjs'
+import { dfStatus, dfGetModel, dfRpc	} from './zu-client.mjs'
+import { WEB, webPath, isUnderWeb	} from './zu-paths.mjs'
+import { validateModel, parseCdeText, formatCdeDoc	} from './zu-validate.mjs'
 
 const
 server = new McpServer( {
-	name	: 'diagramforge'
+	name	: 'zukai'
 ,	version	: '1.0.0'
 } )
 
@@ -38,21 +38,21 @@ resolveCdePath	= rel => {
 }
 
 server.tool(
-	'df_status'
-,	'Check whether a browser editor is connected to df-server and which .zu file is watched.'
+	'zu_status'
+,	'Check whether a browser editor is connected to zu-server and which .zu file is watched.'
 ,	{}
 ,	async () => textResult( await dfStatus() )
 )
 
 server.tool(
-	'df_get_model'
+	'zu_get_model'
 ,	'Read the live diagram from the open browser ( nodes + links + canvas size ). Falls back to last cached snapshot.'
 ,	{}
 ,	async () => textResult( await dfGetModel() )
 )
 
 server.tool(
-	'df_validate'
+	'zu_validate'
 ,	'Validate a Zukai model. Omit model to validate the live browser diagram.'
 ,	{
 		model	: z.object( {
@@ -68,7 +68,7 @@ server.tool(
 )
 
 server.tool(
-	'df_apply'
+	'zu_apply'
 ,	`Apply one or more ops to the live diagram ( same ops as window.DF.apply ).
 Ops: addNode, updateNode, removeNode, restack, addLink, updateLink, removeLink, autoLayout, setCanvas.
 Example updateNode: { "op": "updateNode", "id": "VPN", "area": { "type": "rhombus", "cX": 960, "cY": 584, "rH": 512, "rV": 72, "html": "VPN" } }`
@@ -83,7 +83,7 @@ Example updateNode: { "op": "updateNode", "id": "VPN", "area": { "type": "rhombu
 )
 
 server.tool(
-	'df_auto_layout'
+	'zu_auto_layout'
 ,	'Run a deterministic grid layout on the live diagram.'
 ,	{
 		cols	: z.number().int().positive().optional()
@@ -98,7 +98,7 @@ server.tool(
 )
 
 server.tool(
-	'df_load_file'
+	'zu_load_file'
 ,	'Load a .zu file into the browser editor. Path is relative to Web/ ( e.g. Samples/JSONs.zu ).'
 ,	{
 		path	: z.string()
@@ -111,7 +111,7 @@ server.tool(
 )
 
 server.tool(
-	'df_save_file'
+	'zu_save_file'
 ,	'Save the live diagram to a .zu file under Web/. Writes { model } only; canvas size is derived on load.'
 ,	{
 		path	: z.string()
@@ -128,7 +128,7 @@ server.tool(
 )
 
 server.tool(
-	'df_read_file'
+	'zu_read_file'
 ,	'Read a .zu file from disk ( no browser required ). Path relative to Web/.'
 ,	{
 		path	: z.string()

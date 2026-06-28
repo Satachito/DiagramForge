@@ -7,13 +7,13 @@ A `.zu` file is the JSON of the diagram model, tab-indented:
 ```
 
 `index.html` loads it via the `↑` upload button, and the last session is
-auto-restored from `localStorage` (`tokyo.828.diagramforge`). The canvas origin
+auto-restored from `localStorage` (`tokyo.828.zukai`). The canvas origin
 is top-left with the **y axis pointing down**.
 
 Canvas size is **not** stored in `.zu`. On load, it is derived from the nodes'
 bounding box (with margin, snapped to 256 px); an empty diagram uses **4096 × 4096**.
 At runtime the `<canvas>` element is the source of truth; manual resizes persist
-in `localStorage` (`tokyo.828.diagramforge.canvas`) for the session.
+in `localStorage` (`tokyo.828.zukai.canvas`) for the session.
 
 ## Node
 

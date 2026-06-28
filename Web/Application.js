@@ -10,7 +10,7 @@ window.app		= {
 }
 
 export	const
-STORAGE_KEY	= 'tokyo.828.diagramforge'
+STORAGE_KEY	= 'tokyo.828.zukai'
 
 export	const
 JSONString	= () => JSON.stringify( { model: app.model }, null, '\t' )
@@ -241,7 +241,7 @@ Delete		= () => DoTypical(
 
 export	const
 Copy		= _ => _.setData(	//	ClipboardData
-	'application/x-diagramforge-828-tokyo'
+	'application/x-zukai-828-tokyo'
 ,	JSON.stringify( app.reforms.map( node => structuredClone( node ) ) )
 )
 
@@ -252,7 +252,7 @@ Paste		= async _ => {	//	ClipboardData
 	nodes = []
 
 	{	const
-		json = _.getData( 'application/x-diagramforge-828-tokyo' )
+		json = _.getData( 'application/x-zukai-828-tokyo' )
 		if	( json ) try {
 			nodes.push( ...JSON.parse( json ) )
 		} catch ( er ) {

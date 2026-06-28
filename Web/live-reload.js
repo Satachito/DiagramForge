@@ -1,4 +1,4 @@
-//	Live .zu reload + WebSocket RPC bridge to window.DF ( tools/df-server.mjs ).
+//	Live .zu reload + WebSocket RPC bridge to window.DF ( tools/zu-server.mjs ).
 
 import { Load	} from './Application.js'
 import { CanvasSize	} from './main-editor.js'
@@ -103,7 +103,7 @@ connectBridge	= () => {
 		ws.onmessage = async ev => {
 			let	msg
 			try { msg = JSON.parse( ev.data ) } catch { return }
-			if	( msg.type === 'cde-changed' ) {
+			if	( msg.type === 'zu-changed' ) {
 				if	( !watchPath || msg.path !== watchPath ) return
 				try {
 					await loadCdeFile( watchPath, uiRef ?? {} )

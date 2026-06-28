@@ -1,5 +1,5 @@
 {
-  "name": "diagramforge-tools",
+  "name": "zukai-tools",
   "private": true,
   "type": "module",
   "dependencies": {

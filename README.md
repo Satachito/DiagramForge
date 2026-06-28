@@ -35,7 +35,7 @@ cd Web && npm install && npm run dev
 cd ../tools && npm install   # MCP (one-time)
 ```
 
-Open `http://localhost:8080/?zu=Samples/JSONs.zu` and enable the **`diagramforge`** MCP server in Cursor (**Settings → Tools & MCP**).
+Open `http://localhost:8080/?zu=Samples/JSONs.zu` and enable the **`zukai`** MCP server in Cursor (**Settings → Tools & MCP**).
 
 Full setup, Phase 2/3/4 explanation, MCP tools, and troubleshooting: **[USAGE.md](USAGE.md)**
 
@@ -64,7 +64,7 @@ Zukai has no in-app AI panel. Typical workflows:
 | Goal | How |
 |------|-----|
 | Edit `.zu` on disk, preview on save | Phase 2 — `npm run dev` + `?zu=Samples/….zu` |
-| Change the open diagram from chat | Phase 4 — MCP (`df_get_model`, `df_apply`, …) |
+| Change the open diagram from chat | Phase 4 — MCP (`zu_get_model`, `zu_apply`, …) |
 | One-off file load on GitHub Pages | **↑** upload or a Sample button |
 
 Tips:
@@ -102,7 +102,7 @@ Zukai/
 ├── Web/              App (HTML + ES modules, ai-api.js)
 ├── Samples/          Example .zu files
 ├── ICONs/            Cloud icon ZIP archives
-├── tools/            df-server, df-mcp, utilities
+├── tools/            zu-server, zu-mcp, utilities
 ├── .cursor/mcp.json  Cursor MCP config
 ├── USAGE.md          Dev server + MCP workflow
 ├── AI.md             AI contract + MCP ops

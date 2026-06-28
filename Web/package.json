@@ -1,12 +1,12 @@
 {
-  "name": "diagramforge",
+  "name": "zukai",
   "version": "1.0.0",
   "description": "Canvas-based cloud architecture diagram editor (AWS / Azure / GCP icons).",
   "main": "Application.js",
   "scripts": {
-    "dev": "node ../tools/df-server.mjs",
+    "dev": "node ../tools/zu-server.mjs",
     "lint": "eslint *.js",
-    "mcp": "node ../tools/df-mcp.mjs"
+    "mcp": "node ../tools/zu-mcp.mjs"
   },
   "keywords": [
     "diagram",

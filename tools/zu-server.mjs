@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 //	Zukai dev server: static Web/ + Samples live-reload + model RPC bridge.
 //
-//	Browser ( window.DF ) ↔ WebSocket ↔ this server ↔ HTTP ↔ df-mcp.mjs
+//	Browser ( window.DF ) ↔ WebSocket ↔ this server ↔ HTTP ↔ zu-mcp.mjs
 //
 //	Usage:
-//	  node tools/df-server.mjs
+//	  node tools/zu-server.mjs
 //	  open http://localhost:8080/?zu=Samples/JSONs.zu
 
 import { createServer	} from 'node:http'
@@ -13,7 +13,7 @@ import { stat	} from 'node:fs/promises'
 import { watch		} from 'node:fs'
 import { createReadStream	} from 'node:fs'
 import path from 'node:path'
-import { ROOT, WEB, PORT, isUnderWeb	} from './df-paths.mjs'
+import { ROOT, WEB, PORT, isUnderWeb	} from './zu-paths.mjs'
 
 const
 WS_PATH	= '/__df/ws'
@@ -40,7 +40,7 @@ MIME	= {
 }
 
 const
-log	= ( ...a ) => console.log( '[df-server]', ...a )
+log	= ( ...a ) => console.log( '[zu-server]', ...a )
 
 const
 json	= ( res, code, body ) => {
@@ -60,7 +60,7 @@ readBody	= req => new Promise( ( resolve, reject ) => {
 } )
 
 const
-cdePathFromAbs	= abs => {
+zuPathFromAbs	= abs => {
 	const
 	rel = path.relative( WEB, abs )
 	if	( rel.startsWith( '..' ) || path.isAbsolute( rel ) ) return null
@@ -220,12 +220,12 @@ attachWsReader	= socket => {
 const
 notifyCde	= abs => {
 	const
-	rel = cdePathFromAbs( abs )
+	rel = zuPathFromAbs( abs )
 	if	( !rel ) return
 	clearTimeout( debounce )
 	debounce = setTimeout( () => {
-		log( 'cde-changed', rel )
-		broadcast( { type: 'cde-changed', path: rel } )
+		log( 'zu-changed', rel )
+		broadcast( { type: 'zu-changed', path: rel } )
 	}, 80 )
 }
 
@@ -376,9 +376,9 @@ server.listen( PORT, () => {
 server.on( 'error', er => {
 	if	( er.code === 'EADDRINUSE' ) {
 		console.error(
-			`[df-server] port ${ PORT } is already in use.\n`
+			`[zu-server] port ${ PORT } is already in use.\n`
 			+ `  kill it:  lsof -ti:${ PORT } | xargs kill\n`
-			+ `  or use:   DF_PORT=${ PORT + 1 } node tools/df-server.mjs`
+			+ `  or use:   DF_PORT=${ PORT + 1 } node tools/zu-server.mjs`
 		)
 		process.exit( 1 )
 	}

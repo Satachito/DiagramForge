@@ -1,6 +1,6 @@
-//	Shared HTTP client for df-server RPC ( used by df-mcp.mjs ).
+//	Shared HTTP client for zu-server RPC ( used by zu-mcp.mjs ).
 
-import { DF_BASE } from './df-paths.mjs'
+import { DF_BASE } from './zu-paths.mjs'
 
 export const
 dfFetch	= async ( path, init ) => {
