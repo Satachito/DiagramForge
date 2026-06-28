@@ -36,9 +36,6 @@ AvailableLinks	= () => app.model.links.reduce(
 
 import Do from './Jobs.js'
 
-//	canvas size lives in the <main-editor> element ( SSOT ); Load() resizes through it
-import { SetCanvasSize, CANVAS_DEFAULT } from './main-editor.js'
-
 
 //	Snapshot-based history: capture the state before and after the mutation,
 //	then undo/redo simply restore a *clone* of the relevant snapshot. Restoring a
@@ -387,6 +384,12 @@ Paste		= async _ => {	//	ClipboardData
 const
 MARGIN	= 256
 
+//	default square for an empty diagram. Load() resizes the canvas through the
+//	global <main-editor> element directly ( not main-editor.js's SetCanvasSize ),
+//	to avoid an Application.js ↔ main-editor.js import cycle.
+const
+CANVAS_DEFAULT	= 4096
+
 import { BBox } from './GeoDF.js'
 
 const
@@ -403,9 +406,9 @@ Load		= _ => DoTypical(
 		if	( model.nodes.length ) {
 			const
 			[ , , b, r ] = BBox( model.nodes )
-			SetCanvasSize( fitCanvas( r ), fitCanvas( b ) )
+			MAIN_EDITOR.setCanvasSize( fitCanvas( r ), fitCanvas( b ) )
 		} else {
-			SetCanvasSize( CANVAS_DEFAULT, CANVAS_DEFAULT )
+			MAIN_EDITOR.setCanvasSize( CANVAS_DEFAULT, CANVAS_DEFAULT )
 		}
 	}
 )
