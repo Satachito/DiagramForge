@@ -1,6 +1,7 @@
 //	Live .cde reload + WebSocket RPC bridge to window.DF ( tools/df-server.mjs ).
 
-import { Load, CanvasSize	} from './Application.js'
+import { Load	} from './Application.js'
+import { CanvasSize	} from './main-editor.js'
 
 let
 watchPath = null

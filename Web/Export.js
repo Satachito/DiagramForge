@@ -1,4 +1,5 @@
-import { FindNode, CanvasSize	} from './Application.js'
+import { FindNode	} from './Application.js'
+import { CanvasSize	} from './main-editor.js'
 import { XYWH, LinkMetrics, shaftSpec	} from './GeoDF.js'
 import { drawForeignLabelSvg	} from './ForeignLabel.js'
 

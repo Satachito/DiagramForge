@@ -16,33 +16,6 @@ export	const
 JSONString	= () => JSON.stringify( { model: app.model }, null, '\t' )
 
 export	const
-CANVAS_DEFAULT	= 4096
-
-export	const
-CANVAS_STORAGE_KEY	= `${ STORAGE_KEY }.canvas`
-
-export	const
-loadStoredCanvasSize	= () => {
-	try {
-		const
-		[ w, h ] = JSON.parse( localStorage.getItem( CANVAS_STORAGE_KEY ) )
-		if	( w > 0 && h > 0 )	return [ w, h ]
-	} catch {}
-	return [ CANVAS_DEFAULT, CANVAS_DEFAULT ]
-}
-
-export	const
-CanvasSize		= () => MAIN_EDITOR.canvasSize()
-
-export	const
-SetCanvasSize	= ( width, height ) => {
-	if	( !( width > 0 && height > 0 ) )	throw new Error( `Invalid canvas size: ${ width }×${ height }` )
-	MAIN_EDITOR.setCanvasSize( width, height )
-	localStorage.setItem( CANVAS_STORAGE_KEY, JSON.stringify( [ width, height ] ) )
-}
-
-
-export	const
 FindNode		= ID => app.model.nodes.find( _ => _[ 0 ] === ID )
 
 export	const
@@ -62,6 +35,9 @@ AvailableLinks	= () => app.model.links.reduce(
 )
 
 import Do from './Jobs.js'
+
+//	canvas size lives in the <main-editor> element ( SSOT ); Load() resizes through it
+import { SetCanvasSize, CANVAS_DEFAULT } from './main-editor.js'
 
 
 //	Snapshot-based history: capture the state before and after the mutation,
@@ -282,7 +258,7 @@ Delete		= () => DoTypical(
 export	const
 Copy		= _ => _.setData(	//	ClipboardData
 	'application/x-diagramforge-828-tokyo'
-,	JSON.stringify( app.reforms.map( ( [ ID, S, P ] ) => [ S, P ] ) )
+,	JSON.stringify( app.reforms.map( node => structuredClone( node ) ) )
 )
 
 export	const
@@ -368,17 +344,36 @@ Paste		= async _ => {	//	ClipboardData
 		)
 	}
 
-	//	assign ids unique against the model AND within this batch ( concurrent
-	//	GenerateID could otherwise hand out the same timestamp id to siblings )
+	//	keep original IDs when free; on conflict use orig + "-copy" ( then "-copy2", … )
 	const
 	taken = new Set( app.model.nodes.map( _ => _[ 0 ] ) )
 	,	newID = () => {
-		let	id = String( Date.now() - 176722560000 )
-		while	( taken.has( id ) )	id = String( Number( id ) + 1 )
+		let	id = PreviewID()
+		while	( taken.has( id ) ) {
+			id = String( Number( id ) + 1 )
+		}
 		taken.add( id )
 		return	id
 	}
-	const $ = nodes.map( _ => [ newID(), ..._ ] )
+	,	idFor = orig => {
+		if	( !taken.has( orig ) ) {
+			taken.add( orig )
+			return	orig
+		}
+		let
+		id = `${ orig }-copy`
+		,	n = 2
+		while	( taken.has( id ) )	id = `${ orig }-copy${ n++ }`
+		taken.add( id )
+		return	id
+	}
+	,	$ = nodes.map( entry => {
+		const
+		orig = typeof entry[ 0 ] === 'string' && entry[ 1 ]?.type ? entry[ 0 ] : null
+		return	orig
+			?	[ idFor( orig ), entry[ 1 ], entry[ 2 ] ?? {} ]
+			:	[ newID(), ...entry ]
+	} )
 	void DoTypical(
 		'Paste'
 	,	() => (

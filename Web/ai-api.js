@@ -15,9 +15,12 @@ import {
 ,	EditLink
 ,	RemoveLink
 ,	SetModel
-,	CanvasSize
-,	SetCanvasSize
 }	from './Application.js'
+
+import {
+	CanvasSize
+,	SetCanvasSize
+}	from './main-editor.js'
 
 const
 isNum			= v => typeof v === 'number' && Number.isFinite( v )

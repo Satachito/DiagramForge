@@ -18,8 +18,41 @@ import {
 ,	Delete
 ,	Copy
 ,	Paste
-,	loadStoredCanvasSize
+,	STORAGE_KEY
+,	JSONString
 }	from './Application.js'
+
+export	const
+CANVAS_DEFAULT	= 4096
+
+
+//	lazy ( a function, not a top-level const ): Application.js imports SetCanvasSize
+//	from this module, so reading the Application export STORAGE_KEY at module-eval
+//	time would hit a temporal-dead-zone error in that import cycle. Computing it on
+//	demand keeps this module free of any top-level dependency on Application.js.
+const
+canvasStorageKey	= () => `${ STORAGE_KEY }.canvas`
+
+export	const
+loadStoredCanvasSize	= () => {
+	try {
+		const
+		[ w, h ] = JSON.parse( localStorage.getItem( canvasStorageKey() ) )
+		if	( w > 0 && h > 0 )	return [ w, h ]
+	} catch {}
+	return [ CANVAS_DEFAULT, CANVAS_DEFAULT ]
+}
+
+export	const
+CanvasSize		= () => MAIN_EDITOR.canvasSize()
+
+export	const
+SetCanvasSize	= ( width, height ) => {
+	if	( !( width > 0 && height > 0 ) )	throw new Error( `Invalid canvas size: ${ width }×${ height }` )
+	MAIN_EDITOR.setCanvasSize( width, height )
+	localStorage.setItem( canvasStorageKey(), JSON.stringify( [ width, height ] ) )
+}
+
 
 import {
 	Redo
