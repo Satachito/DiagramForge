@@ -98,6 +98,7 @@ connectBridge	= () => {
 	,	connect = () => {
 		ws = new WebSocket( url )
 		ws.onopen = () => {
+			ws._everOpen = true
 			ws.send( JSON.stringify( { type: 'editor-ready', ...snapshot() } ) )
 		}
 		ws.onmessage = async ev => {
@@ -114,7 +115,7 @@ connectBridge	= () => {
 			}
 			if	( msg.type === 'rpc' ) void handleRpc( msg )
 		}
-		ws.onclose = () => setTimeout( connect, 1500 )
+		ws.onclose = ev => { if ( ev.target._everOpen ) setTimeout( connect, 1500 ) }
 	}
 	connect()
 }
