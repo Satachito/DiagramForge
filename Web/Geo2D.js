@@ -6,8 +6,6 @@ AddXY			= ( [ X, Y ], [ x, y ] )	=> [ X + x, Y + y ]
 export const
 DivXY			= ( [ X, Y ], _ )			=> [ X / _, Y / _ ]
 export const
-EqualXY			= ( [ X, Y ], [ x, y ] )	=> X === x && Y === y
-export const
 DeltaXY			= ( [ X, Y ], [ x, y ] )	=> [ x - X, y - Y ]
 
 export const
@@ -39,8 +37,6 @@ ContainsTLBR	= ( [ T, L, B, R ], [ t, l, b, r ] ) => T <= t && b <= B && L <= l 
 export const
 AreaTLBR		= ( [ T, L, B, R ], _ ) => ( B - T ) * ( R - L )
 
-export const
-Inset			= ( [ T, L, B, R ], _ ) => [ T + _, L + _, B - _, R - _ ]
 export const
 Outset			= ( [ T, L, B, R ], _ ) => [ T - _, L - _, B + _, R + _ ]
 

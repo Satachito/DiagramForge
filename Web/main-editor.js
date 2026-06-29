@@ -18,7 +18,6 @@ import {
 ,	Copy
 ,	Paste
 ,	STORAGE_KEY
-,	JSONString
 }	from './Application.js'
 
 const
@@ -60,7 +59,6 @@ import {
 ,	XY_EV
 ,	AddXY
 ,	DivXY
-,	EqualXY
 ,	DeltaXY
 ,	Outset
 }	from './Geo2D.js'
@@ -85,6 +83,14 @@ strokeHeadPath	= ( c2D, pts, close ) => {
 	c2D.moveTo( ...pts[ 0 ] )
 	for	( let i = 1; i < pts.length; i++ )	c2D.lineTo( ...pts[ i ] )
 	close && c2D.closePath()
+}
+
+const
+PrepareCanvas		= _ => {
+	const
+	$ = _.getContext( '2d' )
+	$.clearRect( 0, 0, _.width, _.height )
+	return $
 }
 
 const
@@ -270,6 +276,8 @@ BBoxGrabCursor	= ( bbox, xy ) => {
 const
 Cursor_EV	= ev => {
 	
+	if	( NodeMode( ev ) )								return 'crosshair'
+
 	const
 	xy = XY_EV( ev )
 
@@ -280,22 +288,21 @@ Cursor_EV	= ev => {
 		if	( ContainsXY( Outset( bbox, GRAB ), xy ) )	return BBoxGrabCursor( bbox, xy )
 	}
 
-	if	( NodeMode( ev ) || LinkMode( ev ) )			return 'crosshair'
-
 	if	( Links_XY( xy ).length )						return 'pointer'
 
-	const	node = Node_XY( xy )
-	if	( node ) return BBoxGrabCursor( TLBR( node[ 1 ] ), xy )
-
-	return	'default'
+	const
+	$ = Node_XY( xy )
+	return $
+?	LinkMode( ev )
+	?	'crosshair'
+	:	BBoxGrabCursor( TLBR( $[ 1 ] ), xy )
+:	'default'
 }
+
 
 
 const
 copyText		= text => navigator.clipboard.writeText( text ).catch( Report )
-
-const
-mouse			= [ null, null ]
 
 const
 DrawPath		= ( c2D, path, P ) => {
@@ -367,13 +374,13 @@ MainEditor extends HTMLElement {
 	}
 
 	clearInteraction() {
-		mouse[ 0 ] = mouse[ 1 ] = null
-		this.drag = null
+		this.gesture = null
 	}
 
 	async DrawModel() {
 
-		const	c2D = this.drawer.getContext( '2d' )
+		const
+		c2D = PrepareCanvas( this.drawer )
 
 		const
 		drawSVG		= async ( svg, S ) => {
@@ -397,7 +404,6 @@ MainEditor extends HTMLElement {
 			}
 		}
 
-		c2D.clearRect( 0, 0, this.drawer.width, this.drawer.height )
 
 		for ( const [ ID, S, P ] of app.model.nodes ) {
 			try {
@@ -441,11 +447,10 @@ MainEditor extends HTMLElement {
 		AvailableLinks().forEach( _ => DrawLinkCanvas( c2D, _ ) )
 	}
 
-	async DrawReforms() {
-		const	c2D = this.reformer.getContext( '2d' )
-		c2D.clearRect( 0, 0, this.reformer.width, this.reformer.height )
+	DrawReforms() {
+		const
+		c2D = PrepareCanvas( this.reformer )
 
-//	TODO: REFACTOR
 		//	redraw every link touching the selection: a moving end follows its
 		//	reform clone, a fixed end stays on its model node ( so half-selected
 		//	links track the drag instead of being left behind )
@@ -483,11 +488,11 @@ MainEditor extends HTMLElement {
 			}
 			c2D.restore()
 		} else {
-			mouse[ 0 ] && mouse[ 1 ] && (
+			this.gesture?.down && this.gesture?.move && (
 				c2D.save()
 			,	c2D.strokeStyle = '#888888'
 			,	c2D.lineWidth = 2
-			,	c2D.strokeRect( ...XYWH_XYXY( mouse ) )
+			,	c2D.strokeRect( ...XYWH_XYXY( [ this.gesture.down, this.gesture.move ] ) )
 			,	c2D.restore()
 			)
 		}
@@ -508,7 +513,7 @@ MainEditor extends HTMLElement {
 		this.linkMenuKey			= null
 		this.headMenuTarget			= null
 		this.nodeMenuTarget			= null
-		this.panning				= null	//	{ x, y } client coords while hand-tool panning
+		this.gesture				= null	//	one active gesture at a time: { pan: { x, y } } | { draw, commit } | null
 		this.spaceDown				= false	//	space held → hand tool armed
 		this.hoverXY				= null	//	last hover position, for refreshModeCursor
 
@@ -599,10 +604,7 @@ MainEditor extends HTMLElement {
 		//	window-level so shortcuts work without the canvas being focused
 		addEventListener( 'keydown', ev => this.onKeyDown( ev ) )
 		//	⌘/⌥ momentarily act as Create-node / Create-link; refresh cursor on release
-		addEventListener( 'keyup', ev => (
-			ev.key === ' ' && ( this.spaceDown = false )
-		,	this.refreshModeCursor( ev )
-		) )
+		addEventListener( 'keyup', ev => this.onKeyUp( ev ) )
 		//	entering create-node mode: clear NODE_ID so the placeholder ( the next
 		//	auto-id ) shows and a previously selected node's id can't pollute the new node
 		CREATE_NODE.onchange = () => (
@@ -670,20 +672,6 @@ MainEditor extends HTMLElement {
 		const	h	= menu.offsetHeight	|| 40
 		menu.style.left	= `${ Math.max( pad, Math.min( ev.clientX, innerWidth - w - pad ) ) }px`
 		menu.style.top	= `${ Math.max( pad, Math.min( ev.clientY, innerHeight - h - pad ) ) }px`
-	}
-
-	//	idle / hover cursor. Recompute from the last hover position so that pressing
-	//	a key that doesn't change the mode ( e.g. Shift while resizing an edge ) keeps
-	//	the resize / move / pointer affordance instead of snapping back to 'default'.
-	refreshModeCursor( ev ) {
-		if	( mouse[ 0 ] !== null )	return	//	mid-drag: keep the drag cursor
-		if	( this.spaceDown ) {
-			this.reformer.style.cursor = 'grab'
-			return
-		}
-		this.reformer.style.cursor = this.hoverXY
-		?	Cursor_EV( { offsetX: this.hoverXY[ 0 ], offsetY: this.hoverXY[ 1 ], metaKey: ev?.metaKey, altKey: ev?.altKey } )
-		:	( ( NodeMode( ev ) || LinkMode( ev ) ) ? 'crosshair' : 'default' )
 	}
 
 	//	modal prompt for a new node's id. Resolves '' ( auto-assign ), the typed id,
@@ -828,45 +816,6 @@ MainEditor extends HTMLElement {
 		} )
 	}
 
-	async onKeyDown( ev ) {
-		this.refreshModeCursor( ev )
-		const	t = ev.target
-		if	( t && ( /^(INPUT|TEXTAREA|SELECT)$/.test( t.tagName ) || t.isContentEditable ) ) return
-		switch ( ev.key ) {
-		case 'z':	case 'Z':
-			if ( ev.metaKey || ev.ctrlKey ) { ev.preventDefault(); await ( ev.shiftKey ? Redo() : Undo() ) }
-			break
-		case 'y':	case 'Y':
-			if ( ev.metaKey || ev.ctrlKey ) { ev.preventDefault(); await Redo() }
-			break
-		case 'a':	case 'A':
-			if ( ev.metaKey || ev.ctrlKey ) { ev.preventDefault(); await this.selectAll() }
-			break
-		case 'e':	case 'E':
-			if ( ev.metaKey || ev.ctrlKey ) { ev.preventDefault(); await this.expand() }
-			break
-		case ' ':
-			//	space arms the hand tool ( space + left-drag pans )
-			ev.preventDefault()
-			this.spaceDown = true
-			this.panning || ( this.reformer.style.cursor = 'grab' )
-			break
-		case 'Escape':
-			mouse[ 0 ] = mouse[ 1 ] = null
-			this.drag = null
-			this.hideContextMenus()
-			await this.DrawReforms()
-			break
-		case 'Delete':
-		case 'Backspace':
-			ev.preventDefault()
-			await Delete()
-			break
-		default:
-			break
-		}
-	}
-
 	//	add a node (clone) to the selection if not already present
 	registReform( _ ) {
 		return FindReform( _[ 0 ] ) || app.reforms.push( structuredClone( _ ) )
@@ -978,43 +927,245 @@ MainEditor extends HTMLElement {
 		this.positionContextMenu( NODE_MENU, ev )
 	}
 
+//	Key down / up は本体についてるよ！
+	async onKeyDown( ev ) {
+		const	t = ev.target
+		if	( t && ( /^(INPUT|TEXTAREA|SELECT)$/.test( t.tagName ) || t.isContentEditable ) ) return
+		switch ( ev.key ) {
+		case 'z':	case 'Z':
+			if ( ev.metaKey || ev.ctrlKey ) { ev.preventDefault(); await ( ev.shiftKey ? Redo() : Undo() ) }
+			break
+		case 'y':	case 'Y':
+			if ( ev.metaKey || ev.ctrlKey ) { ev.preventDefault(); await Redo() }
+			break
+		case 'a':	case 'A':
+			if ( ev.metaKey || ev.ctrlKey ) { ev.preventDefault(); await this.selectAll() }
+			break
+		case 'e':	case 'E':
+			if ( ev.metaKey || ev.ctrlKey ) { ev.preventDefault(); await this.expand() }
+			break
+		case 'Escape':
+			this.gesture = null
+			this.hideContextMenus()
+			await this.DrawReforms()
+			break
+		case 'Delete':
+		case 'Backspace':
+			ev.preventDefault()
+			await Delete()
+			break
+		case ' ':
+			//	space arms the hand tool ( space + left-drag pans )
+			ev.preventDefault()
+			this.spaceDown = true
+			this.reformer.style.cursor = 'grab'
+			break
+		default:
+			break
+		}
+	}
+	async onKeyUp( ev ) {
+		ev.key === ' ' && ( this.spaceDown = false )
+		this.reformer.style.cursor = Cursor_EV( ev )
+	}
+
+	//	idle / hover cursor. Recompute from the last hover position so that pressing
+	//	a key that doesn't change the mode ( e.g. Shift while resizing an edge ) keeps
+	//	the resize / move / pointer affordance instead of snapping back to 'default'.
+	refreshModeCursor( ev ) {
+console.assert( false )
+	/*
+		if	( this.gesture?.down )	return	//	mid-drag: keep the drag cursor
+		if	( this.spaceDown ) {
+			this.reformer.style.cursor = 'grab'
+			return
+		}
+		this.reformer.style.cursor = this.hoverXY
+		?	Cursor_EV( { offsetX: this.hoverXY[ 0 ], offsetY: this.hoverXY[ 1 ], metaKey: ev?.metaKey, altKey: ev?.altKey } )
+		:	( ( NodeMode( ev ) || LinkMode( ev ) ) ? 'crosshair' : 'default' )
+	*/
+	}
+
+	onMouseMove( ev ) {
+		this.reformer.style.cursor = Cursor_EV( ev )
+		UpdateHoverLabel( ev )
+		this.gesture?.move && this.gesture.move( ev )
+	}
+
+	async onMouseUp( ev ) {
+		this.gesture.up( ev )
+		this.setEditorToLargestReform()
+	}
 	async onMouseDown( ev ) {
+
 		this.reformer.tabIndex = 0
 
-		//	PAN ( hand tool ): middle-drag, or space + left-drag. Moves by raw client
-		//	delta — not canvas coords, which would jump as content scrolls under the cursor.
-		if	( ev.button === 1 || ( ev.button === 0 && this.spaceDown ) ) {
-			ev.preventDefault()
-			this.panning = { x: ev.clientX, y: ev.clientY }
-			ev.pointerId != null && this.reformer.setPointerCapture( ev.pointerId )
+		if	( ev.button == 1 || this.spaceDown ) {
 			this.reformer.style.cursor = 'grabbing'
 			return
 		}
 
-		if	( ev.button ) return
-
-		//	capture the pointer for the whole gesture so pointerup always lands here
-		ev.pointerId != null && this.reformer.setPointerCapture( ev.pointerId )
-
 		const
-		xy	= mouse[ 0 ] = XY_EV( ev )
+		xy	= XY_EV( ev )
+
+		this.gesture = {
+			downXY	: xy
+		,	move	: _ => {
+				const
+				moveXY = XY_EV( _ )
+				if	( ev.button == 1 || this.spaceDown ) {
+					const
+					[ dX, dY ] = Delta( this.gesture.downXY, moveXY )
+					this.scrollLeft	-= dX
+					this.scrollTop	-= dY
+				} else {
+					this.gesture.track && this.gesture.track(
+						PrepareCanvas( this.reformer )
+					,	this.gesture.downXY
+					,	moveXY
+					)
+				}
+			}
+		,	up		: async _ => this.gesture.commit && await this.gesture.commit( this.gesture.downXY, XY_EV( _ ) )
+			//	async / await for dialog input
+		}
+
+		ev.pointerId != null && this.reformer.setPointerCapture( ev.pointerId )
 
 		let
 		needsRedraw	= false
 
-		try {
+		const
+		resize = ( c2D, [ x, y ], [ X, Y ] ) => {
+//	TODO: 万一オリジナルの取得に失敗したら落ちるのでリリースまでにはガード入れる
+			const	tlbr = BBox( app.reforms.map( _ => FindNode( _[ 0 ] ) ) )
+			const	edgeDist = EdgeDist( tlbr, xy )
+			const	[ t, l, b, r ] = tlbr
+			const	T = edgeDist[ 0 ] <= GRAB ? Y : t
+			const	L = edgeDist[ 1 ] <= GRAB ? X : l
+			const	B = edgeDist[ 2 ] <= GRAB ? Y : b
+			const	R = edgeDist[ 3 ] <= GRAB ? X : r
+			const	scaleX	= ( R - L ) / ( r - l || 1 )
+			const	scaleY	= ( B - T ) / ( b - t || 1 )
+			const	tX = L - l * scaleX
+			const	tY = T - t * scaleY
+			app.reforms.forEach(
+				( [ ID, S ] ) => {
+					const	[ t, l, b, r ] = TLBR( FindNode( ID )[ 1 ] )
+					const	T = t * scaleY + tY
+					const	L = l * scaleX + tX
+					const	B = b * scaleY + tY
+					const	R = r * scaleX + tX
+					S.cX = ( L + R ) / 2
+					S.cY = ( T + B ) / 2
+					S.rH = ( R - L ) / 2
+					S.rV = ( B - T ) / 2
+				}
+			)
+			this.DrawReforms()
+		}	
+
+		const
+		move = ( c2D, xy, XY ) => {
+			const	[ dX, dY ] = DeltaXY( xy, XY )
+			app.reforms.forEach(
+				( [ ID, S ] ) => (
+					S.cX += dX
+				,	S.cY += dY
+				)
+			)
+			this.DrawReforms()
+		}
+		const
+		create	= ( c2D, xy, XY ) => {
+			const
+			P = NODE_EDITOR.PAINT.$
+			c2D.save()
+			c2D.strokeStyle = P.stroke || 'dodgerblue'
+			c2D.lineWidth = Number( P.lineWidth || 2 )
+			c2D.lineCap = P.lineCap || 'butt'
+			c2D.strokeRect( ...XYWH_XYXY( [ xy, XY ] ) )
+			c2D.restore()
+		}
+		const
+		commitCreate = async ( xy, XY ) => {
+			const	[ S, P ] = NODE_EDITOR.$
+			const	r = DivXY( DeltaXY( d, u ), 2 )
+			const	c = AddXY( d, r )
+			S.cX = c[ 0 ]
+			S.cY = c[ 1 ]
+			S.rH = r[ 0 ]
+			S.rV = r[ 1 ]
+			const	id = await this.promptNodeId()
+			if	( id === null ) return
+			await Node( [ id, S, P ] )
+		}
+		const
+		link	= ( c2D, xy, XY ) => {
+			const	P = LINK_EDITOR.PAINT.$
+			c2D.save()
+			c2D.strokeStyle = P.stroke || 'dodgerblue'
+			c2D.lineWidth = Number( P.lineWidth || 2 )
+			c2D.lineCap = P.lineCap || 'butt'
+			c2D.beginPath()
+			c2D.moveTo( ...xy )
+			c2D.lineTo( ...XY )
+			c2D.stroke()
+			c2D.restore()
+		}
+		const
+		commitLink = async ( xy, XY ) => {
+			const	F = Node_XY( xy );	if	( F === null ) return
+			const	T = Node_XY( XY );	if	( T === null ) return
+			const	[ , A, P ] = LINK_EDITOR.$
+			const	$ = [ [ F[ 0 ], T[ 0 ] ], A, P ]
+			await Link( $ )
+			LINK_EDITOR.$	= $	//	reflect the just-created link in the editor
+		}
+		const
+		area	= ( c2D, xy, XY ) => {
+			c2D.save()
+			c2D.strokeStyle = 'lightgray'
+			c2D.strokeRect( ...XYWH_XYXY( [ xy, XY ] ) )
+			c2D.restore()
+		}
+		const
+		commitArea = async ( xy, XY ) => {
+			const	tlbr = TLBR_XYXY( [ xy, XY ] )
+			app.model.nodes.forEach(
+				_ => ContainsTLBR( tlbr, TLBR( _[ 1 ] ) ) && this.registReform( _ )
+			)
+			await Reform()
+		}
+
+		try {	//	for redrawing
+//	NODE MODE
+			if	( NodeMode( ev ) ) {
+				this.gesture.track = create
+				this.gesture.commit = commitCreate
+				if	( app.reforms.length ) {
+					app.reforms.length = 0
+					needsRedraw = true
+				}
+				return
+			}
+
 //	SELECTION
 			if	( app.reforms.length ) {
 				const
 				bbox = BBox( app.reforms )
-//	SELECTION GRAB
+
+//	SELECTION INSIDE
 				if	( ContainsXY( bbox, xy ) ) {
-					this.drag = this.beginMove()
+					this.gesture.track = move
+					this.gesture.commit = Reform
 					return
 				}
-//	SELECTION INSIDE
+
+//	SELECTION GRAB
 				if	( ContainsXY( Outset( bbox, GRAB ), xy ) ) {
-					this.drag = this.beginResize()
+					this.gesture.track = resize
+					this.gesture.commit = Reform
 					return
 				}
 //	SELECTION OUTSIDE
@@ -1034,229 +1185,32 @@ MainEditor extends HTMLElement {
 			}
 			if	( app.reforms.length ) {
 				needsRedraw = true
-				this.drag = this.beginMove()
-				return
-			}
-
-//	NODE — create / link modes take precedence over hitting existing nodes
-			if	( NodeMode( ev ) ) {
-				this.drag = this.beginCreate()
+				this.gesture.track = move
+				this.gesture.commit = Reform
 				return
 			}
 
 			const
 			$ = Node_EV( ev )
-			if	( LinkMode( ev ) ) {
-				this.drag = $ ? this.beginLink() : this.beginArea()
-				return
-			}
-
-			void (
-				$
-				?	(	this.drag = ContainsXY( TLBR( $[ 1 ] ), xy ) ? this.beginMove() : this.beginResize()
-					,	ev.shiftKey
-						?	(	this.setEditor( $ )
-							,	this.registReform( $ )
-							)
-						:	this.addWithContained( $ )
-					)
-				:	this.drag = this.beginArea()
+			$
+		?	(	this.setEditor( $ )
+			,	LinkMode( ev )
+			?	(	this.gesture.track = link
+				,	this.gesture.commit = commitLink
+				)
+			:	(	ev.shiftKey
+				?	this.registReform( $ )
+				:	this.addWithContained( $ )
+				,	this.gesture.track = ContainsXY( TLBR( $[ 1 ] ), xy ) ? move: resize
+				,	this.gesture.commit = Reform
+				)
+			)
+		:	(	this.gesture.track = area
+			,	this.gesture.commit = commitArea
 			)
 		} finally {
 			needsRedraw && await this.DrawReforms()
 		}
-	}
-
-	//	each gesture is a { draw, commit } handler decided at mousedown:
-	//	draw renders the in-progress drag, commit applies it on mouseup
-	beginMove() {
-		return	{
-			draw	: ( c2D, d, u ) => {
-				const	[ dX, dY ] = DeltaXY( d, u )
-				app.reforms.forEach(
-					( [ ID, S ] ) => {
-						const	s = FindNode( ID )[ 1 ]
-						S.cX = s.cX + dX
-						S.cY = s.cY + dY
-					}
-				)
-				return	this.DrawReforms()
-			}
-		,	commit	: async () => {
-				await Reform()
-				this.setEditorToLargestReform()
-			}
-		}
-	}
-
-	beginResize() {
-		return	{
-			draw	: ( c2D, d, u ) => {
-				let		edgeMode = false
-				const	tlbr = BBox( app.reforms.map( _ => FindNode( _[ 0 ] ) ) )
-				const	edgeDist = EdgeDist( tlbr, d )
-				const	[ t, l, b, r ] = tlbr
-				const	T = edgeDist[ 0 ] <= GRAB ? ( edgeMode = true, u[ 1 ] ) : t
-				const	L = edgeDist[ 1 ] <= GRAB ? ( edgeMode = true, u[ 0 ] ) : l
-				const	B = edgeDist[ 2 ] <= GRAB ? ( edgeMode = true, u[ 1 ] ) : b
-				const	R = edgeDist[ 3 ] <= GRAB ? ( edgeMode = true, u[ 0 ] ) : r
-				if	( edgeMode ) {
-					const	scaleX	= ( R - L ) / ( r - l || 1 )
-					const	scaleY	= ( B - T ) / ( b - t || 1 )
-					const	tX = L - l * scaleX
-					const	tY = T - t * scaleY
-					app.reforms.forEach(
-						( [ ID, S ] ) => {
-							const	[ t, l, b, r ] = TLBR( FindNode( ID )[ 1 ] )
-							const	T = t * scaleY + tY
-							const	L = l * scaleX + tX
-							const	B = b * scaleY + tY
-							const	R = r * scaleX + tX
-							S.cX = ( L + R ) / 2
-							S.cY = ( T + B ) / 2
-							S.rH = ( R - L ) / 2
-							S.rV = ( B - T ) / 2
-						}
-					)
-				}
-				return	this.DrawReforms()
-			}
-		,	commit	: async () => {
-				await Reform()
-				this.setEditorToLargestReform()
-			}
-		}
-	}
-
-	beginLink() {
-		return	{
-			draw	: ( c2D, d, u ) => {
-				const	paint = LINK_EDITOR.PAINT.$
-				c2D.save()
-				c2D.strokeStyle = paint.stroke || 'dodgerblue'
-				c2D.lineWidth = Number( paint.lineWidth || 2 )
-				c2D.lineCap = paint.lineCap || 'butt'
-				c2D.beginPath()
-				c2D.moveTo( ...d )
-				c2D.lineTo( ...u )
-				c2D.stroke()
-				c2D.restore()
-			}
-		,	commit	: async ( d, u ) => {
-				const	F = Node_XY( d );	if	( F === null ) return
-				const	T = Node_XY( u );	if	( T === null ) return
-				const	[ , A, P ] = LINK_EDITOR.$
-				const	$ = [ [ F[ 0 ], T[ 0 ] ], A, P ]
-				await Link( $ )
-				LINK_EDITOR.$	= $	//	reflect the just-created link in the editor
-			}
-		}
-	}
-
-	beginCreate() {
-		return	{
-			draw	: ( c2D, d, u ) => {
-				const	paint = NODE_EDITOR.PAINT.$
-				c2D.save()
-				c2D.strokeStyle = paint.stroke || 'dodgerblue'
-				c2D.lineWidth = Number( paint.lineWidth || 2 )
-				c2D.lineCap = paint.lineCap || 'butt'
-				c2D.strokeRect( ...XYWH_XYXY( [ d, u ] ) )
-				c2D.restore()
-			}
-		,	commit	: async ( d, u ) => {
-				const	[ S, P ] = NODE_EDITOR.$
-				const	r = DivXY( DeltaXY( d, u ), 2 )
-				const	c = AddXY( d, r )
-				S.cX = c[ 0 ]
-				S.cY = c[ 1 ]
-				S.rH = r[ 0 ]
-				S.rV = r[ 1 ]
-				//	ask for the new node's id in a modal ( empty = auto-assign );
-				//	Cancel / Esc aborts and creates nothing.
-				const	id = await this.promptNodeId()
-				if	( id === null ) return
-				await Node( [ id, S, P ] )
-				app.reforms[ 0 ] && this.setEditor( app.reforms[ 0 ] )
-			}
-		}
-	}
-
-	beginArea() {
-		return	{
-			draw	: ( c2D, d, u ) => {
-				c2D.save()
-				c2D.strokeStyle = 'lightgray'
-				c2D.strokeRect( ...XYWH_XYXY( [ d, u ] ) )
-				c2D.restore()
-			}
-		,	commit	: ( d, u ) => {
-				const	tlbr = TLBR_XYXY( [ d, u ] )
-				app.model.nodes.forEach(
-					_ => ContainsTLBR( tlbr, TLBR( _[ 1 ] ) ) && this.registReform( _ )
-				)
-				return	this.DrawReforms()
-			}
-		}
-	}
-
-	async onMouseMove( ev ) {
-
-		if	( this.panning ) {
-			this.scrollLeft	-= ev.clientX - this.panning.x
-			this.scrollTop	-= ev.clientY - this.panning.y
-			this.panning.x	= ev.clientX
-			this.panning.y	= ev.clientY
-			return
-		}
-
-		UpdateHoverLabel( ev )
-
-		if	( mouse[ 0 ] === null ) {
-			this.hoverXY = [ ev.offsetX, ev.offsetY ]	//	remembered for refreshModeCursor
-			this.reformer.style.cursor = this.spaceDown ? 'grab' : Cursor_EV( ev )
-			return
-		}
-		//	NOTE: no `!ev.buttons` reset here — pointer capture guarantees
-		//	pointerup / pointercancel, and a stray buttons:0 move that the browser
-		//	emits just before pointerup would otherwise drop the drag before commit.
-
-		const
-		c2D = this.reformer.getContext( '2d' )
-		c2D.clearRect( 0, 0, this.reformer.width, this.reformer.height )
-
-		mouse[ 1 ] = [ ev.offsetX, ev.offsetY ]
-		if	( EqualXY( mouse[ 0 ], mouse[ 1 ] ) ) return
-
-		await this.drag?.draw( c2D, mouse[ 0 ], mouse[ 1 ] )
-	}
-
-	async onMouseUp( ev ) {
-		if	( this.panning ) {
-			this.panning = null
-			ev?.pointerId != null && this.reformer.releasePointerCapture?.( ev.pointerId )
-			this.reformer.style.cursor = this.spaceDown ? 'grab' : Cursor_EV( ev )
-			return
-		}
-
-		void ev
-
-		const
-		drag = this.drag
-		this.drag = null
-
-		const
-		[ mouseD, mouseU ] = mouse
-		mouse[ 0 ] = mouse[ 1 ] = null
-
-		if	( mouseD === null || mouseU === null ) return
-		if	( EqualXY( mouseD, mouseU ) ) return
-
-		const
-		c2D = this.reformer.getContext( '2d' )
-		c2D.clearRect( 0, 0, this.reformer.width, this.reformer.height )
-
-		await drag?.commit( mouseD, mouseU )
 	}
 }
 

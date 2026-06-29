@@ -896,17 +896,6 @@ isLocalDev = /^(localhost|127\.0\.0\.1|\[::1\])$/.test( location.hostname )
 	|| location.protocol === 'file:'
 if	( isLocalDev ) document.body.classList.add( 'local-dev' )
 
-/*
-const
-UpdateApplyNodeLabel = () => NODE.textContent = app.model.nodes.some( _ => _[ 0 ] === NODE_ID.value )
-?	'Update'
-:	app.reforms.length
-	?	'Replace'
-	:	'Create'
-
-window.UpdateApplyNodeLabel = UpdateApplyNodeLabel
-*/
-
 const
 SyncCanvasInputs = () => {
 	const
@@ -965,11 +954,6 @@ DUMP_CLIPBOARD	.onclick = () => navigator.clipboard.read().then(
 ).catch( er => console.log( 'Clipboard read failed:', er.message ) )
 FORCE_DRAW		.onclick = () => MAIN_EDITOR.Draw()
 
-/*
-NODE_EDITOR.addEventListener( 'input', UpdateApplyNodeLabel )
-NODE_EDITOR.addEventListener( 'change', UpdateApplyNodeLabel )
-*/
-
 NODE			.onclick = () => Node( [ NODE_ID.value, ...NODE_EDITOR.$ ] )
 LINK			.onclick = () => Link( LINK_EDITOR.$ )
 
@@ -1027,7 +1011,6 @@ onload = async () => {
 	_	? await Load( _ ).catch( Report )	//	Load() draws on success
 		: MAIN_EDITOR.Draw()
 	SyncCanvasInputs()
-//	UpdateApplyNodeLabel()
 }
 
 </script>

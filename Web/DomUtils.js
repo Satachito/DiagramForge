@@ -25,14 +25,6 @@ Select		= ( ..._ ) => {
 }
 
 export const
-Checkbox	= _ => {
-	const	$ = E( 'input' )
-	$.type = 'checkbox'
-	$.checked = _
-	return $
-}
-
-export const
 Labeled		= ( parent, label, _ ) => {
 	const
 	$ = AE( parent, 'div' )
@@ -47,9 +39,6 @@ LabeledInput	= ( parent, label, _ = ''		) => Labeled( parent, label, Input( _ ) 
 
 export const
 LabeledSelect	= ( parent, label, ..._			) => Labeled( parent, label, Select( ..._ ) )
-
-export const
-LabeledCheckbox	= ( parent, label, _ = false	) => Labeled( parent, label, Checkbox( _ ) )
 
 export const
 LabeledTextArea	= ( parent, label ) => {

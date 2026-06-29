@@ -9,9 +9,6 @@ watchPath = null
 ,	uiRef = null
 
 export const
-getWatchPath	= () => watchPath
-
-export const
 setWatchPath	= path => {
 	watchPath = path
 	path && sessionStorage.setItem( 'zu-watch', path )

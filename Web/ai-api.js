@@ -6,8 +6,7 @@
 //	can read, validate, generate and lay out the diagram directly.
 
 import {
-	FindNode
-,	Node
+	Node
 ,	EditNode
 ,	RemoveNode
 ,	Restack

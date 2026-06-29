@@ -97,7 +97,7 @@ PreviewID	= async $ => {
 export	const
 Node	= ( [ ID, S, P ] ) => DoTypical(
 	'ApplyNode'
-,	async () => {
+,	() => {
 		const
 		node = FindNode( ID )
 		if	( node ) {
@@ -111,7 +111,7 @@ Node	= ( [ ID, S, P ] ) => DoTypical(
 			)
 		} else {
 			const
-			$ = [ ID || await GenerateID(), S, P ]
+			$ = [ ID, S, P ]
 			app.model.nodes.push( $ )
 			app.reforms = [ structuredClone( $ ) ]
 		}

@@ -13,7 +13,7 @@ import { StdioServerTransport	} from '@modelcontextprotocol/sdk/server/stdio.js'
 import { readFile, writeFile	} from 'node:fs/promises'
 import { z	} from 'zod'
 import { zuStatus, zuGetModel, zuRpc	} from './zu-client.mjs'
-import { WEB, webPath, isUnderWeb	} from './zu-paths.mjs'
+import { webPath, isUnderWeb	} from './zu-paths.mjs'
 import { validateModel, parseZuText, formatZuDoc	} from './zu-validate.mjs'
 
 const
