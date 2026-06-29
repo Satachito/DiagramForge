@@ -28,8 +28,8 @@ const
 loadStoredCanvasSize	= () => {
 	try {
 		const
-		[ w, h ] = JSON.parse( localStorage.getItem( canvasStorageKey() ) )
-		if	( w > 0 && h > 0 )	return [ w, h ]
+		[ W, H ] = JSON.parse( localStorage.getItem( canvasStorageKey() ) )
+		if	( W > 0 && H > 0 )	return [ W, H ]
 	} catch {}
 	return [ 4096, 4096 ]
 }
@@ -38,10 +38,10 @@ export	const
 CanvasSize		= () => MAIN_EDITOR.canvasSize()
 
 export	const
-SetCanvasSize	= ( width, height ) => {
-	if	( !( width > 0 && height > 0 ) )	throw new Error( `Invalid canvas size: ${ width }×${ height }` )
-	MAIN_EDITOR.setCanvasSize( width, height )
-	localStorage.setItem( canvasStorageKey(), JSON.stringify( [ width, height ] ) )
+SetCanvasSize	= ( W, H ) => {
+	if	( !( W > 0 && H > 0 ) )	throw new Error( `Invalid canvas size: ${ W }×${ H }` )
+	MAIN_EDITOR.setCanvasSize( W, H )
+	localStorage.setItem( canvasStorageKey(), JSON.stringify( [ W, H ] ) )
 }
 
 import {
@@ -88,28 +88,6 @@ strokeHeadPath	= ( c2D, pts, close ) => {
 }
 
 const
-DrawHeadCanvas	= ( c2D, h, headFill, stroke ) => {
-	if	( h.kind === 'circle' ) {
-		c2D.beginPath()
-		c2D.arc( h.center[ 0 ], h.center[ 1 ], h.r, 0, 2 * Math.PI )
-		h.fill
-		?	( c2D.fillStyle = headFill, c2D.fill() )
-		:	( c2D.strokeStyle = stroke, c2D.stroke() )
-		return
-	}
-	if	( h.kind === 'line' ) {
-		strokeHeadPath( c2D, h.pts, false )
-		c2D.strokeStyle = stroke
-		c2D.stroke()
-		return
-	}
-	strokeHeadPath( c2D, h.pts, true )
-	h.fill
-	?	( c2D.fillStyle = headFill, c2D.fill() )
-	:	( c2D.strokeStyle = stroke, c2D.stroke() )
-}
-
-const
 DrawLinkCanvas	= ( c2D, _ ) => {
 
 	const
@@ -136,9 +114,29 @@ DrawLinkCanvas	= ( c2D, _ ) => {
 	c2D.setLineDash( [] )
 	c2D.lineJoin	= 'round'
 	c2D.lineCap		= 'round'
+
 	const
 	headFill = P.fill ?? P.stroke
-	for ( const h of $.heads )	DrawHeadCanvas( c2D, h, headFill, P.stroke )
+	for ( const h of $.heads )	{
+		if	( h.kind === 'circle' ) {
+			c2D.beginPath()
+			c2D.arc( h.center[ 0 ], h.center[ 1 ], h.r, 0, 2 * Math.PI )
+			h.fill
+			?	( c2D.fillStyle = headFill, c2D.fill() )
+			:	( c2D.strokeStyle = P.stroke, c2D.stroke() )
+			return
+		}
+		if	( h.kind === 'line' ) {
+			strokeHeadPath( c2D, h.pts, false )
+			c2D.strokeStyle = P.stroke
+			c2D.stroke()
+			return
+		}
+		strokeHeadPath( c2D, h.pts, true )
+		h.fill
+		?	( c2D.fillStyle = headFill, c2D.fill() )
+		:	( c2D.strokeStyle = P.stroke, c2D.stroke() )
+	}
 
 	c2D.restore()
 }
