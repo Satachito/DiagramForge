@@ -16,7 +16,7 @@ Open the page and start drawing — no build step for the hosted demo. Diagrams 
 - **Import / export** — load and save `.zu` files (↑ / ↓ buttons)
 - **Session restore** — last diagram is kept in `localStorage`
 - **Light / dark mode** — follows system preference
-- **AI editing** — dev server with live `.zu` reload, `window.DF` command API, and Cursor MCP for natural-language diagram changes (see **[USAGE.md](USAGE.md)**)
+- **AI editing** — in-app Claude / OpenAI panels (bring-your-own key), plus a dev server with live `.zu` reload, `window.ZU` command API, and Cursor MCP for natural-language diagram changes (see **[USAGE.md](USAGE.md)**)
 
 ## Quick start (demo)
 
@@ -57,14 +57,16 @@ Each node is `[ ID, area, paint ]`. Each link is `[ [ fromID, toID ], ends, pain
 Authoring rules for AI and hand edits: **[Web/SCHEMA.md](Web/SCHEMA.md)** · **[AI.md](AI.md)** (AI contract + MCP)  
 Sample files: **[Samples/](Samples/)**
 
-## Editing with Cursor
+## Editing with AI
 
-Zukai has no in-app AI panel. Typical workflows:
+Zukai has two **in-app AI panels** (bring-your-own API key) — a Claude panel and
+an OpenAI panel — plus on-disk and MCP workflows. Typical workflows:
 
 | Goal | How |
 |------|-----|
+| Chat with the diagram inside the app | In-app **Claude** or **OpenAI** panel (paste your API key) |
 | Edit `.zu` on disk, preview on save | Phase 2 — `npm run dev` + `?zu=Samples/….zu` |
-| Change the open diagram from chat | Phase 4 — MCP (`zu_get_model`, `zu_apply`, …) |
+| Change the open diagram from Cursor chat | Phase 4 — MCP (`zu_get_model`, `zu_apply`, …) |
 | One-off file load on GitHub Pages | **↑** upload or a Sample button |
 
 Tips:

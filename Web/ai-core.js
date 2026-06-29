@@ -3,7 +3,7 @@
 //	Provider-neutral: the .zu / ops contract, the ops tool schema, the SSE line
 //	reader, and the panel UI + tool loop. Each provider module supplies a
 //	streamTurn() that talks to its own API and normalizes tool calls to
-//	{ id, input }. Edits go through window.DF.apply ( ai-api.js ), so each turn
+//	{ id, input }. Edits go through window.ZU.apply ( ai-api.js ), so each turn
 //	is one undo step + redraw, identical to the MCP path.
 
 //	Concise, implementation-accurate contract ( mirrors AI.md ). The live model
@@ -46,7 +46,7 @@ OPS_SCHEMA		= {
 
 //	System prompt with the current live model appended ( fresh every request ).
 export const
-systemWithModel	= () => `${ SYSTEM }\n\nCurrent model ( JSON ):\n${ JSON.stringify( window.DF.getModel() ) }`
+systemWithModel	= () => `${ SYSTEM }\n\nCurrent model ( JSON ):\n${ JSON.stringify( window.ZU.getModel() ) }`
 
 //	Read an SSE response, calling onEvent( rawDataString ) per `data:` line.
 //	Stops on `data: [DONE]` ( OpenAI ) or stream end ( Anthropic ).
@@ -137,7 +137,7 @@ initPanel		= provider => {
 					let		content
 					try {
 						const	ops = tc.input?.ops ?? []
-						const	issues = await window.DF.apply( ops )
+						const	issues = await window.ZU.apply( ops )
 						content = JSON.stringify( { applied: ops.length, issues } )
 					} catch ( er ) {
 						content = JSON.stringify( { error: String( er?.message || er ) } )

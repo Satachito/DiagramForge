@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-drawio2cde.py — Convert a draw.io (.drawio, uncompressed XML) file into
+drawio2zu.py — Convert a draw.io (.drawio, uncompressed XML) file into
 Zukai `.zu` files, one per page.
 
 Schema (see Web/SCHEMA.md):
@@ -17,8 +17,8 @@ Mapping:
     edges (and edge labels) are dropped — Zukai links are node-to-node only.
 
 Usage:
-    python3 tools/drawio2cde.py INPUT.drawio
-    python3 tools/drawio2cde.py INPUT.drawio -o OUTDIR --strip 朝日 --strip 社外秘
+    python3 tools/drawio2zu.py INPUT.drawio
+    python3 tools/drawio2zu.py INPUT.drawio -o OUTDIR --strip 朝日 --strip 社外秘
 """
 import argparse
 import html as H

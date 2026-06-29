@@ -1,4 +1,4 @@
-//	Live .zu reload + WebSocket RPC bridge to window.DF ( tools/zu-server.mjs ).
+//	Live .zu reload + WebSocket RPC bridge to window.ZU ( tools/zu-server.mjs ).
 
 import { Load	} from './Application.js'
 import { CanvasSize	} from './main-editor.js'
@@ -14,7 +14,7 @@ getWatchPath	= () => watchPath
 export const
 setWatchPath	= path => {
 	watchPath = path
-	path && sessionStorage.setItem( 'df-watch', path )
+	path && sessionStorage.setItem( 'zu-watch', path )
 }
 
 const
@@ -22,7 +22,7 @@ snapshot	= () => {
 	const
 	[ width, height ] = CanvasSize()
 	return	{
-		model			: window.DF.getModel()
+		model			: window.ZU.getModel()
 	,	canvas			: { width, height }
 	,	watchPath
 	}
@@ -40,23 +40,23 @@ MUTATING	= new Set( [ 'apply', 'setModel', 'autoLayout', 'addNode', 'updateNode'
 const
 runRpc	= async ( method, params ) => {
 	const
-	DF = window.DF
+	ZU = window.ZU
 	switch ( method ) {
 	case 'getModel':
 		return	snapshot()
 	case 'apply':
-		return	DF.apply( params.ops )
+		return	ZU.apply( params.ops )
 	case 'validate':
-		return	DF.validate( params.model )
+		return	ZU.validate( params.model )
 	case 'autoLayout':
-		return	DF.autoLayout( params )
+		return	ZU.autoLayout( params )
 	case 'setModel':
-		return	DF.setModel( params.model )
-	case 'loadCde':
-		await loadCdeFile( params.path, uiRef ?? {} )
+		return	ZU.setModel( params.model )
+	case 'loadZu':
+		await loadZuFile( params.path, uiRef ?? {} )
 		return	snapshot()
 	default: {
-		const	fn = DF[ method ]
+		const	fn = ZU[ method ]
 		if	( typeof fn !== 'function' ) throw new Error( `unknown RPC method "${ method }"` )
 		return	fn( params )
 	}
@@ -77,7 +77,7 @@ handleRpc	= async msg => {
 }
 
 export const
-loadCdeFile	= async ( path, { SyncCanvasInputs, FILE_NAME } = {} ) => {
+loadZuFile	= async ( path, { SyncCanvasInputs, FILE_NAME } = {} ) => {
 	const
 	res = await fetch( new URL( path, import.meta.url ), { cache: 'no-store' } )
 	if	( !res.ok ) throw new Error( `${ res.status } ${ path }` )
@@ -94,7 +94,7 @@ connectBridge	= () => {
 
 	const
 	proto = location.protocol === 'https:' ? 'wss:' : 'ws:'
-	,	url = `${ proto }//${ location.host }/__df/ws`
+	,	url = `${ proto }//${ location.host }/__zu/ws`
 	,	connect = () => {
 		ws = new WebSocket( url )
 		ws.onopen = () => {
@@ -106,13 +106,13 @@ connectBridge	= () => {
 			if	( msg.type === 'zu-changed' ) {
 				if	( !watchPath || msg.path !== watchPath ) return
 				try {
-					await loadCdeFile( watchPath, uiRef ?? {} )
+					await loadZuFile( watchPath, uiRef ?? {} )
 				} catch ( er ) {
 					console.error( '[live-reload]', er )
 				}
 				return
 			}
-			if	( msg.type === 'rpc' ) handleRpc( msg )
+			if	( msg.type === 'rpc' ) void handleRpc( msg )
 		}
 		ws.onclose = () => setTimeout( connect, 1500 )
 	}
@@ -124,7 +124,7 @@ initLiveReload	= async ( ui, { Report } = {} ) => {
 	uiRef = ui
 	const
 	fromUrl = new URLSearchParams( location.search ).get( 'zu' )
-	,	fromStore = sessionStorage.getItem( 'df-watch' )
+	,	fromStore = sessionStorage.getItem( 'zu-watch' )
 	,	path = fromUrl || fromStore
 
 	setWatchPath( path )
@@ -132,7 +132,7 @@ initLiveReload	= async ( ui, { Report } = {} ) => {
 
 	if	( fromUrl ) {
 		try {
-			await loadCdeFile( fromUrl, ui )
+			await loadZuFile( fromUrl, ui )
 		} catch ( er ) {
 			Report ? Report( er ) : console.error( er )
 		}

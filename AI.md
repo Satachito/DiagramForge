@@ -4,7 +4,7 @@ Implementation-accurate contract for agents (Cursor, MCP, scripts) working on Zu
 
 | Document | Role |
 |----------|------|
-| **This file (AI.md)** | AI contract, MCP / `window.DF` operations |
+| **This file (AI.md)** | AI contract, MCP / `window.ZU` operations |
 | **[Web/SCHEMA.md](Web/SCHEMA.md)** | `.zu` schema detail (link `corner`, anchors, examples) |
 | **[USAGE.md](USAGE.md)** | Dev server, Phase 2/3/4, MCP setup |
 
@@ -109,16 +109,16 @@ Same rules in `Web/ai-api.js` and `tools/zu-validate.mjs`:
 
 ## Programmatic API
 
-### Browser — `window.DF` (`Web/ai-api.js`)
+### Browser — `window.ZU` (`Web/ai-api.js`)
 
 Via `Application.js`: **one operation = one undo step**.
 
 ```js
-DF.getModel()           // clone of { nodes, links }
-DF.validate(model?)     // array of issue strings (empty = OK)
-DF.apply([ { op: '…', … }, … ])
-DF.autoLayout({ algorithm: 'grid', cols, gap, startX, startY })
-DF.setModel({ nodes, links })
+ZU.getModel()           // clone of { nodes, links }
+ZU.validate(model?)     // array of issue strings (empty = OK)
+ZU.apply([ { op: '…', … }, … ])
+ZU.autoLayout({ algorithm: 'grid', cols, gap, startX, startY })
+ZU.setModel({ nodes, links })
 ```
 
 **`apply` ops:**
@@ -155,9 +155,9 @@ DF.setModel({ nodes, links })
 
 Provided by `tools/zu-server.mjs`:
 
-- `GET /__df/status`
-- `GET /__df/model`
-- `POST /__df/rpc` — e.g. `{ "method": "apply", "params": { "ops": […] } }`
+- `GET /__zu/status`
+- `GET /__zu/model`
+- `POST /__zu/rpc` — e.g. `{ "method": "apply", "params": { "ops": […] } }`
 
 ---
 
@@ -167,7 +167,7 @@ Provided by `tools/zu-server.mjs`:
 |------|------|
 | Save `.zu` → browser updates | Phase 2 — `?zu=Samples/….zu` + file save |
 | Change live diagram from chat | Phase 4 — MCP `zu_apply` |
-| Script / curl | Phase 3 — `/__df/rpc` |
+| Script / curl | Phase 3 — `/__zu/rpc` |
 | GitHub Pages only | Hand-edit `.zu` + **↑** upload |
 
 Phase 4 changes stay **in memory** until `zu_save_file`.
@@ -179,8 +179,8 @@ Phase 4 changes stay **in memory** until `zu_save_file`.
 | File | Role |
 |------|------|
 | `Web/Application.js` | `Load`, `Node`, `EditNode`, `Link`, `SetModel`, undo |
-| `Web/ai-api.js` | `window.DF`, `validateModel`, `apply` |
-| `Web/geoDF.js` | Link routing, arrowheads, frame offsets |
+| `Web/ai-api.js` | `window.ZU`, `validateModel`, `apply` |
+| `Web/GeoZU.js` | Link routing, arrowheads, frame offsets |
 | `Web/main-editor.js` | Drawing, context menus |
 | `Web/ForeignLabel.js` | `html` labels |
 | `tools/zu-server.mjs` | Static serve + live reload + RPC |

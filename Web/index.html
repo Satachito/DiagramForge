@@ -792,7 +792,7 @@ aside input[type=checkbox]
 
 <footer>
 	<div class=debug-bar>
-		<button			id=DUMP_CDE			>Dump CDE		</button>
+		<button			id=DUMP_ZU			>Dump ZU		</button>
 		<button			id=DUMP_JOBS		>Dump Jobs		</button>
 		<button			id=DUMP_CLIPBOARD	>Dump Clipboard	</button>
 		<button			id=FORCE_DRAW		>Force Draw		</button>
@@ -888,7 +888,7 @@ import { CanvasSize, SetCanvasSize } from './main-editor.js'
 import './ai-api.js'
 import { initAIPanel } from './ai-panel.js'
 import { initOpenAIPanel } from './ai-panel-openai.js'
-import { loadCdeFile, initLiveReload, setWatchPath } from './live-reload.js'
+import { loadZuFile, initLiveReload, setWatchPath } from './live-reload.js'
 import { saveSVG, printPDF, copySVG, baseName, downloadBlob } from './Export.js'
 
 const
@@ -918,7 +918,7 @@ SyncCanvasInputs = () => {
 const
 LoadSample = async path => {
 	try {
-		await loadCdeFile( path, { SyncCanvasInputs, FILE_NAME } )
+		await loadZuFile( path, { SyncCanvasInputs, FILE_NAME } )
 	} catch ( er ) {
 		throw new Error( `${ er.message || er }` )
 	}
@@ -955,7 +955,7 @@ SAMPLE_ANCHORS		.onclick = () => LoadSample( 'Samples/Anchors.zu'		).catch( Repo
 SAMPLE_ARROWHEADS	.onclick = () => LoadSample( 'Samples/Arrowheads.zu'	).catch( Report )
 SAMPLE_SHOWCASE		.onclick = () => LoadSample( 'Samples/Showcase.zu'		).catch( Report )
 
-DUMP_CDE		.onclick = () => console.log( JSON.stringify( app, null, '\t' ) )
+DUMP_ZU		.onclick = () => console.log( JSON.stringify( app, null, '\t' ) )
 DUMP_JOBS		.onclick = DumpJobs
 DUMP_CLIPBOARD	.onclick = () => navigator.clipboard.read().then(
 	items => (
@@ -1008,7 +1008,7 @@ UPLOAD			.onchange = async ev => {
 			SyncCanvasInputs()
 			//	uploaded files are not on-server paths — disable live .zu watch
 			setWatchPath( null )
-			sessionStorage.removeItem( 'df-watch' )
+			sessionStorage.removeItem( 'zu-watch' )
 		} catch ( er ) {
 			Report( er )
 		} finally {

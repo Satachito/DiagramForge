@@ -52,7 +52,7 @@ validateModel	= model => {
 }
 
 export const
-parseCdeText	= text => {
+parseZuText	= text => {
 	const
 	doc = JSON.parse( text )
 	if	( !doc?.model ) throw new Error( '.zu root must include "model"' )
@@ -60,4 +60,4 @@ parseCdeText	= text => {
 }
 
 export const
-formatCdeDoc	= doc => JSON.stringify( doc, null, '\t' )
+formatZuDoc	= doc => JSON.stringify( doc, null, '\t' )

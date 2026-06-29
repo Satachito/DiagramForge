@@ -84,8 +84,8 @@ streamTurn		= async ( key, model, messages, { onTextStart, onTextDelta } ) => {
 
 export const
 initAIPanel		= () => initPanel( {
-	storeKey	: 'df-anthropic-key'
-,	storeModel	: 'df-anthropic-model'
+	storeKey	: 'zu-anthropic-key'
+,	storeModel	: 'zu-anthropic-model'
 ,	el			: {
 		key			: AI_KEY
 	,	keyToggle	: AI_KEY_TOGGLE

@@ -84,8 +84,8 @@ streamTurn		= async ( key, model, messages, { onTextStart, onTextDelta } ) => {
 
 export const
 initOpenAIPanel	= () => initPanel( {
-	storeKey	: 'df-openai-key'
-,	storeModel	: 'df-openai-model'
+	storeKey	: 'zu-openai-key'
+,	storeModel	: 'zu-openai-model'
 ,	el			: {
 		key			: OAI_KEY
 	,	keyToggle	: OAI_KEY_TOGGLE

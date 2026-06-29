@@ -1,7 +1,7 @@
 //	AI-facing command surface for the live, in-browser model.
 //
 //	Everything here mutates window.app through Application.js so each command is a
-//	single undo step and triggers a redraw. Exposed as window.DF so an external
+//	single undo step and triggers a redraw. Exposed as window.ZU so an external
 //	agent ( e.g. via the browser CDP Runtime.evaluate, or the WebSocket bridge )
 //	can read, validate, generate and lay out the diagram directly.
 
@@ -130,7 +130,7 @@ apply			= async ops => {
 	return	validateModel()
 }
 
-window.DF = {
+window.ZU = {
 	getModel
 ,	setModel
 ,	validate	: validateModel

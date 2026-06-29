@@ -12,9 +12,9 @@ import { McpServer	} from '@modelcontextprotocol/sdk/server/mcp.js'
 import { StdioServerTransport	} from '@modelcontextprotocol/sdk/server/stdio.js'
 import { readFile, writeFile	} from 'node:fs/promises'
 import { z	} from 'zod'
-import { dfStatus, dfGetModel, dfRpc	} from './zu-client.mjs'
+import { zuStatus, zuGetModel, zuRpc	} from './zu-client.mjs'
 import { WEB, webPath, isUnderWeb	} from './zu-paths.mjs'
-import { validateModel, parseCdeText, formatCdeDoc	} from './zu-validate.mjs'
+import { validateModel, parseZuText, formatZuDoc	} from './zu-validate.mjs'
 
 const
 server = new McpServer( {
@@ -28,7 +28,7 @@ textResult	= obj => ( {
 } )
 
 const
-resolveCdePath	= rel => {
+resolveZuPath	= rel => {
 	const
 	clean = rel.replace( /^\/+/, '' )
 	,	abs = webPath( clean )
@@ -41,14 +41,14 @@ server.tool(
 	'zu_status'
 ,	'Check whether a browser editor is connected to zu-server and which .zu file is watched.'
 ,	{}
-,	async () => textResult( await dfStatus() )
+,	async () => textResult( await zuStatus() )
 )
 
 server.tool(
 	'zu_get_model'
 ,	'Read the live diagram from the open browser ( nodes + links + canvas size ). Falls back to last cached snapshot.'
 ,	{}
-,	async () => textResult( await dfGetModel() )
+,	async () => textResult( await zuGetModel() )
 )
 
 server.tool(
@@ -62,22 +62,22 @@ server.tool(
 	}
 ,	async ( { model } ) => {
 		if	( model ) return textResult( { ok: !validateModel( model ).length, issues: validateModel( model ) } )
-		const	{ result } = await dfRpc( 'validate', {} )
+		const	{ result } = await zuRpc( 'validate', {} )
 		return	textResult( { ok: !result.length, issues: result } )
 	}
 )
 
 server.tool(
 	'zu_apply'
-,	`Apply one or more ops to the live diagram ( same ops as window.DF.apply ).
+,	`Apply one or more ops to the live diagram ( same ops as window.ZU.apply ).
 Ops: addNode, updateNode, removeNode, restack, addLink, updateLink, removeLink, autoLayout, setCanvas.
 Example updateNode: { "op": "updateNode", "id": "VPN", "area": { "type": "rhombus", "cX": 960, "cY": 584, "rH": 512, "rV": 72, "html": "VPN" } }`
 ,	{
 		ops	: z.array( z.record( z.any() ) )
 	}
 ,	async ( { ops } ) => {
-		const	{ result: issues } = await dfRpc( 'apply', { ops } )
-		const	snap = await dfGetModel()
+		const	{ result: issues } = await zuRpc( 'apply', { ops } )
+		const	snap = await zuGetModel()
 		return	textResult( { issues, ...snap } )
 	}
 )
@@ -92,8 +92,8 @@ server.tool(
 	,	startY	: z.number().optional()
 	}
 ,	async params => {
-		await dfRpc( 'autoLayout', { algorithm: 'grid', ...params } )
-		return	textResult( await dfGetModel() )
+		await zuRpc( 'autoLayout', { algorithm: 'grid', ...params } )
+		return	textResult( await zuGetModel() )
 	}
 )
 
@@ -104,8 +104,8 @@ server.tool(
 		path	: z.string()
 	}
 ,	async ( { path: rel } ) => {
-		resolveCdePath( rel )
-		const	{ result } = await dfRpc( 'loadCde', { path: rel.replace( /^\/+/, '' ) } )
+		resolveZuPath( rel )
+		const	{ result } = await zuRpc( 'loadZu', { path: rel.replace( /^\/+/, '' ) } )
 		return	textResult( result )
 	}
 )
@@ -117,12 +117,12 @@ server.tool(
 		path	: z.string()
 	}
 ,	async ( { path: rel } ) => {
-		const	{ rel: clean, abs } = resolveCdePath( rel )
-		,	snap = await dfGetModel()
+		const	{ rel: clean, abs } = resolveZuPath( rel )
+		,	snap = await zuGetModel()
 		,	doc = { model: snap.model }
 		,	issues = validateModel( doc.model )
 		if	( issues.length ) return textResult( { saved: false, issues } )
-		await writeFile( abs, formatCdeDoc( doc ) + '\n', 'utf8' )
+		await writeFile( abs, formatZuDoc( doc ) + '\n', 'utf8' )
 		return	textResult( { saved: true, path: clean, nodeCount: doc.model.nodes.length, linkCount: doc.model.links.length } )
 	}
 )
@@ -134,8 +134,8 @@ server.tool(
 		path	: z.string()
 	}
 ,	async ( { path: rel } ) => {
-		const	{ rel: clean, abs } = resolveCdePath( rel )
-		,	doc = parseCdeText( await readFile( abs, 'utf8' ) )
+		const	{ rel: clean, abs } = resolveZuPath( rel )
+		,	doc = parseZuText( await readFile( abs, 'utf8' ) )
 		return	textResult( { path: clean, ...doc, issues: validateModel( doc.model ) } )
 	}
 )

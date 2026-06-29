@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 //	Zukai dev server: static Web/ + Samples live-reload + model RPC bridge.
 //
-//	Browser ( window.DF ) ↔ WebSocket ↔ this server ↔ HTTP ↔ zu-mcp.mjs
+//	Browser ( window.ZU ) ↔ WebSocket ↔ this server ↔ HTTP ↔ zu-mcp.mjs
 //
 //	Usage:
 //	  node tools/zu-server.mjs
@@ -16,7 +16,7 @@ import path from 'node:path'
 import { ROOT, WEB, PORT, isUnderWeb	} from './zu-paths.mjs'
 
 const
-WS_PATH	= '/__df/ws'
+WS_PATH	= '/__zu/ws'
 ,	clients	= new Set
 ,	RPC_DEFAULT_MS	= 15_000
 
@@ -218,7 +218,7 @@ attachWsReader	= socket => {
 }
 
 const
-notifyCde	= abs => {
+notifyZu	= abs => {
 	const
 	rel = zuPathFromAbs( abs )
 	if	( !rel ) return
@@ -230,19 +230,19 @@ notifyCde	= abs => {
 }
 
 const
-watchCdeTree	= dir => {
+watchZuTree	= dir => {
 	watch( dir, { recursive: true }, ( ev, name ) => {
 		if	( !name || !name.endsWith( '.zu' ) ) return
-		notifyCde( path.join( dir, name ) )
+		notifyZu( path.join( dir, name ) )
 	} )
 	log( 'watching', path.relative( ROOT, dir ) || '.' )
 }
 
-watchCdeTree( path.join( WEB, 'Samples' ) )
+watchZuTree( path.join( WEB, 'Samples' ) )
 
 const
 handleDfApi	= async ( req, res, urlPath ) => {
-	if	( urlPath === '/__df/status' && req.method === 'GET' ) {
+	if	( urlPath === '/__zu/status' && req.method === 'GET' ) {
 		json( res, 200, {
 			connected	: !!( editor && !editor.destroyed )
 		,	watchPath	: lastSnapshot?.watchPath ?? null
@@ -252,7 +252,7 @@ handleDfApi	= async ( req, res, urlPath ) => {
 		} )
 		return
 	}
-	if	( urlPath === '/__df/model' && req.method === 'GET' ) {
+	if	( urlPath === '/__zu/model' && req.method === 'GET' ) {
 		try {
 			if	( editor && !editor.destroyed ) {
 				const	snap = await callEditor( 'getModel' )
@@ -268,7 +268,7 @@ handleDfApi	= async ( req, res, urlPath ) => {
 		}
 		return
 	}
-	if	( urlPath === '/__df/rpc' && req.method === 'POST' ) {
+	if	( urlPath === '/__zu/rpc' && req.method === 'POST' ) {
 		try {
 			const
 			body = JSON.parse( await readBody( req ) || '{}' )
@@ -352,7 +352,7 @@ const
 server = createServer( ( req, res ) => {
 	const
 	urlPath = req.url.split( '?' )[ 0 ]
-	if	( urlPath.startsWith( '/__df/' ) && urlPath !== WS_PATH ) {
+	if	( urlPath.startsWith( '/__zu/' ) && urlPath !== WS_PATH ) {
 		handleDfApi( req, res, urlPath ).catch( er => {
 			log( 'api error', er )
 			json( res, 500, { error: 'Internal error' } )
@@ -370,7 +370,7 @@ server.on( 'upgrade', acceptWs )
 server.listen( PORT, () => {
 	log( `http://localhost:${ PORT }/` )
 	log( `example: http://localhost:${ PORT }/?zu=Samples/JSONs.zu` )
-	log( `bridge:  GET http://127.0.0.1:${ PORT }/__df/status` )
+	log( `bridge:  GET http://127.0.0.1:${ PORT }/__zu/status` )
 } )
 
 server.on( 'error', er => {
@@ -378,7 +378,7 @@ server.on( 'error', er => {
 		console.error(
 			`[zu-server] port ${ PORT } is already in use.\n`
 			+ `  kill it:  lsof -ti:${ PORT } | xargs kill\n`
-			+ `  or use:   DF_PORT=${ PORT + 1 } node tools/zu-server.mjs`
+			+ `  or use:   ZU_PORT=${ PORT + 1 } node tools/zu-server.mjs`
 		)
 		process.exit( 1 )
 	}

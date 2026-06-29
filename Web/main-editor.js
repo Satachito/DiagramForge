@@ -77,7 +77,7 @@ import {
 ,	LinkMetrics
 ,	shaftSpec
 ,	shaftToPath
-}	from './GeoDF.js'
+}	from './GeoZU.js'
 
 const
 strokeHeadPath	= ( c2D, pts, close ) => {
@@ -652,7 +652,7 @@ MainEditor extends HTMLElement {
 		A = structuredClone( link[ 1 ] ?? {} )
 		,	key = end === 'F' ? 'headF' : 'headT'
 		style ? ( A[ key ] = style ) : ( delete A[ key ] )
-		Link( [ [ F, T ], A, link[ 2 ] ] )
+		void Link( [ [ F, T ], A, link[ 2 ] ] )
 	}
 
 	hideContextMenus() {

@@ -367,7 +367,7 @@ Paste		= async _ => {	//	ClipboardData
 	)
 }
 
-import { BBox } from './GeoDF.js'
+import { BBox } from './GeoZU.js'
 
 export	const
 Load		= _ => DoTypical(

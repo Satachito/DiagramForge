@@ -1,11 +1,11 @@
 //	Shared HTTP client for zu-server RPC ( used by zu-mcp.mjs ).
 
-import { DF_BASE } from './zu-paths.mjs'
+import { ZU_BASE } from './zu-paths.mjs'
 
 export const
-dfFetch	= async ( path, init ) => {
+zuFetch	= async ( path, init ) => {
 	const
-	res = await fetch( `${ DF_BASE }${ path }`, init )
+	res = await fetch( `${ ZU_BASE }${ path }`, init )
 	if	( !res.ok ) {
 		const	text = await res.text().catch( () => '' )
 		throw new Error( text || `${ res.status } ${ path }` )
@@ -16,13 +16,13 @@ dfFetch	= async ( path, init ) => {
 }
 
 export const
-dfStatus	= () => dfFetch( '/__df/status' )
+zuStatus	= () => zuFetch( '/__zu/status' )
 
 export const
-dfGetModel	= () => dfFetch( '/__df/model' )
+zuGetModel	= () => zuFetch( '/__zu/model' )
 
 export const
-dfRpc	= ( method, params = {}, timeout ) => dfFetch( '/__df/rpc', {
+zuRpc	= ( method, params = {}, timeout ) => zuFetch( '/__zu/rpc', {
 	method	: 'POST'
 ,	headers	: { 'Content-Type': 'application/json' }
 ,	body	: JSON.stringify( { method, params, timeout } )

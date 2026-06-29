@@ -7,13 +7,13 @@ This document summarizes how to edit diagrams with Cursor, the dev server, and M
 | Layer | What it is | When it runs |
 |-------|------------|--------------|
 | **Phase 2 — live reload** | Save a `.zu` on disk → browser reloads that file | `watchPath` is set (see below) |
-| **Phase 3 — WebSocket bridge** | `zu-server` RPCs into the open tab via `window.DF` | `npm run dev` + browser tab open |
+| **Phase 3 — WebSocket bridge** | `zu-server` RPCs into the open tab via `window.ZU` | `npm run dev` + browser tab open |
 | **Phase 4 — MCP** | Cursor chat calls MCP tools → Phase 3 → canvas | MCP enabled + same session as Phase 3 |
 
 All three can be used together, or separately:
 
 - **Edit files in Cursor, preview on save** → Phase 2 (`?zu=…`)
-- **Script or curl changes the live canvas** → Phase 3 (`/__df/rpc`)
+- **Script or curl changes the live canvas** → Phase 3 (`/__zu/rpc`)
 - **Natural language in Cursor chat** → Phase 4 (`zu_apply`, etc.)
 
 Phase 4 does **not** replace Phase 2. MCP changes the **in-memory** diagram until you call `zu_save_file`.
@@ -54,14 +54,14 @@ Leave a browser tab open on the dev server.
 | URL | Phase 2 (auto-reload on save) | Phase 3 / 4 (live MCP) |
 |-----|------------------------------|-------------------------|
 | `http://localhost:8080/?zu=Samples/JSONs.zu` | **Yes** — watches that file | **Yes** |
-| `http://localhost:8080/` | **No** (unless `df-watch` left in sessionStorage) | **Yes** |
+| `http://localhost:8080/` | **No** (unless `zu-watch` left in sessionStorage) | **Yes** |
 | Sample button in the app | **Yes** — sets watch path | **Yes** |
 
 **Recommended for file + AI editing:** use `?zu=Samples/YourDiagram.zu`.
 
 **MCP-only experiments:** `http://localhost:8080/` is fine; live edits apply to whatever is on the canvas (localStorage restore or empty diagram). They are **not** written to disk until `zu_save_file`.
 
-To clear a stale watch path: DevTools → Application → Session Storage → delete `df-watch`, or upload a file with **↑** (upload clears the watch).
+To clear a stale watch path: DevTools → Application → Session Storage → delete `zu-watch`, or upload a file with **↑** (upload clears the watch).
 
 ---
 
@@ -76,7 +76,7 @@ Port already in use:
 
 ```bash
 lsof -ti:8080 | xargs kill
-# or: DF_PORT=8081 npm run dev
+# or: ZU_PORT=8081 npm run dev
 ```
 
 ---
@@ -87,17 +87,17 @@ Requires a connected browser tab (`zu_status` → `"connected": true`).
 
 ```bash
 # Connection check
-curl -s http://127.0.0.1:8080/__df/status
+curl -s http://127.0.0.1:8080/__zu/status
 
 # Read live model
-curl -s http://127.0.0.1:8080/__df/model
+curl -s http://127.0.0.1:8080/__zu/model
 
 # Apply ops (example: change VPN rV live, no file save)
 node --input-type=module -e "
-const snap = await (await fetch('http://127.0.0.1:8080/__df/model')).json();
+const snap = await (await fetch('http://127.0.0.1:8080/__zu/model')).json();
 const vpn = snap.model.nodes.find(n => n[0] === 'VPN');
 const area = { ...vpn[1], rV: 86 };
-await fetch('http://127.0.0.1:8080/__df/rpc', {
+await fetch('http://127.0.0.1:8080/__zu/rpc', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
@@ -112,11 +112,11 @@ Endpoints:
 
 | Method | Path | Purpose |
 |--------|------|---------|
-| GET | `/__df/status` | Browser connected? watch path, node count |
-| GET | `/__df/model` | Live `{ model, canvas: { width, height } }` |
-| POST | `/__df/rpc` | Body: `{ "method": "apply", "params": { "ops": […] } }` |
+| GET | `/__zu/status` | Browser connected? watch path, node count |
+| GET | `/__zu/model` | Live `{ model, canvas: { width, height } }` |
+| POST | `/__zu/rpc` | Body: `{ "method": "apply", "params": { "ops": […] } }` |
 
-DevTools: `window.DF` in the browser — see **`Web/ai-api.js`** and **[Web/SCHEMA.md](Web/SCHEMA.md)**.
+DevTools: `window.ZU` in the browser — see **`Web/ai-api.js`** and **[Web/SCHEMA.md](Web/SCHEMA.md)**.
 
 ---
 
@@ -178,7 +178,7 @@ Calls `zu_save_file`. Phase 2 may then reload the tab when the file is written.
 | MCP listed but Disabled | Toggle **ON** in Settings → Tools & MCP |
 | `connected: false` | Open dev URL in browser; keep tab open |
 | RPC timeout | Restart `npm run dev` |
-| Phase 2 not reloading | Use `?zu=…` or Sample button; check `df-watch` in sessionStorage |
+| Phase 2 not reloading | Use `?zu=…` or Sample button; check `zu-watch` in sessionStorage |
 | `DrawModel failed` + `atob` | Corrupt SVG/PNG on a node — fix via `zu_get_model` / file |
 | Port 8080 in use | `lsof -ti:8080 \| xargs kill` |
 
@@ -188,7 +188,7 @@ Calls `zu_save_file`. Phase 2 may then reload the tab when the file is written.
 
 ```
 Zukai/
-├── Web/              App + ai-api.js (window.DF)
+├── Web/              App + ai-api.js (window.ZU)
 ├── Samples/          Example .zu files
 ├── tools/
 │   zu-server.mjs     Dev server + bridge
