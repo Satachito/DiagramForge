@@ -40,9 +40,26 @@ Every client runs the same stdio server:
 | **`tools/zu-mcp.mjs`** | MCP tools (`zu_status`, `zu_get_model`, …) |
 | **`tools/zu-mcp-run.sh`** | Launcher — `cd`s into `tools/` so `node_modules` resolves |
 
-The MCP process talks to **`zu-server`** (Phase 3) on port **8080** by default. If you use another port, set **`ZU_PORT`** in the MCP server's environment **and** when starting the dev server (see [Every session](#every-session)).
+The MCP process talks to **`zu-server`** (Phase 3) on port **8080** by default. If you use another port, set **`ZU_PORT`** in the MCP server's environment **and** when starting the dev server (see [Start the dev server](#start-the-dev-server-every-session)).
 
-Replace **`/path/to/Zukai`** below with your clone path (Claude Desktop requires absolute paths).
+---
+
+## Start the dev server (every session)
+
+The MCP server (Phase 4) and the HTTP/WebSocket bridge (Phase 3) both connect to the **dev server**, so start it **before** registering or using any client:
+
+```bash
+cd Web
+npm run dev
+```
+
+Leave a browser tab open on the dev server (see [Which URL to open](#which-url-to-open)).
+
+---
+
+## Register your MCP client
+
+Pick your client below. Replace **`/path/to/Zukai`** with your clone path (Claude Desktop requires absolute paths).
 
 ---
 
@@ -156,17 +173,6 @@ codex mcp list
 Inside a Codex session, **`/mcp`** shows server status. Then ask: *Run `zu_status`.*
 
 Docs: [OpenAI Codex — MCP](https://developers.openai.com/codex/mcp).
-
----
-
-## Every session
-
-```bash
-cd Web
-npm run dev
-```
-
-Leave a browser tab open on the dev server.
 
 ---
 
