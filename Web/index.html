@@ -361,6 +361,43 @@ aside details {
 ;	font-family				: inherit
 ;	font-size				: 12px
 }
+.ai-head {
+;	display					: flex
+;	align-items				: center
+;	gap						: 4px
+}
+.ai-head-title {
+;	display					: none
+;	font-weight				: 600
+;	font-size				: 12px
+;	white-space				: nowrap
+}
+.ai-float-btn {
+;	flex					: 0 0 auto
+;	width					: 28px
+;	margin					: 0 0 0 auto
+;	padding					: 0
+;	font-size				: 13px
+;	cursor					: pointer
+}
+.ai-panel.floating {
+;	position				: fixed
+;	top						: 56px
+;	right					: 16px
+;	width					: min( 480px, 90vw )
+;	height					: min( 70vh, 640px )
+;	z-index					: 1000
+;	box-sizing				: border-box
+;	padding					: 10px
+;	border					: 1px solid var( --color-popup-border )
+;	border-radius			: 8px
+;	background				: var( --color-popup-bg )
+;	color					: var( --color-popup-fg )
+;	box-shadow				: 0 8px 28px var( --color-shadow )
+}
+.ai-panel.floating .ai-head			{ cursor: move }
+.ai-panel.floating .ai-head-title	{ display: block }
+.ai-panel.floating .ai-log			{ max-height: none; flex: 1 1 auto }
 aside summary {
 ;	cursor					: pointer
 ;	font-size				: 13px
@@ -729,7 +766,11 @@ aside input[type=checkbox]
 	<hr>
 	<details open>
 		<summary>Claude assistant</summary>
-		<div class=ai-panel>
+		<div class=ai-panel id=AI_PANEL>
+			<div class=ai-head>
+				<span class=ai-head-title>Claude assistant</span>
+				<button id=AI_FLOAT type=button class=ai-float-btn title="Float panel" aria-label="Float / dock panel">⤢</button>
+			</div>
 			<div class=ai-config>
 				<div class=ai-key-row>
 					<input id=AI_KEY type=password placeholder="Anthropic API key (sk-ant-…)" spellcheck=false autocomplete=off>
@@ -750,7 +791,11 @@ aside input[type=checkbox]
 	<hr>
 	<details open>
 		<summary>OpenAI assistant</summary>
-		<div class=ai-panel>
+		<div class=ai-panel id=OAI_PANEL>
+			<div class=ai-head>
+				<span class=ai-head-title>OpenAI assistant</span>
+				<button id=OAI_FLOAT type=button class=ai-float-btn title="Float panel" aria-label="Float / dock panel">⤢</button>
+			</div>
 			<div class=ai-config>
 				<div class=ai-key-row>
 					<input id=OAI_KEY type=password placeholder="OpenAI API key (sk-…)" spellcheck=false autocomplete=off>
@@ -959,6 +1004,42 @@ LINK			.onclick = () => Link( LINK_EDITOR.$ )
 
 initAIPanel()
 initOpenAIPanel()
+
+//	Float / dock an AI panel: the docked panel pops out into a larger fixed box
+//	over the canvas, draggable by its header. State persists in localStorage.
+const
+makeFloatable = ( panel, btn, storeKey ) => {
+	const
+	setFloat = on => {
+		panel.classList.toggle( 'floating', on )
+		on || ( panel.style.left = panel.style.top = panel.style.right = '' )
+		btn.textContent	= on ? '⤓' : '⤢'
+		btn.title		= on ? 'Dock panel' : 'Float panel'
+		localStorage.setItem( storeKey, on ? '1' : '' )
+	}
+	btn.onclick = () => setFloat( !panel.classList.contains( 'floating' ) )
+
+	const
+	head = panel.querySelector( '.ai-head' )
+	let	drag = null
+	head.onpointerdown = ev => {
+		if	( !panel.classList.contains( 'floating' ) || ev.target === btn ) return
+		const	r = panel.getBoundingClientRect()
+		drag = { dx: ev.clientX - r.left, dy: ev.clientY - r.top }
+		panel.style.right = 'auto'
+		head.setPointerCapture( ev.pointerId )
+	}
+	head.onpointermove = ev => {
+		if	( !drag ) return
+		panel.style.left	= `${ ev.clientX - drag.dx }px`
+		panel.style.top		= `${ ev.clientY - drag.dy }px`
+	}
+	head.onpointerup = ev => { drag = null; head.releasePointerCapture?.( ev.pointerId ) }
+
+	setFloat( localStorage.getItem( storeKey ) === '1' )
+}
+makeFloatable( AI_PANEL,	AI_FLOAT,	'zu-ai-float'	)
+makeFloatable( OAI_PANEL,	OAI_FLOAT,	'zu-oai-float'	)
 
 DOWNLOAD		.onclick = () => downloadBlob(
 	new Blob( [ JSONString() ], { type: 'application/json' } )
