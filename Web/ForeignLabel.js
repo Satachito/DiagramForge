@@ -1,4 +1,6 @@
-//	Render node labels via SVG foreignObject (HTML + CSS in S.html / S.style).
+//	S.html / S.style の HTML + CSS を SVG foreignObject として描画する。
+//	注意: ここではサニタイズしない。信頼できない .zu を扱う場合は、
+//	読み込み前に HTML ラベルを除去するか、許可リスト方式で無害化すること。
 
 import { EscapeXML } from './DomUtils.js'
 import { XYWH } from './GeoZU.js'
@@ -7,15 +9,15 @@ const
 labelWrapperStyle	= S => {
 	const
 	color = matchMedia( '(prefers-color-scheme: dark)' ).matches ? '#ffffff' : '#000000'
-	//	the div must fill the foreignObject so the node's own flex/grid alignment
-	//	( place-items:center etc. ) can center the text vertically — without
-	//	height:100% the div shrinks to its content and the text sticks to the top
+	//	div が foreignObject 全体を埋めることで、ノード側の flex/grid 指定
+	//	( place-items:center など ) でラベルを中央寄せできる。
+	//	height:100% がないと div が内容サイズに縮み、文字が上に寄る。
 	return	`width:100%;height:100%;box-sizing:border-box;color-scheme:light dark;color:${ color };${ ( S.style || '' ).replace( /\n/g, '' ) }`
 }
 
-//	foreignObject content must be well-formed XML. Parse the label as HTML ( the
-//	lenient parser absorbs bare &, bare <, void elements like <br>/<img>, unquoted
-//	attributes ) then re-serialize as XML, which escapes and self-closes correctly.
+//	foreignObject の中身は well-formed XML である必要がある。
+//	いったん HTML としてパースし、bare &, bare <, <br>/<img> などの void 要素、
+//	引用符なし属性をブラウザの寛容なパーサに吸収させてから XML として再直列化する。
 const
 htmlToXhtml		= html => {
 	const

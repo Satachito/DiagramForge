@@ -37,31 +37,37 @@ AvailableLinks	= () => app.model.links.reduce(
 import Do from './Jobs.js'
 
 const
+RestoreApp	= _ => async () => (
+	app = structuredClone( _ )
+,	app.reforms = app.reforms.reduce(
+		( $, [ ID ] ) => {
+			const
+			node = FindNode( ID )
+			node && $.push( structuredClone( node ) )
+			return $
+
+		}
+	,	[]
+	)
+,	MAIN_EDITOR.clearInteraction()
+,	await MAIN_EDITOR.Draw()
+,	LINK_EDITOR.Sync()
+,	localStorage.setItem( STORAGE_KEY, JSONString() )
+)
+
+const
 DoTypical	= async ( label, mutate ) => {
 	const
 	before = structuredClone( app )
-	await mutate()
+	try {
+		await mutate()
+	} catch ( er ) {
+		await RestoreApp( before )()
+		throw er
+	}
 	const
 	after = structuredClone( app )
-	const
-	restoreFunc = _ => async () => (
-		app = structuredClone( _ )
-	,	app.reforms = app.reforms.reduce(
-			( $, [ ID ] ) => {
-				const
-				node = FindNode( ID )
-				node && $.push( structuredClone( node ) )
-				return $
-
-			}
-		,	[]
-		)
-	,	MAIN_EDITOR.clearInteraction()
-	,	await MAIN_EDITOR.Draw()
-	,	LINK_EDITOR.Sync()
-	,	localStorage.setItem( STORAGE_KEY, JSONString() )
-	)
-	await Do( label, restoreFunc( after ), restoreFunc( before ) )
+	await Do( label, RestoreApp( after ), RestoreApp( before ) )
 }
 
 export	const
@@ -250,6 +256,15 @@ Paste		= async _ => {	//	ClipboardData
 
 	const
 	nodes = []
+	,	items = Array.from( _.items ?? [] )
+	,	bytesToBase64 = bytes => {
+		let
+		binary = ''
+		for	( let i = 0; i < bytes.length; i += 0x8000 ) {
+			binary += String.fromCharCode( ...bytes.subarray( i, i + 0x8000 ) )
+		}
+		return	btoa( binary )
+	}
 
 	{	const
 		json = _.getData( 'application/x-zukai-828-tokyo' )
@@ -260,31 +275,30 @@ Paste		= async _ => {	//	ClipboardData
 		}
 	}
 
-	{	Array.from( _.items ?? [] ).filter( item => item.type === 'image/png' ).forEach(
-			async item => {
-				try {
+	{	const
+		pngs = await Promise.all(
+			items.filter( item => item.type === 'image/png' ).map(
+				async item => {
 					const blob = item.getAsFile()
 					const bitmap = await createImageBitmap( blob )
 					const W = bitmap.width
 					const H = bitmap.height
 					bitmap.close()
 
-					nodes.push(
-						[	{	type	: 'PNG'
-							,	cX		: W / 2
-							,	cY		: H / 2
-							,	rH		: W / 2
-							,	rV		: H / 2
-							,	PNG		: btoa( String.fromCharCode( ...new Uint8Array( await blob.arrayBuffer() ) ) )
-							}
-						,	{}
-						]
-					)
-				} catch ( er ) {
-					console.error( er )
+					return	[
+						{	type	: 'PNG'
+						,	cX		: W / 2
+						,	cY		: H / 2
+						,	rH		: W / 2
+						,	rV		: H / 2
+						,	PNG		: bytesToBase64( new Uint8Array( await blob.arrayBuffer() ) )
+						}
+					,	{}
+					]
 				}
-			}
-		)
+			)
+		).catch( er => ( console.error( er ), [] ) )
+		nodes.push( ...pngs )
 	}
 
 	{	const
@@ -302,37 +316,38 @@ Paste		= async _ => {	//	ClipboardData
 				$.src = url
 			}
 		)
-		Array.from( _.items ?? [] ).filter( item => item.type === 'image/svg+xml' ).forEach(
-			async item => {
-				try {
+		const
+		svgs = await Promise.all(
+			items.filter( item => item.type === 'image/svg+xml' ).map(
+				async item => {
 					const SVG = item.kind === 'string'
 					?	await new Promise( S => item.getAsString( s => S( s ) ) )
 					:	await item.getAsFile().text()
 					const image = await LoadImage( URL.createObjectURL( new Blob( [ SVG ], { type: 'image/svg+xml;charset=utf-8' } ) ) )
 					const [ W, H ] = [ image.naturalWidth, image.naturalHeight ]
-					nodes.push(
-						[	{	type	: 'SVG'
-							,	cX		: W / 2
-							,	cY		: H / 2
-							,	rH		: W / 2
-							,	rV		: H / 2
-							,	SVG
-							}
-						,	{}
-						]
-					)
-				} catch ( er ) {
-					console.error( er )
+					return	[
+						{	type	: 'SVG'
+						,	cX		: W / 2
+						,	cY		: H / 2
+						,	rH		: W / 2
+						,	rV		: H / 2
+						,	SVG
+						}
+					,	{}
+					]
 				}
-			}
-		)
+			)
+		).catch( er => ( console.error( er ), [] ) )
+		nodes.push( ...svgs )
 	}
+
+	if	( !nodes.length ) return
 
 	//	keep original IDs when free; on conflict use orig + "-copy" ( then "-copy2", … )
 	const
 	taken = new Set( app.model.nodes.map( _ => _[ 0 ] ) )
-,	newID = () => {
-		let	id = PreviewID()
+,	newID = async () => {
+		let	id = await PreviewID()
 		while	( taken.has( id ) ) {
 			id = String( Number( id ) + 1 )
 		}
@@ -351,14 +366,16 @@ Paste		= async _ => {	//	ClipboardData
 		taken.add( id )
 		return	id
 	}
-,	$ = nodes.map( entry => {
+	,	$ = []
+	for	( const entry of nodes ) {
 		const
 		orig = typeof entry[ 0 ] === 'string' && entry[ 1 ]?.type ? entry[ 0 ] : null
-		return	orig
+		$.push( orig
 			?	[ idFor( orig ), entry[ 1 ], entry[ 2 ] ?? {} ]
-			:	[ newID(), ...entry ]
-	} )
-	void DoTypical(
+			:	[ await newID(), ...entry ]
+		)
+	}
+	await DoTypical(
 		'Paste'
 	,	() => (
 			app.model.nodes.push( ...$ )
@@ -375,13 +392,17 @@ Load		= _ => DoTypical(
 ,	() => {
 		const
 		{ model } = JSON.parse( _ )
+		if	( !model || !Array.isArray( model.nodes ) || !Array.isArray( model.links ) ) {
+			throw new Error( '.zu root must include model.nodes and model.links arrays' )
+		}
+		const
+		canvasSize = model.nodes.length ? BBox( model.nodes ) : null
 		app.model	= model
 		app.reforms	= []
-		if	( model.nodes.length ) {
+		if	( canvasSize ) {
 			const
-			[ , , b, r ] = BBox( model.nodes )
+			[ , , b, r ] = canvasSize
 			MAIN_EDITOR.setCanvasSize( r + 256 , b + 256 )
 		}
 	}
 )
-
