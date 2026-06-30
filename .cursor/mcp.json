@@ -5,7 +5,7 @@
       "command": "/bin/bash",
       "args": ["tools/zu-mcp-run.sh"],
       "env": {
-        "DF_PORT": "8080"
+        "ZU_PORT": "8080"
       }
     }
   }

@@ -1,6 +1,10 @@
 # Zukai — AI & dev workflow guide
 
-This document summarizes how to edit diagrams with Cursor, the dev server, and MCP. For the `.zu` file format, see **[Web/SCHEMA.md](Web/SCHEMA.md)**.
+This document summarizes how to edit diagrams with **Cursor, Claude, Codex**, the dev server, and MCP. For the `.zu` file format, see **[Web/SCHEMA.md](Web/SCHEMA.md)**.
+
+**What is shared across clients:** Phase 2 (live reload), Phase 3 (HTTP/WebSocket), MCP tool names (`zu_status`, `zu_apply`, …), agent rules, and troubleshooting for the dev server / browser.
+
+**What differs:** where you register the MCP server (Cursor settings vs Claude config vs Codex `config.toml`).
 
 ## Three layers (Phase 2 / 3 / 4)
 
@@ -8,13 +12,13 @@ This document summarizes how to edit diagrams with Cursor, the dev server, and M
 |-------|------------|--------------|
 | **Phase 2 — live reload** | Save a `.zu` on disk → browser reloads that file | `watchPath` is set (see below) |
 | **Phase 3 — WebSocket bridge** | `zu-server` RPCs into the open tab via `window.ZU` | `npm run dev` + browser tab open |
-| **Phase 4 — MCP** | Cursor chat calls MCP tools → Phase 3 → canvas | MCP enabled + same session as Phase 3 |
+| **Phase 4 — MCP** | Chat agent calls MCP tools → Phase 3 → canvas | MCP enabled + same session as Phase 3 |
 
 All three can be used together, or separately:
 
-- **Edit files in Cursor, preview on save** → Phase 2 (`?zu=…`)
+- **Edit `.zu` files, preview on save** → Phase 2 (`?zu=…`)
 - **Script or curl changes the live canvas** → Phase 3 (`/__zu/rpc`)
-- **Natural language in Cursor chat** → Phase 4 (`zu_apply`, etc.)
+- **Natural language in chat** → Phase 4 (`zu_apply`, etc.)
 
 Phase 4 does **not** replace Phase 2. MCP changes the **in-memory** diagram until you call `zu_save_file`.
 
@@ -27,7 +31,22 @@ cd Web && npm install
 cd ../tools && npm install
 ```
 
-### Enable MCP in Cursor
+### MCP server (all clients)
+
+Every client runs the same stdio server:
+
+| File | Role |
+|------|------|
+| **`tools/zu-mcp.mjs`** | MCP tools (`zu_status`, `zu_get_model`, …) |
+| **`tools/zu-mcp-run.sh`** | Launcher — `cd`s into `tools/` so `node_modules` resolves |
+
+The MCP process talks to **`zu-server`** (Phase 3) on port **8080** by default. If you use another port, set **`ZU_PORT`** in the MCP server's environment **and** when starting the dev server (see [Every session](#every-session)).
+
+Replace **`/path/to/Zukai`** below with your clone path (Claude Desktop requires absolute paths).
+
+---
+
+### Cursor
 
 1. Open this repo at **`Zukai/`** (project root, not `Web/` alone).
 2. **Settings → Tools & MCP** (or **Customize**): find **`zukai`** under **Workspace MCP Servers**.
@@ -35,6 +54,108 @@ cd ../tools && npm install
 4. If it does not appear: **Cmd+Q** to quit Cursor completely, reopen, or **Cmd+Shift+P → Developer: Reload Window**.
 
 Config file: **[`.cursor/mcp.json`](.cursor/mcp.json)** (uses `tools/zu-mcp-run.sh`).
+
+---
+
+### Claude Desktop
+
+1. **Settings → Developer → Edit Config** (creates/opens `claude_desktop_config.json`).
+2. Add a `zukai` entry under `mcpServers`:
+
+```json
+{
+  "mcpServers": {
+    "zukai": {
+      "command": "/bin/bash",
+      "args": ["/path/to/Zukai/tools/zu-mcp-run.sh"],
+      "env": {
+        "ZU_PORT": "8080"
+      }
+    }
+  }
+}
+```
+
+3. **Fully quit** Claude Desktop (**Cmd+Q** on macOS) and reopen — closing the window is not enough.
+
+Config file locations:
+
+| OS | Path |
+|----|------|
+| macOS | `~/Library/Application Support/Claude/claude_desktop_config.json` |
+| Windows | `%APPDATA%\Claude\claude_desktop_config.json` |
+| Linux | `~/.config/Claude/claude_desktop_config.json` |
+
+In chat, MCP tools appear when the hammer/tools icon shows servers connected. Ask: *Run `zu_status`.*
+
+---
+
+### Claude Code (CLI)
+
+From the **repo root** (project scope — shareable via git):
+
+```bash
+claude mcp add zukai --scope project --env ZU_PORT=8080 -- /bin/bash tools/zu-mcp-run.sh
+```
+
+Or add the same block to **`.mcp.json`** at the project root (Claude Code's project config — separate from `.cursor/mcp.json`):
+
+```json
+{
+  "mcpServers": {
+    "zukai": {
+      "command": "/bin/bash",
+      "args": ["/path/to/Zukai/tools/zu-mcp-run.sh"],
+      "env": {
+        "ZU_PORT": "8080"
+      }
+    }
+  }
+}
+```
+
+First use may prompt to **approve** project-scoped servers. Verify:
+
+```bash
+claude mcp list
+```
+
+Then in a session: *Run `zu_status`.*
+
+---
+
+### OpenAI Codex (CLI / IDE extension)
+
+Codex uses **TOML**, not JSON. Global config: **`~/.codex/config.toml`**. Project override (trusted projects): **`.codex/config.toml`**.
+
+**CLI** (from anywhere):
+
+```bash
+codex mcp add zukai --env ZU_PORT=8080 -- /bin/bash /path/to/Zukai/tools/zu-mcp-run.sh
+```
+
+**Or edit `~/.codex/config.toml`:**
+
+```toml
+[mcp_servers.zukai]
+command = "/bin/bash"
+args = ["/path/to/Zukai/tools/zu-mcp-run.sh"]
+enabled = true
+startup_timeout_sec = 30
+
+[mcp_servers.zukai.env]
+ZU_PORT = "8080"
+```
+
+Verify:
+
+```bash
+codex mcp list
+```
+
+Inside a Codex session, **`/mcp`** shows server status. Then ask: *Run `zu_status`.*
+
+Docs: [OpenAI Codex — MCP](https://developers.openai.com/codex/mcp).
 
 ---
 
@@ -69,7 +190,7 @@ To clear a stale watch path: DevTools → Application → Session Storage → de
 
 1. `npm run dev`
 2. Open `http://localhost:8080/?zu=Samples/JSONs.zu`
-3. Edit `Samples/JSONs.zu` in Cursor and **save**
+3. Edit `Samples/JSONs.zu` in your editor and **save**
 4. The browser reloads that file (pan/zoom/selection are not preserved)
 
 Port already in use:
@@ -120,9 +241,9 @@ DevTools: `window.ZU` in the browser — see **`Web/ai-api.js`** and **[Web/SCHE
 
 ---
 
-## Phase 4 — MCP from Cursor chat
+## Phase 4 — MCP from chat (Cursor / Claude / Codex)
 
-**Prerequisites:** `npm run dev`, browser tab open, **`zukai` MCP enabled**.
+**Prerequisites:** `npm run dev`, browser tab open, **`zukai` MCP registered and enabled** in your client (see [MCP setup](#mcp-server-all-clients)).
 
 ### Check connection
 
@@ -174,13 +295,16 @@ Calls `zu_save_file`. Phase 2 may then reload the tab when the file is written.
 
 | Problem | Fix |
 |---------|-----|
-| `zukai` not in MCP list | Open repo root; Reload Window or quit Cursor (Cmd+Q) |
-| MCP listed but Disabled | Toggle **ON** in Settings → Tools & MCP |
+| **Cursor:** `zukai` not in MCP list | Open repo root; Reload Window or quit Cursor (Cmd+Q) |
+| **Cursor:** MCP listed but Disabled | Toggle **ON** in Settings → Tools & MCP |
+| **Claude Desktop:** server missing | Check JSON syntax; use **absolute** path to `zu-mcp-run.sh`; fully quit app (Cmd+Q) |
+| **Claude Code:** server not loaded | `claude mcp list`; approve project servers; restart session |
+| **Codex:** server not loaded | `codex mcp list` or `/mcp`; check `~/.codex/config.toml` |
 | `connected: false` | Open dev URL in browser; keep tab open |
-| RPC timeout | Restart `npm run dev` |
+| RPC timeout | Restart `npm run dev`; increase Codex `startup_timeout_sec` if needed |
 | Phase 2 not reloading | Use `?zu=…` or Sample button; check `zu-watch` in sessionStorage |
 | `DrawModel failed` + `atob` | Corrupt SVG/PNG on a node — fix via `zu_get_model` / file |
-| Port 8080 in use | `lsof -ti:8080 \| xargs kill` |
+| Port 8080 in use | `lsof -ti:8080 \| xargs kill` or `ZU_PORT=8081 npm run dev` (+ set `ZU_PORT` in MCP env) |
 
 ---
 
@@ -193,6 +317,7 @@ Zukai/
 ├── tools/
 │   zu-server.mjs     Dev server + bridge
 │   zu-mcp.mjs        MCP server (stdio)
-│   zu-mcp-run.sh     MCP launcher for Cursor
-└── .cursor/mcp.json  Workspace MCP config
+│   zu-mcp-run.sh     MCP launcher (all clients)
+├── .cursor/mcp.json  Cursor workspace MCP config
+└── .mcp.json         (optional) Claude Code project MCP config
 ```
