@@ -372,20 +372,30 @@ aside details {
 ;	font-size				: 12px
 ;	white-space				: nowrap
 }
-.ai-float-btn {
+.ai-head .ai-float-btn {
+;	display					: inline-flex
+;	align-items				: center
+;	justify-content			: center
 ;	flex					: 0 0 auto
-;	width					: 28px
+;	width					: 26px
+;	height					: 24px
 ;	margin					: 0 0 0 auto
 ;	padding					: 0
-;	font-size				: 13px
+;	font-size				: 14px
+;	line-height				: 1
 ;	cursor					: pointer
 }
 .ai-panel.floating {
 ;	position				: fixed
-;	top						: 56px
-;	right					: 16px
+;	top						: 50%
+;	left					: 50%
+;	transform				: translate( -50%, -50% )
 ;	width					: min( 480px, 90vw )
 ;	height					: min( 70vh, 640px )
+;	min-width				: 280px
+;	min-height				: 220px
+;	resize					: both
+;	overflow				: hidden
 ;	z-index					: 1000
 ;	box-sizing				: border-box
 ;	padding					: 10px
@@ -1012,7 +1022,7 @@ makeFloatable = ( panel, btn, storeKey ) => {
 	const
 	setFloat = on => {
 		panel.classList.toggle( 'floating', on )
-		on || ( panel.style.left = panel.style.top = panel.style.right = '' )
+		on || ( panel.style.left = panel.style.top = panel.style.right = panel.style.transform = '' )
 		btn.textContent	= on ? '⤓' : '⤢'
 		btn.title		= on ? 'Dock panel' : 'Float panel'
 		localStorage.setItem( storeKey, on ? '1' : '' )
@@ -1026,7 +1036,11 @@ makeFloatable = ( panel, btn, storeKey ) => {
 		if	( !panel.classList.contains( 'floating' ) || ev.target === btn ) return
 		const	r = panel.getBoundingClientRect()
 		drag = { dx: ev.clientX - r.left, dy: ev.clientY - r.top }
-		panel.style.right = 'auto'
+		//	switch from the centered transform to absolute left/top for dragging
+		panel.style.transform	= 'none'
+		panel.style.left		= `${ r.left }px`
+		panel.style.top			= `${ r.top }px`
+		panel.style.right		= 'auto'
 		head.setPointerCapture( ev.pointerId )
 	}
 	head.onpointermove = ev => {
