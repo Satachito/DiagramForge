@@ -60,6 +60,7 @@ import {
 ,	AddXY
 ,	DivXY
 ,	DeltaXY
+,	EqualXY
 ,	Outset
 }	from './Geo2D.js'
 
@@ -487,14 +488,6 @@ MainEditor extends HTMLElement {
 				c2D.strokeRect( x, y, HS, HS )
 			}
 			c2D.restore()
-		} else {
-			this.gesture?.down && this.gesture?.move && (
-				c2D.save()
-			,	c2D.strokeStyle = '#888888'
-			,	c2D.lineWidth = 2
-			,	c2D.strokeRect( ...XYWH_XYXY( [ this.gesture.down, this.gesture.move ] ) )
-			,	c2D.restore()
-			)
 		}
 	}
 
@@ -973,9 +966,7 @@ MainEditor extends HTMLElement {
 	//	a key that doesn't change the mode ( e.g. Shift while resizing an edge ) keeps
 	//	the resize / move / pointer affordance instead of snapping back to 'default'.
 	refreshModeCursor( ev ) {
-console.assert( false )
-	/*
-		if	( this.gesture?.down )	return	//	mid-drag: keep the drag cursor
+		if	( this.gesture )	return	//	mid-gesture: keep the current cursor
 		if	( this.spaceDown ) {
 			this.reformer.style.cursor = 'grab'
 			return
@@ -983,25 +974,46 @@ console.assert( false )
 		this.reformer.style.cursor = this.hoverXY
 		?	Cursor_EV( { offsetX: this.hoverXY[ 0 ], offsetY: this.hoverXY[ 1 ], metaKey: ev?.metaKey, altKey: ev?.altKey } )
 		:	( ( NodeMode( ev ) || LinkMode( ev ) ) ? 'crosshair' : 'default' )
-	*/
 	}
 
 	onMouseMove( ev ) {
+		if	( this.gesture ) {
+			this.gesture.move( ev )
+			return
+		}
+		this.hoverXY = [ ev.offsetX, ev.offsetY ]	//	remembered for refreshModeCursor
 		this.reformer.style.cursor = Cursor_EV( ev )
 		UpdateHoverLabel( ev )
-		this.gesture?.move && this.gesture.move( ev )
 	}
 
 	async onMouseUp( ev ) {
-		this.gesture.up( ev )
+		//	take and clear the gesture up-front, so a stray hover / pointercancel
+		//	after release can't keep driving it ( and null before any down is safe )
+		const
+		gesture = this.gesture
+		this.gesture = null
+		if	( !gesture )	return
+		await gesture.up( ev )
 		this.setEditorToLargestReform()
 	}
 	async onMouseDown( ev ) {
 
 		this.reformer.tabIndex = 0
 
-		if	( ev.button == 1 || this.spaceDown ) {
+		ev.pointerId != null && this.reformer.setPointerCapture( ev.pointerId )
+
+		//	PAN ( middle-drag or space + drag ): scroll by raw client delta, no commit
+		if	( ev.button === 1 || this.spaceDown ) {
 			this.reformer.style.cursor = 'grabbing'
+			let	last = [ ev.clientX, ev.clientY ]
+			this.gesture = {
+				move	: _ => {
+					this.scrollLeft	-= _.clientX - last[ 0 ]
+					this.scrollTop	-= _.clientY - last[ 1 ]
+					last = [ _.clientX, _.clientY ]
+				}
+			,	up		: _ => ( this.reformer.style.cursor = Cursor_EV( _ ) )
+			}
 			return
 		}
 
@@ -1010,35 +1022,28 @@ console.assert( false )
 
 		this.gesture = {
 			downXY	: xy
-		,	move	: _ => {
+		,	move	: _ => this.gesture.track && this.gesture.track(
+				PrepareCanvas( this.reformer )
+			,	xy
+			,	XY_EV( _ )
+			)
+			//	async / await for dialog input; skip commit on a click with no drag
+			//	( so a plain click makes no zero-size node / self-link )
+		,	up		: async _ => {
 				const
-				moveXY = XY_EV( _ )
-				if	( ev.button == 1 || this.spaceDown ) {
-					const
-					[ dX, dY ] = Delta( this.gesture.downXY, moveXY )
-					this.scrollLeft	-= dX
-					this.scrollTop	-= dY
-				} else {
-					this.gesture.track && this.gesture.track(
-						PrepareCanvas( this.reformer )
-					,	this.gesture.downXY
-					,	moveXY
-					)
-				}
+				upXY = XY_EV( _ )
+				this.gesture.commit && !EqualXY( xy, upXY ) && await this.gesture.commit( xy, upXY )
 			}
-		,	up		: async _ => this.gesture.commit && await this.gesture.commit( this.gesture.downXY, XY_EV( _ ) )
-			//	async / await for dialog input
 		}
-
-		ev.pointerId != null && this.reformer.setPointerCapture( ev.pointerId )
 
 		let
 		needsRedraw	= false
 
 		const
 		resize = ( c2D, [ x, y ], [ X, Y ] ) => {
-//	TODO: 万一オリジナルの取得に失敗したら落ちるのでリリースまでにはガード入れる
-			const	tlbr = BBox( app.reforms.map( _ => FindNode( _[ 0 ] ) ) )
+			const	origins = app.reforms.map( _ => FindNode( _[ 0 ] ) )
+			if	( origins.some( _ => !_ ) )	return	//	a reform's node was deleted mid-drag
+			const	tlbr = BBox( origins )
 			const	edgeDist = EdgeDist( tlbr, xy )
 			const	[ t, l, b, r ] = tlbr
 			const	T = edgeDist[ 0 ] <= GRAB ? Y : t
@@ -1069,10 +1074,12 @@ console.assert( false )
 		move = ( c2D, xy, XY ) => {
 			const	[ dX, dY ] = DeltaXY( xy, XY )
 			app.reforms.forEach(
-				( [ ID, S ] ) => (
-					S.cX += dX
-				,	S.cY += dY
-				)
+				( [ ID, S ] ) => {
+					const	found = FindNode( ID )
+					if	( !found )	return
+					S.cX = found[ 1 ].cX + dX
+					S.cY = found[ 1 ].cY + dY
+				}
 			)
 			this.DrawReforms()
 		}
@@ -1090,12 +1097,12 @@ console.assert( false )
 		const
 		commitCreate = async ( xy, XY ) => {
 			const	[ S, P ] = NODE_EDITOR.$
-			const	r = DivXY( DeltaXY( d, u ), 2 )
-			const	c = AddXY( d, r )
+			const	r = DivXY( DeltaXY( xy, XY ), 2 )
+			const	c = AddXY( xy, r )
 			S.cX = c[ 0 ]
 			S.cY = c[ 1 ]
-			S.rH = r[ 0 ]
-			S.rV = r[ 1 ]
+			S.rH = Math.abs( r[ 0 ] )
+			S.rV = Math.abs( r[ 1 ] )
 			const	id = await this.promptNodeId()
 			if	( id === null ) return
 			await Node( [ id, S, P ] )
