@@ -987,14 +987,11 @@ MainEditor extends HTMLElement {
 	}
 
 	async onMouseUp( ev ) {
-		//	take and clear the gesture up-front, so a stray hover / pointercancel
-		//	after release can't keep driving it ( and null before any down is safe )
-		const
-		gesture = this.gesture
-		this.gesture = null
-		if	( !gesture )	return
-		await gesture.up( ev )
-		this.setEditorToLargestReform()
+		this.gesture && (
+			await this.gesture.up( ev )
+		,	this.gesture = null
+		,	this.setEditorToLargestReform()
+		)
 	}
 	async onMouseDown( ev ) {
 
