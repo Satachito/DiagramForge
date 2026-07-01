@@ -2,6 +2,8 @@ export const
 XY_EV			= ev => [ ev.offsetX, ev.offsetY ]
 
 export const
+EqualXY			= ( [ X, Y ], [ x, y ] )	=> X === x && Y === y
+export const
 AddXY			= ( [ X, Y ], [ x, y ] )	=> [ X + x, Y + y ]
 export const
 DivXY			= ( [ X, Y ], _ )			=> [ X / _, Y / _ ]
